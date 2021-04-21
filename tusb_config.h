@@ -1,4 +1,4 @@
-/*
+/* 
  * The MIT License (MIT)
  *
  * Copyright (c) 2019 Ha Thach (tinyusb.org)
@@ -27,7 +27,8 @@
 #define _TUSB_CONFIG_H_
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+{
 #endif
 
 //--------------------------------------------------------------------
@@ -39,53 +40,32 @@ extern "C" {
 #error CFG_TUSB_MCU must be defined
 #endif
 
-#if CFG_TUSB_MCU == OPT_MCU_LPC18XX || CFG_TUSB_MCU == OPT_MCU_LPC43XX || CFG_TUSB_MCU == OPT_MCU_MIMXRT10XX || \
-    CFG_TUSB_MCU == OPT_MCU_NUC505 || CFG_TUSB_MCU == OPT_MCU_CXD56
-#define CFG_TUSB_RHPORT0_MODE     (OPT_MODE_DEVICE | OPT_MODE_HIGH_SPEED)
+#if CFG_TUSB_MCU == OPT_MCU_LPC43XX || CFG_TUSB_MCU == OPT_MCU_LPC18XX || CFG_TUSB_MCU == OPT_MCU_MIMXRT10XX
+#define CFG_TUSB_RHPORT0_MODE (OPT_MODE_HOST | OPT_MODE_HIGH_SPEED)
 #else
-#define CFG_TUSB_RHPORT0_MODE     OPT_MODE_DEVICE
+#define CFG_TUSB_RHPORT0_MODE OPT_MODE_HOST
 #endif
 
-#ifndef CFG_TUSB_OS
-#define CFG_TUSB_OS                 OPT_OS_PICO
-#endif
-
-// CFG_TUSB_DEBUG is defined by compiler in DEBUG build
-// #define CFG_TUSB_DEBUG           0
-
-/* USB DMA on some MCUs can only access a specific SRAM region with restriction on alignment.
- * Tinyusb use follows macros to declare transferring memory so that they can be put
- * into those specific section.
- * e.g
- * - CFG_TUSB_MEM SECTION : __attribute__ (( section(".usb_ram") ))
- * - CFG_TUSB_MEM_ALIGN   : __attribute__ ((aligned(4)))
- */
 #ifndef CFG_TUSB_MEM_SECTION
 #define CFG_TUSB_MEM_SECTION
 #endif
 
 #ifndef CFG_TUSB_MEM_ALIGN
-#define CFG_TUSB_MEM_ALIGN          __attribute__ ((aligned(4)))
+#define CFG_TUSB_MEM_ALIGN __attribute__((aligned(4)))
 #endif
 
-//--------------------------------------------------------------------
-// DEVICE CONFIGURATION
-//--------------------------------------------------------------------
+    //--------------------------------------------------------------------
+    // CONFIGURATION
+    //--------------------------------------------------------------------
 
-#ifndef CFG_TUD_ENDPOINT0_SIZE
-#define CFG_TUD_ENDPOINT0_SIZE    64
-#endif
+#define CFG_TUH_HUB 0
+#define CFG_TUH_HID_KEYBOARD 1
+#define CFG_TUH_HID_MOUSE 0
+#define CFG_TUSB_HOST_HID_GENERIC 0 // (not yet supported)
+#define CFG_TUH_MSC 0
+#define CFG_TUH_CDC 0
 
-//------------- CLASS -------------//
-#define CFG_TUD_HID             0
-#define CFG_TUD_CDC             0
-#define CFG_TUD_MSC             0
-#define CFG_TUD_MIDI            1
-#define CFG_TUD_VENDOR          0
-
-// HID buffer size Should be sufficient to hold ID (if any) + Data
-#define CFG_TUD_MIDI_RX_BUFSIZE 64
-#define CFG_TUD_MIDI_TX_BUFSIZE 64
+#define CFG_TUSB_HOST_DEVICE_MAX (CFG_TUH_HUB ? 5 : 1) // normal hub has 4 ports
 
 #ifdef __cplusplus
 }

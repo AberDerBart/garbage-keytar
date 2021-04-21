@@ -103,7 +103,14 @@ void handle_key(uint8_t key, bool pressed)
     {
         board_led_write(pressed);
         // midi_write(pressed ? MIDI_NOTE_ON : MIDI_NOTE_OFF, note, pressed ? 127 : 0);
-        midi_write(MIDI_NOTE_ON, note, 127);
+        if (pressed)
+        {
+            midi_write(MIDI_NOTE_ON, note, 127);
+        }
+        else
+        {
+            midi_write(MIDI_NOTE_OFF, note, 0);
+        }
     }
 }
 

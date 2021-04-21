@@ -29,30 +29,52 @@
 
 #include "bsp/board.h"
 #include "tusb.h"
+#include "midi_note_table.h"
+#include "midi.h"
+#include "pitchbend.h"
 
-void print_greeting(void);
-void led_blinking_task(void);
 extern void hid_task(void);
 
 int main(void)
 {
     board_init();
-    print_greeting();
 
     tusb_init();
+    midi_init();
+    pitchbend_init();
 
     while (1)
     {
         // tinyusb host task
         tuh_task();
-        // led_blinking_task();
 
-#if CFG_TUH_HID_KEYBOARD
         hid_task();
-#endif
+
+        // pitchbend_task();
     }
 
     return 0;
+}
+
+void pitchbend_task()
+{
+    uint8_t const channel = 0;
+
+    static uint32_t start_ms = 0;
+    const uint32_t interval_ms = 10;
+    if (board_millis() - start_ms < interval_ms)
+    {
+        return;
+    }
+    start_ms += interval_ms;
+
+    static struct pitchbend_value last_pitchbend = {
+        low : 0,
+        high : 0
+    };
+    struct pitchbend_value pitchbend = pitchbend_read();
+
+    midi_write(0xe0 | channel, pitchbend.low, pitchbend.high);
 }
 
 //--------------------------------------------------------------------+
@@ -61,7 +83,6 @@ int main(void)
 #if CFG_TUH_HID_KEYBOARD
 
 CFG_TUSB_MEM_SECTION static hid_keyboard_report_t usb_keyboard_report;
-uint8_t const keycode2ascii[128][2] = {HID_KEYCODE_TO_ASCII};
 
 // look up new key in previous keys
 static inline bool find_key_in_report(hid_keyboard_report_t const *p_report, uint8_t keycode)
@@ -75,33 +96,39 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *p_report, uin
     return false;
 }
 
+void handle_key(uint8_t key, bool pressed)
+{
+    uint8_t note = key < 128 ? keycode2midi[key] : 0;
+    if (note != 0)
+    {
+        board_led_write(pressed);
+        // midi_write(pressed ? MIDI_NOTE_ON : MIDI_NOTE_OFF, note, pressed ? 127 : 0);
+        midi_write(MIDI_NOTE_ON, note, 127);
+    }
+}
+
 static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report)
 {
     static hid_keyboard_report_t prev_report = {0, 0, {0}}; // previous report to check key released
 
-    //------------- example code ignore control (non-printable) key affects -------------//
+    // check key presses
     for (uint8_t i = 0; i < 6; i++)
     {
-        if (p_new_report->keycode[i])
+        uint8_t key = p_new_report->keycode[i];
+        if (key && !find_key_in_report(&prev_report, key))
         {
-            if (find_key_in_report(&prev_report, p_new_report->keycode[i]))
-            {
-                // exist in previous report means the current key is holding
-            }
-            else
-            {
-                // not existed in previous report means the current key is pressed
-                bool const is_shift =
-                    p_new_report->modifier & (KEYBOARD_MODIFIER_LEFTSHIFT | KEYBOARD_MODIFIER_RIGHTSHIFT);
-                uint8_t ch = keycode2ascii[p_new_report->keycode[i]][is_shift ? 1 : 0];
-                putchar(ch);
-                if (ch == '\r')
-                    putchar('\n'); // added new line for enter key
-
-                fflush(stdout); // flush right away, else nanolib will wait for newline
-            }
+            handle_key(key, true);
         }
-        // TODO example skips key released
+    }
+
+    // check key releases
+    for (uint8_t i = 0; i < 6; i++)
+    {
+        uint8_t key = prev_report.keycode[i];
+        if (key && !find_key_in_report(p_new_report, key))
+        {
+            handle_key(key, false);
+        }
     }
 
     prev_report = *p_new_report;
@@ -111,7 +138,6 @@ void tuh_hid_keyboard_mounted_cb(uint8_t dev_addr)
 {
     // application set-up
     printf("A Keyboard device (address %d) is mounted\r\n", dev_addr);
-    board_led_on();
 
     tuh_hid_keyboard_get_report(dev_addr, &usb_keyboard_report);
 }
@@ -120,7 +146,6 @@ void tuh_hid_keyboard_unmounted_cb(uint8_t dev_addr)
 {
     // application tear-down
     printf("A Keyboard device (address %d) is unmounted\r\n", dev_addr);
-    board_led_off();
 }
 
 // invoked ISR context
@@ -135,8 +160,6 @@ void tuh_hid_keyboard_isr(uint8_t dev_addr, xfer_result_t event)
 void hid_task(void)
 {
     uint8_t const addr = 1;
-
-#if CFG_TUH_HID_KEYBOARD
     if (tuh_hid_keyboard_is_mounted(addr))
     {
         if (!tuh_hid_keyboard_is_busy(addr))
@@ -145,34 +168,4 @@ void hid_task(void)
             tuh_hid_keyboard_get_report(addr, &usb_keyboard_report);
         }
     }
-#endif
-}
-
-//--------------------------------------------------------------------+
-// BLINKING TASK
-//--------------------------------------------------------------------+
-void led_blinking_task(void)
-{
-    const uint32_t interval_ms = 250;
-    static uint32_t start_ms = 0;
-
-    static bool led_state = false;
-
-    // Blink every interval ms
-    if (board_millis() - start_ms < interval_ms)
-        return; // not enough time
-    start_ms += interval_ms;
-
-    board_led_write(led_state);
-    led_state = 1 - led_state; // toggle
-}
-
-//--------------------------------------------------------------------+
-// HELPER FUNCTION
-//--------------------------------------------------------------------+
-void print_greeting(void)
-{
-    printf("This Host demo is configured to support:\n");
-    if (CFG_TUH_HID_KEYBOARD)
-        puts("  - HID Keyboard");
 }

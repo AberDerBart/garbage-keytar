@@ -74,7 +74,6 @@ int main(void) {
     gpio_set_function(MIDI_OUT_PIN, GPIO_FUNC_UART);
     gpio_set_function(MIDI_IN_PIN, GPIO_FUNC_UART);
 
-
     while (1) {
         tud_task(); // tinyusb device task
         led_blinking_task();
@@ -169,9 +168,10 @@ struct pitchbend_value read_pitchbend(void) {
     return to_pitchbend(0); 
 }
 
-void midi_write(uint8_t cmd[4]) {
-    cmd[3]=0;
-    uart_puts(UART_ID, cmd);
+void midi_write(uint8_t cmd[3]) {
+    uart_putc(UART_ID, cmd[0]);
+    uart_putc(UART_ID, cmd[1]);
+    uart_putc(UART_ID, cmd[2]);
 }
 
 void midi_task2(void) {
@@ -190,11 +190,10 @@ void midi_task2(void) {
     };
     struct pitchbend_value pitchbend = read_pitchbend();
 
-    uint8_t cmd[4];
+    uint8_t cmd[3];
     cmd[0] = 0xe0|channel;
     cmd[1] = pitchbend.low;
     cmd[2] = pitchbend.high;
-    cmd[3] = 0;
     midi_write(cmd);
 }
 
@@ -257,9 +256,9 @@ void led_blinking_task(void) {
     static bool led_state = false;
 
     // Blink every interval ms
-    if (board_millis() - start_ms < blink_interval_ms) return; // not enough time
-    start_ms += blink_interval_ms;
+    // if (board_millis() - start_ms < blink_interval_ms) return; // not enough time
+    // start_ms += blink_interval_ms;
 
-    board_led_write(led_state);
-    led_state = 1 - led_state; // toggle
+    // board_led_write(led_state);
+    // led_state = 1 - led_state; // toggle
 }

@@ -1,4 +1,4 @@
-TARGET = build/host_hid.elf
+TARGET = build/garbage-keytar.elf
 
 .PHONY: flash clean distclean
 
@@ -8,7 +8,7 @@ $TARGET: *.c *.h CMakeLists.txt
 	cmake -B build
 	make -C build
 
-flash: build/host_hid.elf
+flash: ${TARGET}
 	sudo openocd -f openocd/picoprobe.cfg -f openocd/rp2040.cfg -c "program ${TARGET} verify reset exit"
 
 clean:

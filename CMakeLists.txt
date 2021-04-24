@@ -14,9 +14,9 @@ project(my_project)
 pico_sdk_init()
 
 # rest of your project
-add_executable(host_hid host_hid.c midi.c pitchbend.c control.c)
+add_executable(garbage-keytar main.c midi.c pitchbend.c control.c)
 
-target_include_directories(host_hid PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(garbage-keytar PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
-target_link_libraries(host_hid pico_stdlib tinyusb_host tinyusb_board hardware_adc)
-pico_add_extra_outputs(host_hid)
+target_link_libraries(garbage-keytar pico_stdlib tinyusb_host tinyusb_board hardware_adc)
+pico_add_extra_outputs(garbage-keytar)

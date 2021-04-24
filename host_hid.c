@@ -36,6 +36,9 @@
 
 extern void hid_task(void);
 
+void control_task();
+void pitchbend_task();
+
 int main(void)
 {
     board_init();
@@ -90,15 +93,18 @@ void control_task() {
     }
     start_ms += interval_ms;
 
+    static uint8_t reported_values[2] = {0,0};
     static uint8_t old_values[2] = {0,0};
 
     for(uint8_t i=0; i<2; i++){
         uint8_t val = read_control(i);
 
-        if(val != old_values[i]){
+        if(abs(val-reported_values[i]) > 1 || val != reported_values[i] && old_values[i] != reported_values[i]){
             midi_write(0xb0, i, val);
-            old_values[i] = val;
+            reported_values[i] = val;
         }
+
+        old_values[i] = val;
     }
 }
     

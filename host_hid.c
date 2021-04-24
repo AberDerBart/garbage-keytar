@@ -32,6 +32,7 @@
 #include "midi_note_table.h"
 #include "midi.h"
 #include "pitchbend.h"
+#include "control.h"
 
 extern void hid_task(void);
 
@@ -42,6 +43,7 @@ int main(void)
     tusb_init();
     midi_init();
     pitchbend_init();
+    control_init();
 
     while (1)
     {
@@ -49,6 +51,8 @@ int main(void)
         tuh_task();
 
         hid_task();
+
+        control_task();
 
         // pitchbend_task();
     }
@@ -76,6 +80,28 @@ void pitchbend_task()
 
     midi_write(0xe0 | channel, pitchbend.low, pitchbend.high);
 }
+
+void control_task() {
+    static uint32_t start_ms = 0;
+    const uint32_t interval_ms = 10;
+    if (board_millis() - start_ms < interval_ms)
+    {
+        return;
+    }
+    start_ms += interval_ms;
+
+    static uint8_t old_values[2] = {0,0};
+
+    for(uint8_t i=0; i<2; i++){
+        uint8_t val = read_control(i);
+
+        if(val != old_values[i]){
+            midi_write(0xb0, i, val);
+            old_values[i] = val;
+        }
+    }
+}
+    
 
 //--------------------------------------------------------------------+
 // USB HID
@@ -109,7 +135,7 @@ void handle_key(uint8_t key, bool pressed)
         }
         else
         {
-            midi_write(MIDI_NOTE_OFF, note, 0);
+            midi_write(MIDI_NOTE_ON, note, 0);
         }
     }
 }

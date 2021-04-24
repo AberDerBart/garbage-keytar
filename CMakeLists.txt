@@ -20,7 +20,7 @@ pico_sdk_init()
 #        usb_descriptors.c
 #        )
 
-add_executable(host_hid host_hid.c midi.c pitchbend.c)
+add_executable(host_hid host_hid.c midi.c pitchbend.c control.c)
 
 target_include_directories(host_hid PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 # target_include_directories(dev_hid_composite PRIVATE ${CMAKE_CURRENT_LIST_DIR})

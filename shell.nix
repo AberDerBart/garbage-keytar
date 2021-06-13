@@ -12,5 +12,6 @@ in pkgs.mkShell {
       vscodeExtensions = with pkgs.vscode-extensions; [ ms-vscode.cpptools ];
     })
     pkgs.openocdpico
+    pkgs.openscad
   ];
 }

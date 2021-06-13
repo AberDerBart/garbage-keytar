@@ -70,9 +70,14 @@ module usb_port_inner(){
 
 height=15;
 
+$fn=72;
 difference(){
     union(){
-        zmove(height)linear_extrude(3)difference(){
+        zmove(height)    hull(){
+            linear_extrude(.2)cover_2d();
+            linear_extrude(3.2)offset(r=-3)cover_2d();
+        }
+        *zmove(height)linear_extrude(3)difference(){
             cover_2d();
             pot_holes();
         }
@@ -85,4 +90,5 @@ difference(){
     ymove(35)usb_port_inner();
 
     ymove(34)cube([5,6,8]);
+    ymove(90)xmove(10) cube([50,6,6]);
 }

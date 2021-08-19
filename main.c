@@ -81,7 +81,12 @@ void pitchbend_task()
     };
     struct pitchbend_value pitchbend = pitchbend_read();
 
-    midi_write(0xe0 | channel, pitchbend.low, pitchbend.high);
+    if(last_pitchbend.low != pitchbend.low || last_pitchbend.high != pitchbend.high){
+      midi_write(0xe0 | channel, pitchbend.low, pitchbend.high);
+    }
+
+    last_pitchbend.low = pitchbend.low;
+    last_pitchbend.high = pitchbend.high;
 }
 
 void control_task() {

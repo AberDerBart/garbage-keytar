@@ -23,7 +23,7 @@
  *
  */
 
-#include <stdlib.h>
+#include "pico/stdlib.h"
 #include <stdio.h>
 #include <string.h>
 
@@ -57,7 +57,7 @@ int main(void)
 
         control_task();
 
-        // pitchbend_task();
+        pitchbend_task();
     }
 
     return 0;

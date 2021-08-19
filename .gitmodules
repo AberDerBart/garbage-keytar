@@ -1,3 +1,9 @@
 [submodule "pico-sdk"]
 	path = pico-sdk
 	url = git@github.com:raspberrypi/pico-sdk
+[submodule "kicad/RP_Silicon_KiCad"]
+	path = kicad/RP_Silicon_KiCad
+	url = git@github.com:HeadBoffin/RP_Silicon_KiCad.git
+[submodule "kicad/eurocad"]
+	path = kicad/eurocad
+	url = https://github.com/nebs/eurocad

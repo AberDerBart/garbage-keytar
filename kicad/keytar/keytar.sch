@@ -1,0 +1,210 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr A4 11693 8268
+encoding utf-8
+Sheet 1 1
+Title ""
+Date ""
+Rev ""
+Comp ""
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L MCU_RaspberryPi_and_Boards:Pico U1
+U 1 1 611E3765
+P 5700 3150
+F 0 "U1" H 5700 4455 50  0000 C CNN
+F 1 "Pico" H 5700 4364 50  0000 C CNN
+F 2 "MCU_RaspberryPi_and_Boards:RPi_Pico_SMD_TH" H 5700 4273 50  0000 C CNN
+F 3 "" H 5700 3150 50  0001 C CNN
+	1    5700 3150
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:USB_B J2
+U 1 1 611E5934
+P 5950 1400
+F 0 "J2" H 6007 1867 50  0000 C CNN
+F 1 "USB_B" H 6007 1776 50  0000 C CNN
+F 2 "Connector_USB:USB_B_OST_USB-B1HSxx_Horizontal" H 6100 1350 50  0001 C CNN
+F 3 " ~" H 6100 1350 50  0001 C CNN
+	1    5950 1400
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR0101
+U 1 1 611E7F8E
+P 5950 1800
+F 0 "#PWR0101" H 5950 1550 50  0001 C CNN
+F 1 "GND" H 5955 1627 50  0000 C CNN
+F 2 "" H 5950 1800 50  0001 C CNN
+F 3 "" H 5950 1800 50  0001 C CNN
+	1    5950 1800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6250 1200 6450 1200
+Wire Wire Line
+	6450 1200 6450 2200
+$Comp
+L Device:R_POT RV1
+U 1 1 611E9846
+P 8700 2550
+F 0 "RV1" V 8493 2550 50  0000 C CNN
+F 1 "R_POT" V 8584 2550 50  0000 C CNN
+F 2 "Potentiometer_THT:Potentiometer_Alps_RK09K_Single_Vertical" H 8700 2550 50  0001 C CNN
+F 3 "~" H 8700 2550 50  0001 C CNN
+	1    8700 2550
+	0    1    1    0   
+$EndComp
+$Comp
+L Device:R_POT RV2
+U 1 1 611E9E4C
+P 8700 3150
+F 0 "RV2" V 8493 3150 50  0000 C CNN
+F 1 "R_POT" V 8584 3150 50  0000 C CNN
+F 2 "Potentiometer_THT:Potentiometer_Alps_RK09K_Single_Vertical" H 8700 3150 50  0001 C CNN
+F 3 "~" H 8700 3150 50  0001 C CNN
+	1    8700 3150
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR0102
+U 1 1 611EB7AC
+P 6650 2400
+F 0 "#PWR0102" H 6650 2150 50  0001 C CNN
+F 1 "GND" H 6655 2227 50  0000 C CNN
+F 2 "" H 6650 2400 50  0001 C CNN
+F 3 "" H 6650 2400 50  0001 C CNN
+	1    6650 2400
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector_Generic:Conn_01x02 J3
+U 1 1 611F72DD
+P 8150 2500
+F 0 "J3" V 8114 2312 50  0000 R CNN
+F 1 "Conn_01x02" V 8023 2312 50  0000 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Horizontal" H 8150 2500 50  0001 C CNN
+F 3 "~" H 8150 2500 50  0001 C CNN
+	1    8150 2500
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R3
+U 1 1 611F8973
+P 7850 2700
+F 0 "R3" V 8057 2700 50  0000 C CNN
+F 1 "R" V 7966 2700 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P5.08mm_Vertical" V 7780 2700 50  0001 C CNN
+F 3 "~" H 7850 2700 50  0001 C CNN
+	1    7850 2700
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	8550 2550 8550 2900
+Connection ~ 8550 2900
+Wire Wire Line
+	8850 2550 8850 2400
+Connection ~ 8850 2550
+Wire Wire Line
+	8000 2800 8000 2700
+Wire Wire Line
+	6400 2800 8000 2800
+Wire Wire Line
+	8150 2700 8000 2700
+Connection ~ 8000 2700
+Wire Wire Line
+	7700 2700 6400 2700
+Wire Wire Line
+	7700 2700 7700 2400
+Wire Wire Line
+	7700 2400 8850 2400
+Connection ~ 7700 2700
+Wire Wire Line
+	6400 2900 8250 2900
+Wire Wire Line
+	8250 2700 8250 2900
+Connection ~ 8250 2900
+Wire Wire Line
+	8250 2900 8550 2900
+Wire Wire Line
+	6450 2200 6400 2200
+$Comp
+L Connector:DIN-5_180degree J1
+U 1 1 6122C08C
+P 3400 2550
+F 0 "J1" H 3400 2275 50  0000 C CNN
+F 1 "DIN-5_180degree" H 3400 2184 50  0000 C CNN
+F 2 "Eurocad:MIDI_DIN5" H 3400 2550 50  0001 C CNN
+F 3 "http://www.mouser.com/ds/2/18/40_c091_abd_e-75918.pdf" H 3400 2550 50  0001 C CNN
+	1    3400 2550
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 6122CA20
+P 3100 1750
+F 0 "R1" H 3030 1704 50  0000 R CNN
+F 1 "33" H 3030 1795 50  0000 R CNN
+F 2 "Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P5.08mm_Vertical" V 3030 1750 50  0001 C CNN
+F 3 "~" H 3100 1750 50  0001 C CNN
+	1    3100 1750
+	-1   0    0    1   
+$EndComp
+$Comp
+L Device:R R2
+U 1 1 6122CDD6
+P 4600 2200
+F 0 "R2" V 4807 2200 50  0000 C CNN
+F 1 "10" V 4716 2200 50  0000 C CNN
+F 2 "Resistor_THT:R_Axial_DIN0411_L9.9mm_D3.6mm_P5.08mm_Vertical" V 4530 2200 50  0001 C CNN
+F 3 "~" H 4600 2200 50  0001 C CNN
+	1    4600 2200
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	5000 2200 4750 2200
+Wire Wire Line
+	3700 2450 3700 2200
+Wire Wire Line
+	3700 2200 4450 2200
+Wire Wire Line
+	3100 2450 3100 1900
+Wire Wire Line
+	3100 1600 3100 850 
+Wire Wire Line
+	3100 850  6800 850 
+Wire Wire Line
+	6800 850  6800 2600
+Wire Wire Line
+	6800 2600 6400 2600
+Wire Wire Line
+	6400 2400 6650 2400
+Wire Wire Line
+	3400 2250 3400 1850
+Wire Wire Line
+	4300 1850 4300 2400
+Wire Wire Line
+	4300 2400 5000 2400
+Wire Wire Line
+	3400 1850 4300 1850
+Wire Wire Line
+	8700 2700 8700 3000
+Wire Wire Line
+	8700 3000 6400 3000
+Wire Wire Line
+	8850 2550 8850 3150
+Wire Wire Line
+	8550 2900 8550 3150
+Wire Wire Line
+	8700 3300 8450 3300
+Wire Wire Line
+	8450 3300 8450 3100
+Wire Wire Line
+	8450 3100 6400 3100
+$EndSCHEMATC

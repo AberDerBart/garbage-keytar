@@ -32,14 +32,14 @@ struct pitchbend_value to_pitchbend(int16_t value)
 struct pitchbend_value pitchbend_read()
 {
     adc_select_input(2);
-    uint16_t const ACTIVATION_THRESHOLD = 3276;
-    uint16_t const LOWER_BOUND = 30;
-    uint16_t const UPPER_BOUND = 2700;
+    uint16_t const ACTIVATION_THRESHOLD = 4000;
+    uint16_t const MAX_VALUE = 0x0fff;
+    uint32_t const ADC_RANGE = 2048;
     uint16_t const INACTIVE = 0xffff;
 
-    static uint16_t start_value = INACTIVE;
+    static uint32_t start_value = INACTIVE;
 
-    uint16_t adc_value = adc_read();
+    uint32_t adc_value = adc_read();
 
     if (start_value == INACTIVE)
     {
@@ -58,7 +58,7 @@ struct pitchbend_value pitchbend_read()
         }
         else
         {
-            int32_t value = (int32_t)(1 << 14) * (adc_value - start_value) / (UPPER_BOUND - LOWER_BOUND);
+            int32_t value = (int32_t)(1 << 14) * (adc_value - start_value) / ADC_RANGE;
             return to_pitchbend(value);
         }
     }

@@ -55,7 +55,7 @@ int main(void)
 
         hid_task();
 
-        control_task();
+        // control_task();
 
         pitchbend_task();
     }

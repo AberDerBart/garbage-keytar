@@ -1,6 +1,7 @@
 #include "display.h"
 #include "hardware/i2c.h"
 #include "stdio.h"
+#include "string.h"
 
 #include "pico-ssd1306/ssd1306.h"
 
@@ -91,7 +92,23 @@ void draw_info() {
     ssd1306_draw_char(&disp, 99, 48, 2, '+');
   }
   ssd1306_draw_char(&disp, 112, 48, 2, octave + '0');
-
+  debug_render();
   ssd1306_show(&disp);
 }
 
+char debug_lines[4][17];
+uint8_t debug_offset = 0;
+
+void debug(char* str) {
+
+  uint8_t n = strncpy(debug_lines[debug_offset], str, 16);
+  debug_lines[debug_offset][n] = 0;
+  debug_offset = (debug_offset + 1) % 4;
+}
+
+void debug_render(){
+  for(uint8_t i = 0; i < 4; i++) {
+    uint8_t line_index = (i + debug_offset) % 4;
+    ssd1306_draw_string(&disp, 0, 8 * i, 1, debug_lines[line_index]);
+  }
+}

@@ -7,3 +7,9 @@
 [submodule "kicad/eurocad"]
 	path = kicad/eurocad
 	url = https://github.com/nebs/eurocad
+[submodule "kicad/3d_models/kicad-3dmodels"]
+	path = kicad/3d_models/kicad-3dmodels
+	url = git@github.com:dhaillant/kicad-3dmodels.git
+[submodule "pico-ssd1306"]
+	path = pico-ssd1306
+	url = git@github.com:daschr/pico-ssd1306.git

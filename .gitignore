@@ -3,3 +3,5 @@ pico-examples
 *.gcode
 *.stl
 *.swp
+gerber
+gerber.zip

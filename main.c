@@ -33,6 +33,8 @@
 #include "midi.h"
 #include "pitchbend.h"
 #include "control.h"
+#include "display.h"
+#include "offset.h"
 
 extern void hid_task(void);
 
@@ -47,6 +49,7 @@ int main(void)
     midi_init();
     pitchbend_init();
     control_init();
+    display_init();
 
     while (1)
     {
@@ -133,22 +136,61 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *p_report, uin
     return false;
 }
 
+void clear_notes();
+
 void handle_key(uint8_t key, bool pressed)
 {
-    uint8_t note = key < 128 ? keycode2midi[key] : 0;
-    if (note != 0)
-    {
-        board_led_write(pressed);
-        // midi_write(pressed ? MIDI_NOTE_ON : MIDI_NOTE_OFF, note, pressed ? 127 : 0);
-        if (pressed)
-        {
-            midi_write(MIDI_NOTE_ON, note, 127);
+    if(pressed){
+      if(key == 75){
+        clear_notes();
+        int16_t max_note = 67 + offset + 12;
+        if(max_note <= 127) {
+          offset += 12;
         }
-        else
-        {
+        draw_info();
+      } else if(key == 78){
+        clear_notes();
+        int16_t min_note = 35 + offset -12;
+        if(min_note > 0) {
+          offset -= 12;
+        }
+        draw_info();
+      } else if(key == 81){
+        clear_notes();
+        int16_t min_note = 35 + offset -1;
+        if(min_note > 0) {
+          offset--;
+        }
+        draw_info();
+      } else if(key == 82){
+        clear_notes();
+        int16_t max_note = 67 + offset +1;
+        if(max_note <= 127) {
+          offset++;
+        }
+        draw_info();
+      }
+    }
+
+    uint8_t note = key < 128 ? keycode2midi[key] + offset : 0;
+    if (note != 0) {
+        board_led_write(pressed);
+        if (pressed) {
+            midi_write(MIDI_NOTE_ON, note, 127);
+        } else {
             midi_write(MIDI_NOTE_ON, note, 0);
         }
     }
+}
+
+void clear_notes(hid_keyboard_report_t const *p_report) {
+  for (uint8_t i = 0; i < 6; i++){
+    uint8_t key = p_report->keycode[i];
+    uint8_t note = key < 128 ? keycode2midi[key] + offset : 0;
+    if (note != 0){
+      midi_write(MIDI_NOTE_ON, note, 0);
+    }
+  }
 }
 
 static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report)
@@ -156,21 +198,17 @@ static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report)
     static hid_keyboard_report_t prev_report = {0, 0, {0}}; // previous report to check key released
 
     // check key presses
-    for (uint8_t i = 0; i < 6; i++)
-    {
+    for (uint8_t i = 0; i < 6; i++) {
         uint8_t key = p_new_report->keycode[i];
-        if (key && !find_key_in_report(&prev_report, key))
-        {
+        if (key && !find_key_in_report(&prev_report, key)) {
             handle_key(key, true);
         }
     }
 
     // check key releases
-    for (uint8_t i = 0; i < 6; i++)
-    {
+    for (uint8_t i = 0; i < 6; i++) {
         uint8_t key = prev_report.keycode[i];
-        if (key && !find_key_in_report(p_new_report, key))
-        {
+        if (key && !find_key_in_report(p_new_report, key)) {
             handle_key(key, false);
         }
     }

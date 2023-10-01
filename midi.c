@@ -18,7 +18,7 @@ void midi_init() {
     gpio_set_function(MIDI_IN_PIN, GPIO_FUNC_UART);
 }
 
-void midi_write(uint8_t cmd, uint8_t b1, uint8_t b2) {
+void midi_write3(uint8_t cmd, uint8_t b1, uint8_t b2) {
 #ifdef DEBUG_MIDI
     char msg[16];
     sprintf(msg, "MIDI %02X %02X %02X", cmd, b1, b2);
@@ -28,4 +28,15 @@ void midi_write(uint8_t cmd, uint8_t b1, uint8_t b2) {
     uart_putc(UART_ID, cmd);
     uart_putc(UART_ID, b1);
     uart_putc(UART_ID, b2);
+}
+
+void midi_write2(uint8_t cmd, uint8_t b1) {
+#ifdef DEBUG_MIDI
+    char msg[16];
+    sprintf(msg, "MIDI %02X %02X", cmd, b1);
+    debug(msg);
+    draw_info();
+#endif
+    uart_putc(UART_ID, cmd);
+    uart_putc(UART_ID, b1);
 }

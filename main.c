@@ -32,9 +32,9 @@
 #include "display.h"
 #include "midi.h"
 #include "midi_note_table.h"
-#include "offset.h"
 #include "pico/stdlib.h"
 #include "pitchbend.h"
+#include "settings.h"
 #include "tusb.h"
 #include "tusb_config.h"
 
@@ -83,7 +83,7 @@ void pitchbend_task() {
     struct pitchbend_value pitchbend = pitchbend_read();
 
     if (last_pitchbend.low != pitchbend.low || last_pitchbend.high != pitchbend.high) {
-        midi_write(0xe0 | channel, pitchbend.low, pitchbend.high);
+        midi_write3(0xe0 | channel, pitchbend.low, pitchbend.high);
     }
 
     last_pitchbend.low = pitchbend.low;
@@ -105,7 +105,7 @@ void control_task() {
         uint8_t val = read_control(i);
 
         if (abs(val - reported_values[i]) > 1 || val != reported_values[i] && old_values[i] != reported_values[i]) {
-            midi_write(0xb0, i, val);
+            midi_write3(0xb0, i, val);
             reported_values[i] = val;
         }
 
@@ -131,7 +131,6 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *p_report, uin
 }
 
 void clear_notes();
-
 void handle_key(uint8_t key, bool pressed) {
 #ifdef DEBUG_KEYS
     char msg[16];
@@ -145,34 +144,39 @@ void handle_key(uint8_t key, bool pressed) {
 #endif
 
     if (pressed) {
+        if (key >= 58 && key <= 69) {
+            program = key - 58;
+            midi_write2(MIDI_PROGRAM_CHANGE, program);
+            draw_info();
+        }
         if (key == 75) {
-            clear_notes();
             int16_t max_note = 67 + offset + 12;
             if (max_note <= 127) {
+                clear_notes();
                 offset += 12;
+                draw_info();
             }
-            draw_info();
         } else if (key == 78) {
-            clear_notes();
             int16_t min_note = 35 + offset - 12;
             if (min_note > 0) {
+                clear_notes();
                 offset -= 12;
+                draw_info();
             }
-            draw_info();
         } else if (key == 81) {
-            clear_notes();
             int16_t min_note = 35 + offset - 1;
             if (min_note > 0) {
+                clear_notes();
                 offset--;
+                draw_info();
             }
-            draw_info();
         } else if (key == 82) {
-            clear_notes();
             int16_t max_note = 67 + offset + 1;
             if (max_note <= 127) {
+                clear_notes();
                 offset++;
+                draw_info();
             }
-            draw_info();
         }
     }
 
@@ -180,15 +184,15 @@ void handle_key(uint8_t key, bool pressed) {
     if (raw_note != 0) {
         board_led_write(pressed);
         if (pressed) {
-            midi_write(MIDI_NOTE_ON, raw_note + offset, 127);
+            midi_write3(MIDI_NOTE_ON, raw_note + offset, 127);
         } else {
-            midi_write(MIDI_NOTE_ON, raw_note + offset, 0);
+            midi_write3(MIDI_NOTE_ON, raw_note + offset, 0);
         }
     }
 }
 
 void clear_notes() {
-    midi_write(MIDI_CHANNEL_MODE, MIDI_CHANNEL_MODE_ALL_SOUND_OFF_B1, MIDI_CHANNEL_MODE_ALL_SOUND_OFF_B2);
+    midi_write3(MIDI_CONTROL_CHANGE, MIDI_CONTROL_ALL_NOTES_OFF_B1, MIDI_CONTROL_ALL_NOTES_OFF_B2);
 }
 
 static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report) {

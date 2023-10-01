@@ -1,8 +1,8 @@
 #include "display.h"
 
 #include "hardware/i2c.h"
-#include "offset.h"
 #include "pico-ssd1306/ssd1306.h"
+#include "settings.h"
 #include "stdio.h"
 #include "string.h"
 
@@ -31,9 +31,9 @@ void display_init() {
 
 void draw_info() {
     const uint8_t keyb_h = 32;
-    const uint8_t key_w = 12;
+    const uint8_t key_w = 8;
 
-    const uint8_t keyb_x = 4;
+    const uint8_t keyb_x = 0;
     const uint8_t keyb_y = 32;
 
     const uint8_t trans = offset_get_trans();
@@ -70,18 +70,28 @@ void draw_info() {
         }
     }
 
-    ssd1306_draw_char(&disp, 92, 32, 2, 'O');
-    ssd1306_draw_char(&disp, 105, 32, 2, 'C');
-    ssd1306_draw_char(&disp, 118, 32, 2, 'T');
+    ssd1306_draw_char(&disp, 62, 32, 2, 'O');
+    ssd1306_draw_char(&disp, 75, 32, 2, 'C');
+    ssd1306_draw_char(&disp, 88, 32, 2, 'T');
 
     int8_t octave = offset_get_octave();
     if (octave < 0) {
-        ssd1306_draw_char(&disp, 99, 48, 2, '-');
+        ssd1306_draw_char(&disp, 102, 32, 2, '-');
         octave = -octave;
     } else if (octave > 0) {
-        ssd1306_draw_char(&disp, 99, 48, 2, '+');
+        ssd1306_draw_char(&disp, 102, 32, 2, '+');
     }
-    ssd1306_draw_char(&disp, 112, 48, 2, octave + '0');
+    ssd1306_draw_char(&disp, 115, 32, 2, octave + '0');
+
+    ssd1306_draw_char(&disp, 62, 48, 2, 'P');
+    ssd1306_draw_char(&disp, 75, 48, 2, 'R');
+    ssd1306_draw_char(&disp, 88, 48, 2, 'G');
+
+    if (program > 9) {
+        ssd1306_draw_char(&disp, 102, 48, 2, '1');
+    }
+    ssd1306_draw_char(&disp, 115, 48, 2, (program % 10) + '0');
+
     debug_render();
     ssd1306_show(&disp);
 }

@@ -9,7 +9,7 @@ $TARGET: *.c *.h CMakeLists.txt
 	make -C build
 
 flash: ${TARGET}
-	sudo openocd -f openocd/picoprobe.cfg -f openocd/rp2040.cfg -c "program ${TARGET} verify reset exit"
+	sudo openocd -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "adapter speed 5000" -c "program ${TARGET} verify reset exit"
 
 clean:
 	make -C build clean

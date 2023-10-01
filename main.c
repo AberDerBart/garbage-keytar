@@ -23,6 +23,7 @@
  *
  */
 
+#include "tusb_config.h"
 #include "pico/stdlib.h"
 #include <stdio.h>
 #include <string.h>
@@ -35,6 +36,7 @@
 #include "control.h"
 #include "display.h"
 #include "offset.h"
+#include "hid.h"
 
 extern void hid_task(void);
 
@@ -183,14 +185,8 @@ void handle_key(uint8_t key, bool pressed)
     }
 }
 
-void clear_notes(hid_keyboard_report_t const *p_report) {
-  for (uint8_t i = 0; i < 6; i++){
-    uint8_t key = p_report->keycode[i];
-    uint8_t note = key < 128 ? keycode2midi[key] + offset : 0;
-    if (note != 0){
-      midi_write(MIDI_NOTE_ON, note, 0);
-    }
-  }
+void clear_notes() {
+  midi_write(MIDI_CHANNEL_MODE, MIDI_CHANNEL_MODE_ALL_SOUND_OFF_B1, MIDI_CHANNEL_MODE_ALL_SOUND_OFF_B2);
 }
 
 static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report)

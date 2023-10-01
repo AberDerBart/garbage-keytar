@@ -12,6 +12,7 @@
 
 void draw_info();
 void draw_menu();
+void debug_render();
 
 ssd1306_t disp;
 uint8_t menu_index = 0xff;

@@ -21,17 +21,16 @@ void keyboard_task() {
   while(queue_try_remove(&keyboard_event_queue, &msg)){
     switch(msg.type) {
     case KEYBOARD_CONNECTED:
-      display_debug("KEY CONN");
+      display_debug("KBD CONN");
       break;
     case KEYBOARD_DISCONNECTED:
-      display_debug("KEY DC");
+      display_debug("KBD DC");
       break;
     case KEYBOARD_REPORT:
-      display_debug("REPORT");
       process_kbd_report(&msg.report);
       break;
     default:
-      display_debug("UNKNOWN");
+      display_debug("UNKNOWN MSG");
       break;
     }
   }

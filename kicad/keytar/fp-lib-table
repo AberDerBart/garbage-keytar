@@ -1,4 +1,5 @@
 (fp_lib_table
-  (lib (name MCU_RaspberryPi_and_Boards)(type KiCad)(uri /home/bart/programming/c/keytar/kicad/RP_Silicon_KiCad/KiCadLibraries/MCU_RaspberryPi_and_Boards.pretty)(options "")(descr ""))
-  (lib (name Eurocad)(type KiCad)(uri /home/bart/programming/c/keytar/kicad/eurocad/Eurocad.pretty)(options "")(descr ""))
+  (version 7)
+  (lib (name "MCU_RaspberryPi_and_Boards")(type "KiCad")(uri "${KIPRJMOD}/../RP_Silicon_KiCad/KiCadLibraries/MCU_RaspberryPi_and_Boards.pretty")(options "")(descr ""))
+  (lib (name "Eurocad")(type "KiCad")(uri "${KIPRJMOD}/../eurocad/Eurocad.pretty")(options "")(descr ""))
 )

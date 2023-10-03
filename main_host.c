@@ -104,6 +104,7 @@ void core1_main() {
 //--------------------------------------------------------------------+
 // Host HID
 //--------------------------------------------------------------------+
+uint8_t connected_kbd_address = 0;
 
 // Invoked when device with hid interface is mounted
 // Report descriptor is also available for use. tuh_hid_parse_report_descriptor()
@@ -119,6 +120,7 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
   uint8_t const itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
 
   if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD) {
+    connected_kbd_address = dev_addr;
     send_connected();
     if (!tuh_hid_receive_report(dev_addr, instance) ) {
       tud_cdc_write_str("Error: cannot request report\r\n");
@@ -128,10 +130,12 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_re
 
 // Invoked when device with hid interface is un-mounted
 void tuh_hid_umount_cb(uint8_t dev_addr, uint8_t instance) {
-  (void) dev_addr;
   (void) instance;
 
-  send_disconnected();
+  if (dev_addr == connected_kbd_address) {
+    send_disconnected();
+    connected_kbd_address = 0;
+  }
 }
 
 // Invoked when received report from device via interrupt endpoint

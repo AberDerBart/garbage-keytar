@@ -13,7 +13,7 @@ project(my_project)
 pico_sdk_init()
 
 # rest of your project
-add_executable(keytar main.c midi.c pitchbend.c control.c display.c pico-ssd1306/ssd1306.c settings.c)
+add_executable(keytar main.c midi.c pitchbend.c control.c display.c pico-ssd1306/ssd1306.c settings.c keyboard.c)
 
 target_include_directories(keytar PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 

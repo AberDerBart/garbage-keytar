@@ -4,6 +4,7 @@
 #include <stdint.h>
 
 void control_init();
-uint8_t read_control(uint8_t adc_index);
+
+void control_task();
 
 #endif

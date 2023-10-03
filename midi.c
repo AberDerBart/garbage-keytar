@@ -40,3 +40,7 @@ void midi_write2(uint8_t cmd, uint8_t b1) {
     uart_putc(UART_ID, cmd);
     uart_putc(UART_ID, b1);
 }
+
+void clear_notes() {
+    midi_write3(MIDI_CONTROL_CHANGE, MIDI_CONTROL_ALL_NOTES_OFF_B1, MIDI_CONTROL_ALL_NOTES_OFF_B2);
+}

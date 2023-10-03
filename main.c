@@ -26,22 +26,18 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "bsp/board.h"
-#include "class/hid/hid.h"
-#include "control.h"
-#include "display.h"
-#include "midi.h"
-#include "midi_note_table.h"
 #include "pico/stdlib.h"
-#include "pitchbend.h"
-#include "settings.h"
+#include "class/hid/hid.h"
 #include "tusb.h"
 #include "tusb_config.h"
 
-extern void hid_task(void);
+#include "control.h"
+#include "display.h"
+#include "midi.h"
+#include "pitchbend.h"
+#include "settings.h"
 
-void control_task();
-void pitchbend_task();
+extern void hid_task(void);
 
 int main(void) {
     board_init();
@@ -67,53 +63,6 @@ int main(void) {
     return 0;
 }
 
-void pitchbend_task() {
-    uint8_t const channel = 0;
-
-    static uint32_t start_ms = 0;
-    const uint32_t interval_ms = 10;
-    if (board_millis() - start_ms < interval_ms) {
-        return;
-    }
-    start_ms += interval_ms;
-
-    static struct pitchbend_value last_pitchbend = {
-        low : 0,
-        high : 0
-    };
-    struct pitchbend_value pitchbend = pitchbend_read();
-
-    if (last_pitchbend.low != pitchbend.low || last_pitchbend.high != pitchbend.high) {
-        midi_write3(0xe0 | channel, pitchbend.low, pitchbend.high);
-    }
-
-    last_pitchbend.low = pitchbend.low;
-    last_pitchbend.high = pitchbend.high;
-}
-
-void control_task() {
-    static uint32_t start_ms = 0;
-    const uint32_t interval_ms = 10;
-    if (board_millis() - start_ms < interval_ms) {
-        return;
-    }
-    start_ms += interval_ms;
-
-    static uint8_t reported_values[2] = {0, 0};
-    static uint8_t old_values[2] = {0, 0};
-
-    for (uint8_t i = 0; i < 2; i++) {
-        uint8_t val = read_control(i);
-
-        if (abs(val - reported_values[i]) > 1 || val != reported_values[i] && old_values[i] != reported_values[i]) {
-            midi_write3(0xb0, i, val);
-            reported_values[i] = val;
-        }
-
-        old_values[i] = val;
-    }
-}
-
 //--------------------------------------------------------------------+
 // USB HID
 //--------------------------------------------------------------------+
@@ -128,70 +77,6 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *p_report, uin
     }
 
     return false;
-}
-
-void clear_notes() {
-    midi_write3(MIDI_CONTROL_CHANGE, MIDI_CONTROL_ALL_NOTES_OFF_B1, MIDI_CONTROL_ALL_NOTES_OFF_B2);
-}
-
-void handle_key(uint8_t key, bool pressed) {
-#ifdef DEBUG_KEYS
-    char msg[16];
-    if (pressed) {
-        sprintf(msg, "KEY %d %d PRE", key, keycode2midi[key]);
-    } else {
-        sprintf(msg, "KEY %d %d REL", key, keycode2midi[key]);
-    }
-    debug(msg);
-    draw_info();
-#endif
-
-    if (pressed) {
-        if (key >= 58 && key <= 69) {
-            program = key - 58;
-            midi_write2(MIDI_PROGRAM_CHANGE, program);
-            draw_info();
-        }
-        if (key == 75) {
-            int16_t max_note = 67 + offset + 12;
-            if (max_note <= 127) {
-                clear_notes();
-                offset += 12;
-                draw_info();
-            }
-        } else if (key == 78) {
-            int16_t min_note = 35 + offset - 12;
-            if (min_note > 0) {
-                clear_notes();
-                offset -= 12;
-                draw_info();
-            }
-        } else if (key == 81) {
-            int16_t min_note = 35 + offset - 1;
-            if (min_note > 0) {
-                clear_notes();
-                offset--;
-                draw_info();
-            }
-        } else if (key == 82) {
-            int16_t max_note = 67 + offset + 1;
-            if (max_note <= 127) {
-                clear_notes();
-                offset++;
-                draw_info();
-            }
-        }
-    }
-
-    uint8_t raw_note = key < 128 ? keycode2midi[key] : 0;
-    if (raw_note != 0) {
-        board_led_write(pressed);
-        if (pressed) {
-            midi_write3(MIDI_NOTE_ON, raw_note + offset, 127);
-        } else {
-            midi_write3(MIDI_NOTE_ON, raw_note + offset, 0);
-        }
-    }
 }
 
 static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report) {

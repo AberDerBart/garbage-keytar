@@ -25,4 +25,6 @@ void midi_init();
 void midi_write3(uint8_t cmd, uint8_t b1, uint8_t b2);
 void midi_write2(uint8_t cmd, uint8_t b1);
 
+void clear_notes();
+
 #endif

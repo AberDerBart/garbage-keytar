@@ -5,3 +5,4 @@ pico-examples
 *.swp
 gerber
 gerber.zip
+.direnv

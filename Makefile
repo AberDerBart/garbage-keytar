@@ -1,4 +1,4 @@
-TARGET = build/garbage-keytar.elf
+TARGET = build/keytar.elf
 
 .PHONY: flash clean distclean
 

@@ -13,9 +13,9 @@ project(my_project)
 pico_sdk_init()
 
 # rest of your project
-add_executable(garbage-keytar main.c midi.c pitchbend.c control.c display.c pico-ssd1306/ssd1306.c settings.c)
+add_executable(keytar main.c midi.c pitchbend.c control.c display.c pico-ssd1306/ssd1306.c settings.c)
 
-target_include_directories(garbage-keytar PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+target_include_directories(keytar PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 
-target_link_libraries(garbage-keytar pico_stdlib tinyusb_host tinyusb_board hardware_adc hardware_i2c)
-pico_add_extra_outputs(garbage-keytar)
+target_link_libraries(keytar pico_stdlib tinyusb_host tinyusb_board hardware_adc hardware_i2c)
+pico_add_extra_outputs(keytar)

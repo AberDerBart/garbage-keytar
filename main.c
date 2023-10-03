@@ -52,11 +52,12 @@ int main(void) {
     control_init();
     display_init();
 
+    debug("INIT");
+    draw_info();
+
     while (1) {
         // tinyusb host task
         tuh_task();
-
-        hid_task();
 
         // control_task();
 
@@ -116,7 +117,6 @@ void control_task() {
 //--------------------------------------------------------------------+
 // USB HID
 //--------------------------------------------------------------------+
-#if CFG_TUH_HID_KEYBOARD
 
 CFG_TUSB_MEM_SECTION static hid_keyboard_report_t usb_keyboard_report;
 
@@ -130,7 +130,10 @@ static inline bool find_key_in_report(hid_keyboard_report_t const *p_report, uin
     return false;
 }
 
-void clear_notes();
+void clear_notes() {
+    midi_write3(MIDI_CONTROL_CHANGE, MIDI_CONTROL_ALL_NOTES_OFF_B1, MIDI_CONTROL_ALL_NOTES_OFF_B2);
+}
+
 void handle_key(uint8_t key, bool pressed) {
 #ifdef DEBUG_KEYS
     char msg[16];
@@ -191,10 +194,6 @@ void handle_key(uint8_t key, bool pressed) {
     }
 }
 
-void clear_notes() {
-    midi_write3(MIDI_CONTROL_CHANGE, MIDI_CONTROL_ALL_NOTES_OFF_B1, MIDI_CONTROL_ALL_NOTES_OFF_B2);
-}
-
 static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report) {
     static hid_keyboard_report_t prev_report = {0, 0, {0}};  // previous report to check key released
 
@@ -217,32 +216,24 @@ static inline void process_kbd_report(hid_keyboard_report_t const *p_new_report)
     prev_report = *p_new_report;
 }
 
-void tuh_hid_keyboard_mounted_cb(uint8_t dev_addr) {
-    // application set-up
-    printf("A Keyboard device (address %d) is mounted\r\n", dev_addr);
-
-    tuh_hid_keyboard_get_report(dev_addr, &usb_keyboard_report);
+void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_report, uint16_t desc_len) {
+    /* Ask for a report only if this is a keyboard device */
+    uint8_t const itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
+    if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD) {
+        debug("KBD MOUNT");
+        draw_info();
+        tuh_hid_receive_report(dev_addr, instance);
+    } else {
+        debug("??? MOUNT");
+        draw_info();
+    }
 }
 
-void tuh_hid_keyboard_unmounted_cb(uint8_t dev_addr) {
-    // application tear-down
-    printf("A Keyboard device (address %d) is unmounted\r\n", dev_addr);
-}
-
-// invoked ISR context
-void tuh_hid_keyboard_isr(uint8_t dev_addr, xfer_result_t event) {
-    (void)dev_addr;
-    (void)event;
-}
-
-#endif
-
-void hid_task(void) {
-    uint8_t const addr = 1;
-    if (tuh_hid_keyboard_is_mounted(addr)) {
-        if (!tuh_hid_keyboard_is_busy(addr)) {
-            process_kbd_report(&usb_keyboard_report);
-            tuh_hid_keyboard_get_report(addr, &usb_keyboard_report);
-        }
+void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t const *report, uint16_t len) {
+    switch (tuh_hid_interface_protocol(dev_addr, instance)) {
+        case HID_ITF_PROTOCOL_KEYBOARD:
+            process_kbd_report((hid_keyboard_report_t const *)report);
+            tuh_hid_receive_report(dev_addr, instance);
+            break;
     }
 }

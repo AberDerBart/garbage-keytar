@@ -1,21 +1,41 @@
 cmake_minimum_required(VERSION 3.13)
 
+include (pico-sdk/pico_sdk_init.cmake)
+project(keytar)
 
-# initialize pico-sdk from submodule
-# note: this must happen before project()
-include(pico-sdk/pico_sdk_init.cmake)
-
-# set(PICO_SDK_PATH pico-sdk/)
-
-project(my_project)
-
-# initialize the Raspberry Pi Pico SDK
 pico_sdk_init()
 
-# rest of your project
-add_executable(keytar main.c midi.c pitchbend.c control.c display.c pico-ssd1306/ssd1306.c settings.c keyboard.c)
+add_subdirectory("./Pico-PIO-USB" pico_pio_usb)
 
-target_include_directories(keytar PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+set(target_name keytar)
+add_executable(${target_name})
+target_sources(${target_name} PRIVATE
+ main_device.c
+ main_host.c
+ usb_descriptors.c
+ display.c
+ pico-ssd1306/ssd1306.c
+ settings.c
+ keyboard.c
+ midi.c
+ # can use 'tinyusb_pico_pio_usb' library later when pico-sdk is updated
+ ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/dcd_pio_usb.c
+ ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/hcd_pio_usb.c
+ )
 
-target_link_libraries(keytar pico_stdlib tinyusb_host tinyusb_board hardware_adc hardware_i2c)
-pico_add_extra_outputs(keytar)
+
+
+
+ # print memory usage, enable all warnings
+target_link_options(${target_name} PRIVATE -Xlinker --print-memory-usage)
+target_compile_options(${target_name} PRIVATE ) #-Wall -Wextra
+
+# use tinyusb implementation
+target_compile_definitions(${target_name} PRIVATE PIO_USB_USE_TINYUSB)
+
+# needed so tinyusb can find tusb_config.h
+target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
+
+target_link_libraries(${target_name} PRIVATE pico_stdlib pico_pio_usb tinyusb_device tinyusb_host hardware_i2c)
+pico_add_extra_outputs(${target_name})
+

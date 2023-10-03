@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-void handle_key(uint8_t key, bool pressed);
+void keyboard_init();
+
+void keyboard_task();
 
 #endif

@@ -3,8 +3,8 @@
 
 void display_init();
 
-void draw_info();
+void display_task();
 
-void debug(char* str);
+void display_debug(char* str);
 
 #endif

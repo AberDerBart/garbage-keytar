@@ -22,8 +22,7 @@ void midi_write3(uint8_t cmd, uint8_t b1, uint8_t b2) {
 #ifdef DEBUG_MIDI
     char msg[16];
     sprintf(msg, "MIDI %02X %02X %02X", cmd, b1, b2);
-    debug(msg);
-    draw_info();
+    display_debug(msg);
 #endif
     uart_putc(UART_ID, cmd);
     uart_putc(UART_ID, b1);
@@ -34,8 +33,7 @@ void midi_write2(uint8_t cmd, uint8_t b1) {
 #ifdef DEBUG_MIDI
     char msg[16];
     sprintf(msg, "MIDI %02X %02X", cmd, b1);
-    debug(msg);
-    draw_info();
+    display_debug(msg);
 #endif
     uart_putc(UART_ID, cmd);
     uart_putc(UART_ID, b1);

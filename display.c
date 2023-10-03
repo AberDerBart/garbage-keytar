@@ -25,11 +25,9 @@ void display_init() {
 
     disp.external_vcc = false;
     ssd1306_init(&disp, 128, 64, 0x3c, i2c0);
-
-    draw_info();
 }
 
-void draw_info() {
+void display_task() {
     const uint8_t keyb_h = 32;
     const uint8_t key_w = 8;
 
@@ -99,7 +97,7 @@ void draw_info() {
 char debug_lines[4][17];
 uint8_t debug_offset = 0;
 
-void debug(char* str) {
+void display_debug(char* str) {
     uint8_t n = strncpy(debug_lines[debug_offset], str, 16);
     debug_lines[debug_offset][n] = 0;
     debug_offset = (debug_offset + 1) % 4;

@@ -41,3 +41,4 @@ target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_LIST_DIR})
 target_link_libraries(${target_name} PRIVATE pico_stdlib pico_pio_usb tinyusb_device tinyusb_host hardware_i2c pico_btstack_ble pico_btstack_cyw43 pico_cyw43_arch_none)
 pico_add_extra_outputs(${target_name})
 
+add_subdirectory(pico_w)

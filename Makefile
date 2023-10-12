@@ -1,4 +1,4 @@
-TARGET = build/keytar.elf
+TARGET = build/pico_w/picow_ble_temp_sensor.elf
 
 .PHONY: flash clean distclean
 

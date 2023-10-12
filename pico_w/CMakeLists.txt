@@ -15,8 +15,8 @@ target_include_directories(picow_ble_temp_sensor PRIVATE
     )
 pico_btstack_make_gatt_header(picow_ble_temp_sensor PRIVATE "${CMAKE_CURRENT_LIST_DIR}/temp_sensor.gatt")
 
-pico_enable_stdio_usb(picow_ble_temp_sensor 1)
-pico_enable_stdio_uart(picow_ble_temp_sensor 0)
+# pico_enable_stdio_usb(picow_ble_temp_sensor 0)
+# pico_enable_stdio_uart(picow_ble_temp_sensor 1)
 
 pico_add_extra_outputs(picow_ble_temp_sensor)
 

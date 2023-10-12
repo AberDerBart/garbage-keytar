@@ -34,6 +34,7 @@ void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint
     if (packet_type != HCI_EVENT_PACKET) return;
 
     uint8_t event_type = hci_event_packet_get_type(packet);
+    printf("event type %d size %d\n", event_type, size);
     switch(event_type){
         case BTSTACK_EVENT_STATE:
             if (btstack_event_state_get_state(packet) != HCI_STATE_WORKING) return;
@@ -55,9 +56,11 @@ void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint
 
             break;
         case HCI_EVENT_DISCONNECTION_COMPLETE:
+            printf("disconnected\n");
             le_notification_enabled = 0;
             break;
         case ATT_EVENT_CAN_SEND_NOW:
+            printf("can send now\n");
             att_server_notify(con_handle, ATT_CHARACTERISTIC_7772E5DB_3868_4112_A1A9_F2669D106BF3_01_VALUE_HANDLE, (uint8_t*)&current_temp, sizeof(current_temp));
             break;
         default:
@@ -67,6 +70,7 @@ void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint
 
 uint16_t att_read_callback(hci_con_handle_t connection_handle, uint16_t att_handle, uint16_t offset, uint8_t * buffer, uint16_t buffer_size) {
     UNUSED(connection_handle);
+    printf("att_read_callback\n");
 
     if (att_handle == ATT_CHARACTERISTIC_7772E5DB_3868_4112_A1A9_F2669D106BF3_01_VALUE_HANDLE){
         return att_read_callback_handle_blob((const uint8_t *)&current_temp, sizeof(current_temp), offset, buffer, buffer_size);
@@ -75,6 +79,7 @@ uint16_t att_read_callback(hci_con_handle_t connection_handle, uint16_t att_hand
 }
 
 int att_write_callback(hci_con_handle_t connection_handle, uint16_t att_handle, uint16_t transaction_mode, uint16_t offset, uint8_t *buffer, uint16_t buffer_size) {
+    printf("att_write_callback\n");
     UNUSED(transaction_mode);
     UNUSED(offset);
     UNUSED(buffer_size);

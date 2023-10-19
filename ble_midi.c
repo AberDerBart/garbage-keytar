@@ -87,6 +87,8 @@ void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint
 static btstack_packet_callback_registration_t sm_event_callback_registration;
 
 void ble_midi_init() {
+  printf("init ble midi\n");
+
   if (cyw43_arch_init()) {
     printf("failed to initialise cyw43_arch\n");
     return;

@@ -98,7 +98,7 @@ void ble_midi_init() {
   att_server_init(profile_data, NULL, NULL);
   // just works, legacy pairing
   sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);
-  sm_set_authentication_requirements(0);
+  sm_set_authentication_requirements(SM_AUTHREQ_SECURE_CONNECTION | SM_AUTHREQ_BONDING);
   // register for SM events
   sm_event_callback_registration.callback = &packet_handler;
   sm_add_event_handler(&sm_event_callback_registration);
@@ -108,3 +108,10 @@ void ble_midi_init() {
   hci_power_control(HCI_POWER_ON);
 }
 
+void ble_midi_send_msg(uint8_t n_bytes, uint8_t* midi_stream_bytes) {
+  if (con_handle == HCI_CON_HANDLE_INVALID) {
+    return;
+  }
+
+  midi_service_stream_write(con_handle, n_bytes, midi_stream_bytes);
+}

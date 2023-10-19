@@ -1,54 +1,44 @@
 #include "midi.h"
 
-#include <stdint.h>
-#include <stdio.h>
+#include "midi_uart.h"
+#include "midi_ble.h"
 
-#include "display.h"
-#include "hardware/gpio.h"
-#include "hardware/uart.h"
-#include "ble_midi.h"
+#define CMD_NOTE_ON 0x90
+#define CMD_NOTE_OFF 0x80
+#define CMD_CC 0xb0
+#define CMD_PC 0xc0
+#define CMD_PITCHBEND 0xe0
 
-#define UART_ID uart1
-#define BAUD_RATE 31250
-#define MIDI_OUT_PIN 6
-#define MIDI_IN_PIN 7
+#define CONTROL_ALL_NOTES_OFF_B1 123
+#define CONTROL_ALL_NOTES_OFF_B2 0
 
-void midi_init() {
-    printf("init uart midi\n");
-    uart_init(UART_ID, BAUD_RATE);
-    gpio_set_function(MIDI_OUT_PIN, GPIO_FUNC_UART);
-    gpio_set_function(MIDI_IN_PIN, GPIO_FUNC_UART);
+#define CONTROL_SUSTAIN 64
+#define CONTROL_SOSTENUTO 66
+
+#define CONTROL_VALUE_ON 64
+#define CONTROL_VALUE_OFF 0
+
+void send(uint8_t len, uint8_t* msg) {
+  midi_uart_write(len, msg);
+  midi_ble_write(len, msg);
 }
 
-void midi_write3(uint8_t cmd, uint8_t b1, uint8_t b2) {
-    //uart_putc(UART_ID, cmd);
-    //uart_putc(UART_ID, b1);
-    //uart_putc(UART_ID, b2);
-
-    uint8_t msg[3] = { cmd, b1, b2 };
-    ble_midi_send_msg(3, msg);
-
-  #ifdef DEBUG_MIDI
-    char display_msg[16];
-    sprintf(display_msg, "MIDI %02X %02X %02X", cmd, b1, b2);
-    display_debug(display_msg);
-  #endif
+void midi_note_on(uint8_t note) {
+  uint8_t msg[3] = { CMD_NOTE_ON, note, 127 };
+  send(3, msg);
 }
 
-void midi_write2(uint8_t cmd, uint8_t b1) {
-    //uart_putc(UART_ID, cmd);
-    //uart_putc(UART_ID, b1);
-
-    uint8_t msg[2] = { cmd, b1 };
-    ble_midi_send_msg(2, msg);
-
-  #ifdef DEBUG_MIDI
-    char display_msg[16];
-    sprintf(display_msg, "MIDI %02X %02X", cmd, b1);
-    display_debug(display_msg);
-  #endif
+void midi_note_off(uint8_t note) {
+  uint8_t msg[3] = { CMD_NOTE_OFF, note, 127 };
+  send(3, msg);
 }
 
-void clear_notes() {
-    midi_write3(MIDI_CONTROL_CHANGE, MIDI_CONTROL_ALL_NOTES_OFF_B1, MIDI_CONTROL_ALL_NOTES_OFF_B2);
+void midi_program_change(uint8_t program) {
+  uint8_t msg[2] = { CMD_PC, program };
+  send(2, msg);
+}
+
+void midi_clear_notes() {
+  uint8_t msg[3] = { CMD_CC, CONTROL_ALL_NOTES_OFF_B1, CONTROL_ALL_NOTES_OFF_B2 };
+  send(3, msg);
 }

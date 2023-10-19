@@ -53,7 +53,8 @@ target_sources(${target_name} PRIVATE
  settings.c
  keyboard.c
  midi.c
- ble_midi.c
+ midi_ble.c
+ midi_uart.c
  # can use 'tinyusb_pico_pio_usb' library later when pico-sdk is updated
  ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/dcd_pio_usb.c
  ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/hcd_pio_usb.c

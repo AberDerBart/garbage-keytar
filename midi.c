@@ -20,9 +20,9 @@ void midi_init() {
 }
 
 void midi_write3(uint8_t cmd, uint8_t b1, uint8_t b2) {
-    uart_putc(UART_ID, cmd);
-    uart_putc(UART_ID, b1);
-    uart_putc(UART_ID, b2);
+    //uart_putc(UART_ID, cmd);
+    //uart_putc(UART_ID, b1);
+    //uart_putc(UART_ID, b2);
 
     uint8_t msg[3] = { cmd, b1, b2 };
     ble_midi_send_msg(3, msg);
@@ -35,8 +35,8 @@ void midi_write3(uint8_t cmd, uint8_t b1, uint8_t b2) {
 }
 
 void midi_write2(uint8_t cmd, uint8_t b1) {
-    uart_putc(UART_ID, cmd);
-    uart_putc(UART_ID, b1);
+    //uart_putc(UART_ID, cmd);
+    //uart_putc(UART_ID, b1);
 
     uint8_t msg[2] = { cmd, b1 };
     ble_midi_send_msg(2, msg);

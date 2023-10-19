@@ -12,7 +12,7 @@
 void process_kbd_report(hid_keyboard_report_t const *p_new_report);
 
 void keyboard_init() {
-
+  printf("init keyboard\n");
 }
 
 void keyboard_task() {

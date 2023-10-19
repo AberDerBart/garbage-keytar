@@ -61,31 +61,37 @@ int main(void) {
 
   stdio_init_all();
 
-  // queue_init(&keyboard_event_queue, sizeof(keyboard_event_message), 1);
+  printf("---------\n");
+  printf("startup\n");
+  printf("---------\n");
 
-  // midi_init();
-  ble_midi_init();
+  queue_init(&keyboard_event_queue, sizeof(keyboard_event_message), 1);
+
+  midi_init();
 
   sleep_ms(10);
 
-  // multicore_reset_core1();
+  printf("init USB host\n");
+  multicore_reset_core1();
   // all USB task run in core1
-  // multicore_launch_core1(core1_main);
+  multicore_launch_core1(core1_main);
 
+  ble_midi_init();
   // init device stack on native usb (roothub port0)
-  // tud_init(0);
+  tud_init(0);
 
-  //display_init();
-  display_debug("INIT");
+  display_init();
+
+  printf("all set up\n");
 
   while (true) {
     //tud_task(); // tinyusb device task
     //tud_cdc_write_flush();
-    //keyboard_task();
+    keyboard_task();
     //display_task();
 
     //printf("sending midi message");
-    midi_write3(MIDI_NOTE_ON, 40, 127);
+    // midi_write3(MIDI_NOTE_ON, 40, 127);
   }
 
   return 0;

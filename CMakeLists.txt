@@ -85,5 +85,8 @@ target_link_libraries(${target_name} PRIVATE
   ring_buffer_lib
 )
 
+pico_enable_stdio_uart(${target_name} 1)
+
+
 pico_add_extra_outputs(${target_name})
 

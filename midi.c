@@ -8,12 +8,13 @@
 #include "hardware/uart.h"
 #include "ble_midi.h"
 
-#define UART_ID uart0
+#define UART_ID uart1
 #define BAUD_RATE 31250
-#define MIDI_OUT_PIN 0
-#define MIDI_IN_PIN 1
+#define MIDI_OUT_PIN 6
+#define MIDI_IN_PIN 7
 
 void midi_init() {
+    printf("init uart midi\n");
     uart_init(UART_ID, BAUD_RATE);
     gpio_set_function(MIDI_OUT_PIN, GPIO_FUNC_UART);
     gpio_set_function(MIDI_IN_PIN, GPIO_FUNC_UART);

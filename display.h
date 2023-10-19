@@ -5,6 +5,4 @@ void display_init();
 
 void display_task();
 
-void display_debug(char* str);
-
 #endif

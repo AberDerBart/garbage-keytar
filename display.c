@@ -11,12 +11,11 @@
 
 void draw_info();
 void draw_menu();
-void debug_render();
 
 ssd1306_t disp;
 uint8_t menu_index = 0xff;
 
-bool initialized = false;
+bool display_initialized = false;
 
 void display_init() {
     printf("init display\n");
@@ -27,16 +26,16 @@ void display_init() {
     gpio_pull_up(SCL_PIN);
 
     disp.external_vcc = false;
-    initialized = ssd1306_init(&disp, 128, 64, 0x3c, i2c0);
-    if(initialized) {
-      printf("display initialized\n");
+    display_initialized = ssd1306_init(&disp, 128, 64, 0x3c, i2c0);
+    if(display_initialized) {
+      printf("display display_initialized\n");
     }else{
       printf("failed to initialize display\n");
     }
 }
 
 void display_task() {
-    if(!initialized) {
+    if(!display_initialized) {
       return;
     }
     const uint8_t keyb_h = 32;
@@ -101,22 +100,6 @@ void display_task() {
     }
     ssd1306_draw_char(&disp, 115, 48, 2, (program % 10) + '0');
 
-    debug_render();
     ssd1306_show(&disp);
 }
 
-char debug_lines[4][17];
-uint8_t debug_offset = 0;
-
-void display_debug(char* str) {
-    uint8_t n = strncpy(debug_lines[debug_offset], str, 16);
-    debug_lines[debug_offset][n] = 0;
-    debug_offset = (debug_offset + 1) % 4;
-}
-
-void debug_render() {
-    for (uint8_t i = 0; i < 4; i++) {
-        uint8_t line_index = (i + debug_offset) % 4;
-        ssd1306_draw_string(&disp, 0, 8 * i, 1, debug_lines[line_index]);
-    }
-}

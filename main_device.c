@@ -45,6 +45,7 @@
 #include "display.h"
 #include "keyboard.h"
 #include "settings.h"
+#include "ble_midi.h"
 
 #include "main_host.h"
 
@@ -58,9 +59,12 @@ int main(void) {
   // default 125MHz is not appropreate. Sysclock should be multiple of 12MHz.
   set_sys_clock_khz(120000, true);
 
+  stdio_init_all();
+
   queue_init(&keyboard_event_queue, sizeof(keyboard_event_message), 1);
 
-  midi_init();
+  // midi_init();
+  ble_midi_init();
 
   sleep_ms(10);
 
@@ -71,7 +75,7 @@ int main(void) {
   // init device stack on native usb (roothub port0)
   tud_init(0);
 
-  display_init();
+  //display_init();
   display_debug("INIT");
 
   while (true) {

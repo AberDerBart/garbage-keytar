@@ -16,3 +16,6 @@
 [submodule "lib/pico-w-ble-midi-lib"]
 	path = lib/pico-w-ble-midi-lib
 	url = git@github.com:rppicomidi/pico-w-ble-midi-lib.git
+[submodule "lib/ring_buffer_lib"]
+	path = lib/ring_buffer_lib
+	url = git@github.com:rppicomidi/ring_buffer_lib.git

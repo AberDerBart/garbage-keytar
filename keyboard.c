@@ -4,7 +4,6 @@
 #include "bsp/board.h"
 
 #include "midi.h"
-#include "display.h"
 #include "settings.h"
 #include "midi_note_table.h"
 #include "main_host.h"
@@ -21,59 +20,55 @@ void keyboard_task() {
   while(queue_try_remove(&keyboard_event_queue, &msg)){
     switch(msg.type) {
     case KEYBOARD_CONNECTED:
-      display_debug("KBD CONN");
+      printf("keyboard connected\n");
       break;
     case KEYBOARD_DISCONNECTED:
-      display_debug("KBD DC");
+      printf("keyboard disconnected\n");
       break;
     case KEYBOARD_REPORT:
       process_kbd_report(&msg.report);
       break;
     default:
-      display_debug("UNKNOWN MSG");
+      printf("unknown keyboard message\n");
       break;
     }
   }
 }
 
 void handle_key(uint8_t key, bool pressed) {
-#ifdef DEBUG_KEYS
-    char msg[16];
-    if (pressed) {
-        sprintf(msg, "KEY %d %d PRE", key, keycode2midi[key]);
-    } else {
-        sprintf(msg, "KEY %d %d REL", key, keycode2midi[key]);
+    if(pressed) {
+      printf("key %d pressed", key);
+    }else{
+      printf("key %d released", key);
     }
-    display_debug(msg);
-#endif
 
     if (pressed) {
         if (key >= 58 && key <= 69) {
             program = key - 58;
-            midi_write2(MIDI_PROGRAM_CHANGE, program);
+            midi_program_change(program);
         }
         if (key == 75) {
             int16_t max_note = 67 + offset + 12;
             if (max_note <= 127) {
-                clear_notes();
+                midi_clear_notes();
                 offset += 12;
             }
         } else if (key == 78) {
             int16_t min_note = 35 + offset - 12;
             if (min_note > 0) {
-                clear_notes();
+                midi_clear_notes();
                 offset -= 12;
             }
         } else if (key == 81) {
             int16_t min_note = 35 + offset - 1;
             if (min_note > 0) {
-                clear_notes();
+                midi_clear_notes();
                 offset--;
             }
         } else if (key == 82) {
             int16_t max_note = 67 + offset + 1;
             if (max_note <= 127) {
-                clear_notes();
+                midi_clear_notes();
                 offset++;
             }
         }
@@ -82,9 +77,9 @@ void handle_key(uint8_t key, bool pressed) {
     uint8_t raw_note = key < 128 ? keycode2midi[key] : 0;
     if (raw_note != 0) {
         if (pressed) {
-            midi_write3(MIDI_NOTE_ON, raw_note + offset, 127);
+            midi_note_on(raw_note + offset);
         } else {
-            midi_write3(MIDI_NOTE_ON, raw_note + offset, 0);
+            midi_note_off(raw_note + offset);
         }
     }
 }

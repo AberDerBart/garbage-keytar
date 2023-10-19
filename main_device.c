@@ -45,7 +45,8 @@
 #include "display.h"
 #include "keyboard.h"
 #include "settings.h"
-#include "ble_midi.h"
+#include "midi_ble.h"
+#include "midi_uart.h"
 
 #include "main_host.h"
 
@@ -67,7 +68,7 @@ int main(void) {
 
   queue_init(&keyboard_event_queue, sizeof(keyboard_event_message), 1);
 
-  midi_init();
+  midi_uart_init();
 
   sleep_ms(10);
 
@@ -76,7 +77,7 @@ int main(void) {
   // all USB task run in core1
   multicore_launch_core1(core1_main);
 
-  ble_midi_init();
+  midi_ble_init();
   // init device stack on native usb (roothub port0)
   tud_init(0);
 

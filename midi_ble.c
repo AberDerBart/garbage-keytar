@@ -1,4 +1,4 @@
-#include "ble_midi.h"
+#include "midi_ble.h"
 #include "midi_service_stream_handler.h"
 #include "btstack.h"
 #include "pico/cyw43_arch.h"
@@ -86,7 +86,7 @@ void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint
 
 static btstack_packet_callback_registration_t sm_event_callback_registration;
 
-void ble_midi_init() {
+void midi_ble_init() {
   printf("init ble midi\n");
 
   if (cyw43_arch_init()) {
@@ -110,7 +110,7 @@ void ble_midi_init() {
   hci_power_control(HCI_POWER_ON);
 }
 
-void ble_midi_send_msg(uint8_t n_bytes, uint8_t* midi_stream_bytes) {
+void midi_ble_write(uint8_t n_bytes, uint8_t* midi_stream_bytes) {
   if (con_handle == HCI_CON_HANDLE_INVALID) {
     return;
   }

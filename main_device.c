@@ -88,10 +88,7 @@ int main(void) {
     //tud_task(); // tinyusb device task
     //tud_cdc_write_flush();
     keyboard_task();
-    //display_task();
-
-    //printf("sending midi message");
-    // midi_write3(MIDI_NOTE_ON, 40, 127);
+    display_task();
   }
 
   return 0;

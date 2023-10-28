@@ -13,6 +13,7 @@
           pkgs.cmake
           pkgs.gcc-arm-embedded
           pkgs.openocd
+          pkgs.minicom
         ];
         
         PICO_SDK_PATH = "./pico-sdk";

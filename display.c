@@ -16,7 +16,10 @@ void debug_render();
 ssd1306_t disp;
 uint8_t menu_index = 0xff;
 
+bool initialized = false;
+
 void display_init() {
+    printf("init display\n");
     i2c_init(i2c0, 400000);
     gpio_set_function(SDA_PIN, GPIO_FUNC_I2C);
     gpio_set_function(SCL_PIN, GPIO_FUNC_I2C);
@@ -24,10 +27,18 @@ void display_init() {
     gpio_pull_up(SCL_PIN);
 
     disp.external_vcc = false;
-    ssd1306_init(&disp, 128, 64, 0x3c, i2c0);
+    initialized = ssd1306_init(&disp, 128, 64, 0x3c, i2c0);
+    if(initialized) {
+      printf("display initialized\n");
+    }else{
+      printf("failed to initialize display\n");
+    }
 }
 
 void display_task() {
+    if(!initialized) {
+      return;
+    }
     const uint8_t keyb_h = 32;
     const uint8_t key_w = 8;
 

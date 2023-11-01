@@ -12,13 +12,25 @@ void process_kbd_report(hid_keyboard_report_t const *p_new_report);
 
 void keyboard_init() {
   printf("init keyboard\n");
+  mutex_init(&keyboard_event_mutex);
 }
 
 void keyboard_task() {
-  keyboard_event_message msg;
+  keyboard_event_message_t message;
 
-  while(queue_try_remove(&keyboard_event_queue, &msg)){
-    switch(msg.type) {
+  mutex_enter_blocking(&keyboard_event_mutex);
+
+  if(keyboard_event_message.read) {
+    mutex_exit(&keyboard_event_mutex);
+    return;
+  }
+
+  memcpy(&message, &keyboard_event_message, sizeof(keyboard_event_message_t));
+  keyboard_event_message.read = true;
+
+  mutex_exit(&keyboard_event_mutex);
+
+  switch(message.type) {
     case KEYBOARD_CONNECTED:
       printf("keyboard connected\n");
       break;
@@ -26,20 +38,19 @@ void keyboard_task() {
       printf("keyboard disconnected\n");
       break;
     case KEYBOARD_REPORT:
-      process_kbd_report(&msg.report);
+      process_kbd_report(&message.report);
       break;
     default:
       printf("unknown keyboard message\n");
       break;
-    }
   }
 }
 
 void handle_key(uint8_t key, bool pressed) {
     if(pressed) {
-      printf("key %d pressed", key);
+      printf("key %d pressed\n", key);
     }else{
-      printf("key %d released", key);
+      printf("key %d released\n", key);
     }
 
     if (pressed) {

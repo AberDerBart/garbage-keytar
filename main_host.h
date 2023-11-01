@@ -4,7 +4,6 @@
 #include "tusb.h"
 #include "pico/util/queue.h"
 
-extern queue_t keyboard_event_queue;
 
 typedef enum {
   KEYBOARD_CONNECTED = 0,
@@ -15,6 +14,11 @@ typedef enum {
 typedef struct {
   keyboard_event_message_type type;
   hid_keyboard_report_t report;
-} keyboard_event_message;
+  bool read;
+} keyboard_event_message_t;
+
+extern keyboard_event_message_t keyboard_event_message;
+
+extern mutex_t keyboard_event_mutex;
 
 #endif

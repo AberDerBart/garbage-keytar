@@ -38,30 +38,38 @@
 #include "pico/stdlib.h"
 #include "pico/multicore.h"
 #include "pico/bootrom.h"
+#include "pico/platform.h"
 
 #include "pio_usb.h"
 #include "tusb.h"
 #include "usb_descriptors.h"
 
-queue_t keyboard_event_queue;
+keyboard_event_message_t keyboard_event_message;
+
+mutex_t keyboard_event_mutex;
+
+void set_keyboard_event_message(keyboard_event_message_type type, hid_keyboard_report_t const * report) {
+  mutex_enter_blocking(&keyboard_event_mutex);
+
+  keyboard_event_message.read = false;
+  keyboard_event_message.type = type;
+  if(report){
+    memcpy(&(keyboard_event_message.report), report, sizeof(hid_keyboard_report_t));
+  }
+
+  mutex_exit(&keyboard_event_mutex);
+}
 
 void send_connected() {
-  keyboard_event_message msg;
-  msg.type = KEYBOARD_CONNECTED;
-  queue_add_blocking(&keyboard_event_queue, &msg);
+  set_keyboard_event_message(KEYBOARD_CONNECTED, NULL);
 }
 
 void send_disconnected() {
-  keyboard_event_message msg;
-  msg.type = KEYBOARD_DISCONNECTED;
-  queue_add_blocking(&keyboard_event_queue, &msg);
+  set_keyboard_event_message(KEYBOARD_DISCONNECTED, NULL);
 }
 
 void send_report(hid_keyboard_report_t const * report) {
-  keyboard_event_message msg;
-  msg.type = KEYBOARD_REPORT;
-  memcpy(&msg.report, report, sizeof(hid_keyboard_report_t));
-  queue_add_blocking(&keyboard_event_queue, &msg);
+  set_keyboard_event_message(KEYBOARD_REPORT, report);
 }
 
 //--------------------------------------------------------------------+
@@ -151,7 +159,8 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t cons
 
   // continue to request to receive report
   if ( !tuh_hid_receive_report(dev_addr, instance) ) {
-    tud_cdc_write_str("Error: cannot request report\r\n");
+    send_disconnected();
+    //tud_cdc_write_str("Error: cannot request report\r\n");
   }
 }
 

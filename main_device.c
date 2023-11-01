@@ -66,11 +66,10 @@ int main(void) {
   printf("startup\n");
   printf("---------\n");
 
-  queue_init(&keyboard_event_queue, sizeof(keyboard_event_message), 1);
-
   midi_uart_init();
 
   sleep_ms(10);
+  keyboard_init();
 
   printf("init USB host\n");
   multicore_reset_core1();
@@ -79,7 +78,7 @@ int main(void) {
 
   midi_ble_init();
   // init device stack on native usb (roothub port0)
-  tud_init(0);
+  //tud_init(0);
 
   display_init();
 
@@ -110,11 +109,4 @@ void tud_cdc_rx_cb(uint8_t itf)
   // TODO control LED on keyboard of host stack
   (void) count;
 }
-
-
-
-
-
-
-
 

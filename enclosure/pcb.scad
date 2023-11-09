@@ -28,7 +28,10 @@ module connector_holes_right(spacing=0, top_open=false) {
     // MIDI
     translate([70,90-38.9425, 19.5/2]) rotate([0,90,0])cylinder(d=15, h=10, center=true);
     // Pedal
-    translate([70,28.9596-7.23,6.5]) rotate([0,90,0]) cylinder(d=11.2+2*spacing, h=10, center=true);
+    translate([70,28.9596-7.23,6.5]) rotate([0,90,0]) hull(){
+      translate([2,0,0])cylinder(d=11.2+2*spacing, h=10, center=true);
+      translate([-2,0,0])cylinder(d=11.2+2*spacing, h=10, center=true);
+    }
   }
 }
 

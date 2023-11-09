@@ -10,8 +10,8 @@ Z_PCB=4+W_WALL;
 H_CASE = h_pcb()+Z_PCB;
 H_BORDER=2;
 
-Y_MIN=-83;
-Y_MAX=83;
+Y_MIN=-78.5;
+Y_MAX=78.5;
 X_MIN=-73;
 X_MAX=73;
 R_CORNER=20;
@@ -64,7 +64,13 @@ module case_gaps() {
         translate([3,0,0])square([5,10],center=true);
       }
     }
-    keyboard_anchor()translate([0,-8,0])rotate([0,90,0])linear_extrude(30,center=true)cable_channel_cross();
+    keyboard_anchor()
+      translate([0,-8,0])
+      rotate([0,90,0])
+    {
+      linear_extrude(30,center=true)cable_channel_cross();
+      translate([0,0,10])rotate([0,45,0])linear_extrude(20)cable_channel_cross();
+    }
 
     // space for top
     case_top(false);

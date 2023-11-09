@@ -1,7 +1,7 @@
 R_CORNER = 16.25/2;
 
-W_TOP = 138.6;
-W_BOTTOM = 133.8;
+W_BOTTOM = 138.6;
+W_TOP = 136;
 H_KEYBOARD=19.3;
 
 function h_keyboard() = H_KEYBOARD;
@@ -13,25 +13,25 @@ module keyboard(anchor="center", open_top=false){
       linear_extrude(0.2)
         offset(R_CORNER)
         offset(-R_CORNER)
-        square([100,138.6],center=true);
+        square([100,W_BOTTOM],center=true);
       translate([0,0,H_KEYBOARD-0.2])
         linear_extrude(0.2)
         offset(R_CORNER)
         offset(-R_CORNER)
-        square([100-5.2,133.8],center=true);
+        square([100-5.2,W_TOP],center=true);
     }
     if(open_top)
       linear_extrude(2*H_KEYBOARD)
       offset(R_CORNER)
       offset(-R_CORNER)
-      square([100-5.2,133.8], center=true);
+      square([100-5.2,W_TOP], center=true);
   }
 }
 
-function keyboard_top_max_x() = (W_TOP-W_BOTTOM)/2;
+function keyboard_top_max_x() = (W_BOTTOM-W_TOP)/2;
 
 module keyboard_edge_top_left(){
-  translate([(W_TOP-W_BOTTOM)/2,0,H_KEYBOARD]) children();
+  translate([keyboard_top_max_x(),0,H_KEYBOARD]) children();
 }
 
 function keyboard_overlap_top() = 5;

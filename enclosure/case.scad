@@ -58,7 +58,7 @@ module case_gaps() {
 
     // space for cable
     difference(){
-      translate([25+W_WALL,-10,W_WALL]) linear_extrude(H_CASE) square([50,80],center=true);
+      translate([25+W_WALL,-13,W_WALL]) linear_extrude(H_CASE) square([50,100],center=true);
       translate([50+W_WALL-5,0,0])linear_extrude(H_CASE+1){
         circle(d=10);
         translate([3,0,0])square([5,10],center=true);

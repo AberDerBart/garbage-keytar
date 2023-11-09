@@ -76,12 +76,22 @@ module case_gaps() {
     case_top(false);
 
     // space for battery
-    translate([-15,42,H_CASE+1])scale([1,1,-1])cube([62,35,11]);
-    translate([-15,43,H_CASE+1])scale([1,-1,-1])cube([3,10,11]);
+    translate([-35,42,H_CASE+1])scale([1,1,-1])cube([62,35,11]);
+    translate([-35,43,H_CASE+1])scale([1,-1,-1])cube([3,10,11]);
 
     // screw insets
     for(pos=SCREW_POSITIONS){
-      #translate([0,0,H_CASE])translate(pos) insert_m3();
+      translate([0,0,H_CASE])translate(pos) insert_m3();
+    }
+
+    // support strips
+    for(y = [Y_MIN+3/2+W_WALL, Y_MAX-3/2-W_WALL]){
+      translate([X_MAX-40,y,H_CASE/2]){
+        rotate([0,90,0])linear_extrude(300)square([15.2,2.2],center=true);
+        for(x=[8,20]){
+          translate([x,0,0])rotate([90,0,0])cylinder(d=3.2,h=10,center=true);
+        }
+      }
     }
 }
 

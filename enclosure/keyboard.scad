@@ -7,7 +7,7 @@ H_KEYBOARD=19.3;
 function h_keyboard() = H_KEYBOARD;
 
 module keyboard(anchor="center", open_top=false){
-  offset=anchor=="left" ? [50,0]: anchor=="right" ? [-50:0]: [0,0];
+  offset=(anchor=="left" ? [50,0]: (anchor=="right" ? [-50,0]: [0,0]));
   translate(offset){
     hull(){
       linear_extrude(0.2)
@@ -30,8 +30,14 @@ module keyboard(anchor="center", open_top=false){
 
 function keyboard_top_max_x() = (W_BOTTOM-W_TOP)/2;
 
+function keyboard_top_min_x() = -(W_BOTTOM-W_TOP)/2;
+
 module keyboard_edge_top_left(){
   translate([keyboard_top_max_x(),0,H_KEYBOARD]) children();
+}
+
+module keyboard_edge_top_right(){
+  translate([keyboard_top_min_x(),0,H_KEYBOARD]) children();
 }
 
 function keyboard_overlap_top() = 5;

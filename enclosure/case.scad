@@ -54,8 +54,10 @@ module case_footprint_right(){
   ]);
 }
 
+PCB_POSITION = [0.2,39,4+W_WALL];
+
 module pcb_anchor() {
-  translate([0,39,4+W_WALL])rotate([0,0,180])children();
+  translate(PCB_POSITION)rotate([0,0,180])children();
 }
 
 function keyboard_anchor(x=55) = [x,0,H_CASE-h_keyboard()];
@@ -75,7 +77,7 @@ module support_strip_gaps(extend=false) {
       translate([-40,y,H_CASE/2]){
         rotate([0,90,0])linear_extrude(300,center=extend)square([15.2,2.2],center=true);
         for(x=[8,20]){
-          translate([x,0,0])rotate([90,0,0])cylinder(d=3.2,h=10,center=true);
+          translate([x,0,0])rotate([90,0,0])cylinder(d=2.8,h=10,center=true);
         }
       }
     }
@@ -84,8 +86,11 @@ module support_strip_gaps(extend=false) {
 module case_gaps() {
     // space for PCB
     pcb_anchor() difference(){
-      pcb_hole(0.1, top_open=true);
-      pcb_feet();
+      union(){
+        pcb_hole(.2, top_open=true);
+        translate([10,0,0])scale([-1,1,1])linear_extrude(H_CASE+1)offset(.2)square([30,90]);
+      }
+      pcb_feet(1);
     }
     pcb_anchor() at_pcb_screw_positions() insert_m3();
     
@@ -96,7 +101,7 @@ module case_gaps() {
 
     // space for cable
     difference(){
-      translate([25+W_WALL,-13,W_WALL]) linear_extrude(H_CASE) square([50,100],center=true);
+      pcb_anchor()scale([-1,1,1]) linear_extrude(H_CASE) offset(0.2)square([50,90]);
       translate([50+W_WALL-5,0,0])linear_extrude(H_CASE+1){
         circle(d=10);
         translate([3,0,0])square([5,10],center=true);
@@ -150,6 +155,19 @@ module case_bottom() {
     linear_extrude(H_CASE+H_BORDER) case_footprint();
     case_gaps();
   }
+
+  module ledge_profile(){
+    polygon([
+      [X_MIN+W_WALL-0.01,H_CASE],
+      [X_MIN+W_WALL+2,H_CASE],
+      [X_MIN+W_WALL+2,H_CASE-1],
+      [X_MIN+W_WALL-0.01,H_CASE-3],
+    ]);
+
+  }
+
+  translate([0,PCB_POSITION.y+1,0])rotate([90,0,0])linear_extrude(90-38.9425-21.1/2)ledge_profile();
+  translate([0,PCB_POSITION.y-90+38.9425-21.1/2-1,0])rotate([90,0,0])linear_extrude(38.9425-21.1/2)ledge_profile();
 }
 
 module case_bottom_right() {
@@ -159,12 +177,12 @@ module case_bottom_right() {
   }
 }
 
-module case_top(with_holes=true) {
+module case_top(positive=true) {
   difference(){
     translate([0,0,H_CASE]) linear_extrude(W_WALL) difference(){
-      offset(-W_WALL)case_footprint();
-      translate([keyboard_anchor().x+keyboard_overlap_top()+keyboard_top_max_x(),Y_MIN-1])square([10,Y_MAX-Y_MIN+2]);
-      if(with_holes)
+      offset(positive ? -W_WALL-0.1: -W_WALL)case_footprint();
+      offset(positive? 0.1:0)translate([keyboard_anchor().x+keyboard_overlap_top()+keyboard_top_max_x(),Y_MIN-1])square([10,Y_MAX-Y_MIN+2]);
+      if(positive)
         for(pos=SCREW_POSITIONS)
       {
         translate(pos)circle(d=3.2);
@@ -173,13 +191,13 @@ module case_top(with_holes=true) {
   }
 }
 
-module case_top_right(with_holes=true) {
+module case_top_right(positive=true) {
   translate([0,0,H_CASE]) linear_extrude(W_WALL) difference(){
-    offset(-W_WALL)case_footprint_right();
+      offset(positive ? -W_WALL-0.1: -W_WALL)case_footprint_right();
     
-    translate([keyboard_anchor_right().x-keyboard_overlap_top()+keyboard_top_min_x(),Y_MIN-1])scale([-1,1])square([10,Y_MAX-Y_MIN+2]);
+    offset(positive? 0.1:0)translate([keyboard_anchor_right().x-keyboard_overlap_top()+keyboard_top_min_x(),Y_MIN-1])scale([-1,1])square([10,Y_MAX-Y_MIN+2]);
 
-    if(with_holes)
+    if(positive)
       for(pos=SCREW_POSITIONS_RIGHT)
     {
       translate(pos)circle(d=3.2);
@@ -192,7 +210,7 @@ case_bottom();
 
 translate([100,0,0]){
   case_bottom_right();
-  //case_top_right();
+  case_top_right();
 }
 
 //#color("#dd2222")case_top();

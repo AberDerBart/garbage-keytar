@@ -24,14 +24,17 @@ module connector_holes_left(spacing=0, top_open=false) {
 module connector_holes_right(spacing=0, top_open=false) {
   translate([0,0,1.6]){
     // USB-B
-    translate([70,74.2985,5.3]) cube([10, 12.8, 10.6], center=true);
-    // MIDI
-    translate([70,90-38.9425, 19.5/2]) rotate([0,90,0])cylinder(d=15, h=10, center=true);
-    // Pedal
-    translate([70,28.9596-7.23,6.5]) rotate([0,90,0]) hull(){
-      translate([2,0,0])cylinder(d=11.2+2*spacing, h=10, center=true);
-      translate([-2,0,0])cylinder(d=11.2+2*spacing, h=10, center=true);
+    translate([70,74.2985,5.4]) rotate([0,90,0]) {
+      linear_extrude(10) square([10,11], center=true);
+      translate([0,0,0.5])linear_extrude(10, scale=[(10+2*10)/10.6,(11+2*10)/12.8]) square([10,11], center=true);
     }
+    // MIDI
+    translate([70,90-38.9425, 19.5/2]){
+      rotate([0,90,0])cylinder(d=15, h=10, center=true);
+      rotate([0,90,0])translate([0,0,0.5])cylinder(r1=7.5, r2=11.5, h=4);
+    }
+    // Pedal
+    translate([70,28.9596-7.23,6.5]) rotate([0,90,0]) cylinder(d=11.2+2*spacing, h=10, center=true);
   }
 }
 

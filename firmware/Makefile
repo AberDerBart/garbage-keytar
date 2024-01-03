@@ -1,6 +1,6 @@
 TARGET = build/keytar.elf
 
-.PHONY: flash clean distclean
+.PHONY: flash clean distclean debug
 
 $TARGET: *.c *.h CMakeLists.txt
 	mkdir -p build
@@ -16,3 +16,6 @@ clean:
 
 distclean:
 	rm -rf build
+
+debug:
+	minicom -b 115200 -o -D /dev/ttyACM0

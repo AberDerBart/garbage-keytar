@@ -207,10 +207,11 @@ module case_top_right(positive=true) {
 
 $fn=120;
 case_bottom();
+translate([0,0,10]) case_top();
 
 translate([100,0,0]){
   case_bottom_right();
-  case_top_right();
+  translate([0,0,10])case_top_right();
 }
 
 //#color("#dd2222")case_top();

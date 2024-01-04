@@ -55,6 +55,7 @@ target_sources(${target_name} PRIVATE
  midi.c
  midi_ble.c
  midi_uart.c
+ sync.c
  # can use 'tinyusb_pico_pio_usb' library later when pico-sdk is updated
  ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/dcd_pio_usb.c
  ${PICO_TINYUSB_PATH}/src/portable/raspberrypi/pio_usb/hcd_pio_usb.c
@@ -73,9 +74,13 @@ target_compile_definitions(${target_name} PRIVATE PIO_USB_USE_TINYUSB)
 # needed so tinyusb can find tusb_config.h
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_LIST_DIR} )
 
+add_compile_definitions(RING_BUFFER_MULTICORE_SUPPORT=1 PICO_TIME_DEFAULT_ALARM_POOL_DISABLED)
+
 target_link_libraries(${target_name} PRIVATE 
   pico_stdlib
   pico_pio_usb
+  pico_sync
+  pico_flash
   tinyusb_device
   tinyusb_host
   hardware_i2c

@@ -7,28 +7,53 @@
 #include "settings.h"
 #include "midi_note_table.h"
 #include "main_host.h"
+#include "sync.h"
+#include "pico/flash.h"
+#include "pico/multicore.h"
+
+// core1: handle host events
+extern void core1_main();
 
 void process_kbd_report(hid_keyboard_report_t const *p_new_report);
 
 void keyboard_init() {
   printf("init keyboard\n");
-  mutex_init(&keyboard_event_mutex);
+  keyboard_event_message.read = true;
+  keyboard_event_message.type = UNKNOWN;
+
+  printf("init USB host\n");
+  flash_safe_execute_core_init(); 	
+  multicore_reset_core1();
+  multicore_launch_core1(core1_main);
+
+  // wait for message
+  bool usb_ready = false;
+  while(!usb_ready) {
+    enter_critical();
+    if (!keyboard_event_message.read && keyboard_event_message.type == USB_READY) {
+      usb_ready = true;
+      keyboard_event_message.read = true;
+    }
+    exit_critical();
+    sleep_ms(10);
+  }
+  printf("USB host ready\n");
 }
 
 void keyboard_task() {
   keyboard_event_message_t message;
 
-  mutex_enter_blocking(&keyboard_event_mutex);
+  enter_critical();
 
   if(keyboard_event_message.read) {
-    mutex_exit(&keyboard_event_mutex);
+    exit_critical();
     return;
   }
 
   memcpy(&message, &keyboard_event_message, sizeof(keyboard_event_message_t));
   keyboard_event_message.read = true;
 
-  mutex_exit(&keyboard_event_mutex);
+  exit_critical();
 
   switch(message.type) {
     case KEYBOARD_CONNECTED:

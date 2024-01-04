@@ -34,8 +34,8 @@
 #include <string.h>
 
 #include "pico/stdlib.h"
-#include "pico/multicore.h"
 #include "pico/bootrom.h"
+#include "pico/cyw43_arch.h"
 
 #include "pio_usb.h"
 #include "tusb.h"
@@ -47,18 +47,22 @@
 #include "settings.h"
 #include "midi_ble.h"
 #include "midi_uart.h"
+#include "sync.h"
 
 #include "main_host.h"
 
 /*------------- MAIN -------------*/
 
-// core1: handle host events
-extern void core1_main();
+uint32_t ms_since_boot() {
+  return to_ms_since_boot(get_absolute_time());
+}
 
 // core0: handle device events
 int main(void) {
   // default 125MHz is not appropreate. Sysclock should be multiple of 12MHz.
   set_sys_clock_khz(120000, true);
+
+  sync_init();
 
   stdio_init_all();
 
@@ -67,28 +71,35 @@ int main(void) {
   printf("---------\n");
 
   midi_uart_init();
+  midi_ble_init();
 
   sleep_ms(10);
   keyboard_init();
 
-  printf("init USB host\n");
-  multicore_reset_core1();
-  // all USB task run in core1
-  multicore_launch_core1(core1_main);
+  sleep_ms(10);
 
-  midi_ble_init();
   // init device stack on native usb (roothub port0)
   //tud_init(0);
 
-  display_init();
+  //display_init();
 
   printf("all set up\n");
 
+  uint32_t last_msg = ms_since_boot();
+  bool led_state = false;
+
   while (true) {
+    if (ms_since_boot() > last_msg + 1000) {
+      midi_note_on(10);
+      last_msg += 1000;
+      led_state = !led_state;
+      cyw43_arch_gpio_put(CYW43_WL_GPIO_LED_PIN, led_state);
+    }
     //tud_task(); // tinyusb device task
     //tud_cdc_write_flush();
     keyboard_task();
-    display_task();
+    //display_task();
+    sleep_ms(1);
   }
 
   return 0;

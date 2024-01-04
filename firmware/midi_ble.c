@@ -3,6 +3,7 @@
 #include "btstack.h"
 #include "pico/cyw43_arch.h"
 #include "pico/btstack_cyw43.h"
+#include "sync.h"
 
 #include "midi-ble.h"
 
@@ -115,5 +116,7 @@ void midi_ble_write(uint8_t n_bytes, uint8_t* midi_stream_bytes) {
     return;
   }
 
+  //enter_critical();
   midi_service_stream_write(con_handle, n_bytes, midi_stream_bytes);
+  //exit_critical();
 }

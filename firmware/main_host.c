@@ -39,17 +39,19 @@
 #include "pico/multicore.h"
 #include "pico/bootrom.h"
 #include "pico/platform.h"
+#include "pico/flash.h"
 
 #include "pio_usb.h"
 #include "tusb.h"
 #include "usb_descriptors.h"
+#include "sync.h"
 
 keyboard_event_message_t keyboard_event_message;
 
 mutex_t keyboard_event_mutex;
 
 void set_keyboard_event_message(keyboard_event_message_type type, hid_keyboard_report_t const * report) {
-  mutex_enter_blocking(&keyboard_event_mutex);
+  enter_critical();
 
   keyboard_event_message.read = false;
   keyboard_event_message.type = type;
@@ -57,7 +59,11 @@ void set_keyboard_event_message(keyboard_event_message_type type, hid_keyboard_r
     memcpy(&(keyboard_event_message.report), report, sizeof(hid_keyboard_report_t));
   }
 
-  mutex_exit(&keyboard_event_mutex);
+  exit_critical();
+}
+
+void send_usb_ready() {
+  set_keyboard_event_message(USB_READY, NULL);
 }
 
 void send_connected() {
@@ -81,28 +87,34 @@ void send_report(hid_keyboard_report_t const * report) {
 /*------------- MAIN -------------*/
 
 #define PIO_USB_DP_PIN 2
-// NOTE: The D- pin is hardwired to the configured D+ pin + 1
-
-#define PIO_USB_CONFIG \
-  { \
-    PIO_USB_DP_PIN, PIO_USB_TX_DEFAULT, PIO_SM_USB_TX_DEFAULT, \
-        PIO_USB_DMA_TX_DEFAULT, PIO_USB_RX_DEFAULT, PIO_SM_USB_RX_DEFAULT, \
-        PIO_SM_USB_EOP_DEFAULT, NULL, PIO_USB_DEBUG_PIN_NONE, \
-        PIO_USB_DEBUG_PIN_NONE, .skip_alarm_pool = false \
-  }
+// NOTE: The D- pin is hardcoded to the configured D+ pin + 1
 
 // core1: handle host events
 void core1_main() {
+  flash_safe_execute_core_init(); 	
   sleep_ms(10);
 
   // Use tuh_configure() to pass pio configuration to the host stack
-  // Note: tuh_configure() must be called before
-  pio_usb_configuration_t pio_cfg = PIO_USB_CONFIG;
+  pio_usb_configuration_t pio_cfg = PIO_USB_DEFAULT_CONFIG;
+
+  pio_cfg.pin_dp = PIO_USB_DP_PIN; // see above
+  pio_cfg.pio_tx_num = 1; // 0
+  pio_cfg.sm_tx = 3; // 0
+  pio_cfg.tx_ch = 3; // 0
+  pio_cfg.pio_rx_num = 0; // PIO_USB_RX_DEFAULT; // 1
+  pio_cfg.sm_rx = 2; // 0
+  pio_cfg.sm_eop = 3; // 1
+  pio_cfg.alarm_pool = NULL;
+  pio_cfg.debug_pin_rx = PIO_USB_DEBUG_PIN_NONE; // -1
+  pio_cfg.debug_pin_eop = PIO_USB_DEBUG_PIN_NONE; // -1
+
   tuh_configure(1, TUH_CFGID_RPI_PIO_USB_CONFIGURATION, &pio_cfg);
 
   // To run USB SOF interrupt in core1, init host stack for pio_usb (roothub
   // port1) on core1
   tuh_init(1);
+
+  send_usb_ready();
 
   while (true) {
     tuh_task(); // tinyusb host task

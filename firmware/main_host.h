@@ -6,9 +6,11 @@
 
 
 typedef enum {
-  KEYBOARD_CONNECTED = 0,
-  KEYBOARD_DISCONNECTED = 1,
-  KEYBOARD_REPORT = 2,
+  UNKNOWN = 0,
+  USB_READY = 1,
+  KEYBOARD_CONNECTED = 2,
+  KEYBOARD_DISCONNECTED = 3,
+  KEYBOARD_REPORT = 4,
 } keyboard_event_message_type;
 
 typedef struct {

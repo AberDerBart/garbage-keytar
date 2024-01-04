@@ -5,7 +5,7 @@ TARGET = build/keytar.elf
 $TARGET: *.c *.h CMakeLists.txt
 	mkdir -p build
 	cd build
-	cmake -B build
+	cmake -B build -DCMAKE_BUILD_TYPE=Debug
 	make -C build
 
 flash: ${TARGET}
@@ -17,5 +17,11 @@ clean:
 distclean:
 	rm -rf build
 
-debug:
+debug-openocd: ${TARGET}
+	sudo openocd -f interface/cmsis-dap.cfg -f target/rp2040.cfg -c "adapter speed 5000"
+
+debug-gdb: ${TARGET}
+	arm-none-eabi-gdb build/keytar.elf -x ./gdbinit
+
+serial:
 	minicom -b 115200 -o -D /dev/ttyACM0

@@ -10,9 +10,6 @@
 [submodule "pico-sdk"]
 	path = firmware/pico-sdk
 	url = git@github.com:raspberrypi/pico-sdk.git
-[submodule "Pico-PIO-USB"]
-	path = firmware/Pico-PIO-USB
-	url = git@github.com:sekigon-gonnoc/Pico-PIO-USB.git
 [submodule "lib/pico-w-ble-midi-lib"]
 	path = firmware/lib/pico-w-ble-midi-lib
 	url = git@github.com:rppicomidi/pico-w-ble-midi-lib.git

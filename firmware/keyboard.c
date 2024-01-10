@@ -7,7 +7,6 @@
 #include "settings.h"
 #include "midi_note_table.h"
 #include "main_host.h"
-#include "sync.h"
 #include "pico/flash.h"
 #include "pico/multicore.h"
 
@@ -17,58 +16,12 @@ extern void core1_main();
 void process_kbd_report(hid_keyboard_report_t const *p_new_report);
 
 void keyboard_init() {
-  printf("init keyboard\n");
-  keyboard_event_message.read = true;
-  keyboard_event_message.type = UNKNOWN;
-
-  printf("init USB host\n");
-  flash_safe_execute_core_init(); 	
-  multicore_reset_core1();
-  multicore_launch_core1(core1_main);
-
-  // wait for message
-  bool usb_ready = false;
-  while(!usb_ready) {
-    enter_critical();
-    if (!keyboard_event_message.read && keyboard_event_message.type == USB_READY) {
-      usb_ready = true;
-      keyboard_event_message.read = true;
-    }
-    exit_critical();
-    sleep_ms(10);
-  }
-  printf("USB host ready\n");
+  printf("init keyboard");
+  tusb_init();
 }
 
 void keyboard_task() {
-  keyboard_event_message_t message;
-
-  enter_critical();
-
-  if(keyboard_event_message.read) {
-    exit_critical();
-    return;
-  }
-
-  memcpy(&message, &keyboard_event_message, sizeof(keyboard_event_message_t));
-  keyboard_event_message.read = true;
-
-  exit_critical();
-
-  switch(message.type) {
-    case KEYBOARD_CONNECTED:
-      printf("keyboard connected\n");
-      break;
-    case KEYBOARD_DISCONNECTED:
-      printf("keyboard disconnected\n");
-      break;
-    case KEYBOARD_REPORT:
-      process_kbd_report(&message.report);
-      break;
-    default:
-      printf("unknown keyboard message\n");
-      break;
-  }
+  tuh_task();
 }
 
 void handle_key(uint8_t key, bool pressed) {
@@ -149,4 +102,30 @@ void process_kbd_report(hid_keyboard_report_t const *p_new_report) {
     }
 
     prev_report = *p_new_report;
+}
+
+//--------------------------------------------------------------------+
+// USB HID
+//--------------------------------------------------------------------+
+
+CFG_TUSB_MEM_SECTION static hid_keyboard_report_t usb_keyboard_report;
+
+void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_report, uint16_t desc_len) {
+    /* Ask for a report only if this is a keyboard device */
+    uint8_t const itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
+    if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD) {
+        printf("USB keyboard connected");
+        tuh_hid_receive_report(dev_addr, instance);
+    } else {
+        printf("unkonwn USB device connected");
+    }
+}
+
+void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t const *report, uint16_t len) {
+    switch (tuh_hid_interface_protocol(dev_addr, instance)) {
+        case HID_ITF_PROTOCOL_KEYBOARD:
+            process_kbd_report((hid_keyboard_report_t const *)report);
+            tuh_hid_receive_report(dev_addr, instance);
+            break;
+    }
 }

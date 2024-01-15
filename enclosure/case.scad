@@ -1,10 +1,11 @@
+include <constants.scad>
 use <bartscad/poly.scad>
 use <pcb.scad>
 use <keyboard.scad>
 use <parts.scad>
+use <display.scad>
+use <battery_cover.scad>
 
-
-W_WALL = 3;
 Z_OFFSET_TOP = 1;
 Z_PCB=4+W_WALL;
 H_CASE = h_pcb()+Z_PCB;
@@ -177,17 +178,37 @@ module case_bottom_right() {
   }
 }
 
-module case_top(positive=true) {
-  difference(){
-    translate([0,0,H_CASE]) linear_extrude(W_WALL) difference(){
-      offset(positive ? -W_WALL-0.1: -W_WALL)case_footprint();
-      offset(positive? 0.1:0)translate([keyboard_anchor().x+keyboard_overlap_top()+keyboard_top_max_x(),Y_MIN-1])square([10,Y_MAX-Y_MIN+2]);
-      if(positive)
-        for(pos=SCREW_POSITIONS)
-      {
-        translate(pos)circle(d=3.2);
-      }
+module case_top_2d(positive=true){
+  difference() {
+    offset(positive ? -W_WALL-0.1: -W_WALL)case_footprint();
+    offset(positive? 0.1:0)translate([keyboard_anchor().x+keyboard_overlap_top()+keyboard_top_max_x(),Y_MIN-1])square([10,Y_MAX-Y_MIN+2]);
+    if(positive)
+      for(pos=SCREW_POSITIONS)
+    {
+      translate(pos)circle(d=3.2);
     }
+    translate([PCB_POSITION.x,PCB_POSITION.y]) rotate([0,0,180])translate([23.86+11,37+26]){
+      offset(3)square([22,52], center=true);
+      translate([28/2+5,22])circle(d=2.8);
+      translate([-28/2-5,22])circle(d=2.8);
+      translate([28/2+5,-22])circle(d=2.8);
+      translate([-28/2-5,-22])circle(d=2.8);
+    }
+    translate([-50,32]){
+      translate([15,0]) circle(d=3.2);
+      translate([-15,0]) circle(d=3.2);
+      square([13.5,6.5], center=true);
+    }
+    translate([PCB_POSITION.x+16,PCB_POSITION.y-11.5,0]){
+      battery_cover_cutout_2d();
+    }
+    translate([20,-23])rotate([0,0,30])display_cutout_2d();
+  }
+}
+
+module case_top(positive=true) {
+  translate([0,0,H_CASE]) {
+    linear_extrude(W_WALL) case_top_2d(positive);
   }
 }
 
@@ -207,7 +228,7 @@ module case_top_right(positive=true) {
 
 $fn=120;
 case_bottom();
-translate([0,0,10]) case_top();
+!translate([0,0,10]) case_top_2d();
 
 translate([100,0,0]){
   case_bottom_right();

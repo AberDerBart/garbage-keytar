@@ -178,6 +178,12 @@ module case_bottom_right() {
   }
 }
 
+module switch_mount_2d(omit_handle=false){
+  translate([15,0]) circle(d=3.2);
+  translate([-15,0]) circle(d=3.2);
+  if(!omit_handle) square([13.5,6.5], center=true);
+}
+
 module case_top_2d(positive=true){
   difference() {
     offset(positive ? -W_WALL-0.1: -W_WALL)case_footprint();
@@ -194,17 +200,34 @@ module case_top_2d(positive=true){
       translate([28/2+5,-22])circle(d=2.8);
       translate([-28/2-5,-22])circle(d=2.8);
     }
-    translate([-50,32]){
-      translate([15,0]) circle(d=3.2);
-      translate([-15,0]) circle(d=3.2);
-      square([13.5,6.5], center=true);
-    }
+    translate([-50,32]) switch_mount_2d();
     translate([PCB_POSITION.x+16,PCB_POSITION.y-11.5,0]){
       battery_cover_cutout_2d();
     }
     translate([20,-23])rotate([0,0,30])display_cutout_2d();
   }
 }
+
+module switch_case() {
+  SWITCH_POS=[-48,50];
+  module outline(){
+    offset(3.3)hull(){
+      translate([-50,32])switch_mount_2d();
+      translate(SWITCH_POS)offset(2)switch_mount_2d();
+      translate(SCREW_POSITIONS[1])circle(d=3.4);
+    }
+  }
+  difference(){
+    linear_extrude(15)outline();
+    translate([0,0,-W_WALL])linear_extrude(15) offset(-3) outline();
+    linear_extrude(16){
+      translate([-50,32])switch_mount_2d(true);
+      translate(SWITCH_POS)switch_mount_2d();
+      translate(SCREW_POSITIONS[1])circle(d=3.4);
+    }
+  }
+}
+
 
 module case_top(positive=true) {
   translate([0,0,H_CASE]) {
@@ -228,7 +251,12 @@ module case_top_right(positive=true) {
 
 $fn=120;
 case_bottom();
-!translate([0,0,10]) case_top_2d();
+!union(){
+  //translate([0,0,10]) linear_extrude(3)case_top_2d();
+  translate([0,0,13])switch_case();
+  translate([16,28,13])battery_cover();
+}
+
 
 translate([100,0,0]){
   case_bottom_right();

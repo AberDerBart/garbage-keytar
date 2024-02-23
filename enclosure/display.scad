@@ -2,7 +2,7 @@ include <constants.scad>
 use <mounting_holes.scad>
 
 DISPLAY_W = 24;
-DISPLAY_H = 12.5;
+DISPLAY_H = 13.5;
 DISPLAY_PCB_W = 29;
 DISPLAY_PCB_H = 28;
 DISPLAY_D=3;
@@ -63,5 +63,7 @@ module display_mount() {
   }
 }
 
-display_mount();
+let($fn=72){
+  display_mount();
+}
 

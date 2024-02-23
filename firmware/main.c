@@ -34,6 +34,9 @@
 #include "control.h"
 #include "display.h"
 #include "midi.h"
+#include "midi_uart.h"
+#include "midi_ble.h"
+#include "keyboard.h"
 #include "pitchbend.h"
 #include "settings.h"
 
@@ -52,7 +55,7 @@ int main(void) {
   keyboard_init();
   //pitchbend_init();
   //control_init();
-  //display_init();
+  display_init();
 
   printf("all set up\n");
 

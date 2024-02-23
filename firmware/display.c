@@ -27,6 +27,10 @@ void display_init() {
 
     disp.external_vcc = false;
     display_initialized = ssd1306_init(&disp, 128, 64, 0x3c, i2c0);
+    ssd1306_set_rotation(&disp, ROT_180);
+    ssd1306_clear(&disp);
+    ssd1306_show(&disp);
+
     if(display_initialized) {
       printf("display display_initialized\n");
     }else{

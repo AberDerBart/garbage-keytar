@@ -4,9 +4,6 @@
 [submodule "kicad/3d_models/kicad-3dmodels"]
 	path = kicad/3d_models/kicad-3dmodels
 	url = git@github.com:dhaillant/kicad-3dmodels.git
-[submodule "pico-sdk"]
-	path = firmware/pico-sdk
-	url = git@github.com:raspberrypi/pico-sdk.git
 [submodule "lib/pico-w-ble-midi-lib"]
 	path = firmware/lib/pico-w-ble-midi-lib
 	url = git@github.com:rppicomidi/pico-w-ble-midi-lib.git
@@ -16,3 +13,6 @@
 [submodule "firmware/pico-ssd1306"]
 	path = firmware/pico-ssd1306
 	url = git@github.com:AberDerBart/pico-ssd1306
+[submodule "firmware/pico-sdk"]
+	path = firmware/pico-sdk
+	url = git@github.com:raspberrypi/pico-sdk.git

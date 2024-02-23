@@ -52,15 +52,16 @@ int main(void) {
   midi_uart_init();
   midi_ble_init();
 
-  keyboard_init();
   //pitchbend_init();
   //control_init();
   display_init();
+  keyboard_init();
 
   printf("all set up\n");
 
   while (1) {
     keyboard_task();
+    display_task();
 
     // control_task();
 

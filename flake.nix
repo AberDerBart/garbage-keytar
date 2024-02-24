@@ -10,6 +10,7 @@
           pkgs.gcc-arm-embedded
           pkgs.openocd-rp2040
           pkgs.minicom
+          pkgs.imagemagick
         ];
         
         PICO_SDK_PATH = "./firmware/pico-sdk";

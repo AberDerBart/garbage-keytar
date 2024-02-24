@@ -5,6 +5,7 @@
 #include "pico/btstack_cyw43.h"
 
 #include "midi-ble.h"
+#include "display.h"
 
 #define APP_AD_FLAGS 0x06
 const uint8_t adv_data[] = {
@@ -66,9 +67,12 @@ void packet_handler(uint8_t packet_type, uint16_t channel, uint8_t *packet, uint
       switch(hci_event_gattservice_meta_get_subevent_code(packet)) {
         case GATTSERVICE_SUBEVENT_SPP_SERVICE_CONNECTED:
           con_handle = gattservice_subevent_spp_service_connected_get_con_handle(packet);
+          printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_CONNECTED event\r\n");
+          display_get_state_for_update()->bluetooth = true;
           break;
         case GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED:
           printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED event\r\n");
+          display_get_state_for_update()->bluetooth = false;
           con_handle = HCI_CON_HANDLE_INVALID;
           break;
         default:

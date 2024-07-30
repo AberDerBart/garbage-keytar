@@ -48,6 +48,7 @@ target_sources(${target_name} PRIVATE
  pico-ssd1306/ssd1306.c
  settings.c
  keyboard.c
+ keyboard_matrix.c
  midi.c
  midi_ble.c
  midi_uart.c

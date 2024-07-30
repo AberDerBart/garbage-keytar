@@ -9,6 +9,7 @@
 #include "main_host.h"
 #include "pico/flash.h"
 #include "pico/multicore.h"
+#include "keyboard_matrix.h"
 
 #include "display.h"
 
@@ -65,7 +66,7 @@ void handle_key(uint8_t key, bool pressed) {
         }
     }
 
-    uint8_t raw_note = key < 128 ? keycode2midi[key] : 0;
+    uint8_t raw_note = accordion_c(key);
     if (raw_note != 0) {
         if (pressed) {
             midi_note_on(raw_note + offset);

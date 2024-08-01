@@ -1,5 +1,13 @@
 #pragma once
 #include <stdint.h>
+typedef struct {
+	uint8_t (*lookup)(uint8_t);
+	char* name;
+	unsigned long icon_size;
+	unsigned char* icon_data;
+} key_mapping_t;
+
+extern const key_mapping_t KEY_MAPPINGS[5];
 
 uint8_t piano(uint8_t keycode);
 

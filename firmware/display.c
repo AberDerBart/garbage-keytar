@@ -22,6 +22,7 @@
 #define BLUETOOTH_POS 48,0
 #define CHARGE_POS 96,0
 #define BATTERY_POS 104,0
+#define KEY_MAPPING_POS 64,0
 
 void draw_info();
 void draw_menu();
@@ -65,6 +66,7 @@ void display_init() {
     state.bluetooth = false;
     state.charging = false;
     state.battery = EMPTY;
+    state.key_mapping = key_mapping;
 
     memcpy(&prev_state, &state, sizeof(state));
 
@@ -100,6 +102,8 @@ void redraw() {
     ssd1306_bmp_show_image_with_offset(&disp, battery_full_24_16_bmp_data, battery_full_24_16_bmp_size, BATTERY_POS);
     break;
   }
+
+  ssd1306_bmp_show_image_with_offset(&disp, state.key_mapping->icon_data, state.key_mapping->icon_size, KEY_MAPPING_POS);
 
   ssd1306_show(&disp);
 }

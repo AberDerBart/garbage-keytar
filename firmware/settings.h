@@ -1,10 +1,11 @@
-#ifndef OFFSET_H
-#define OFFSET_H
-
+#pragma once
 #include <stdint.h>
-extern uint8_t program;
+#include "keyboard_matrix.h"
+
 extern int8_t offset;
+extern uint8_t program;
+extern const key_mapping_t* key_mapping;
 int8_t offset_get_octave();
 uint8_t offset_get_trans();
 
-#endif
+void set_key_mapping(uint8_t index);

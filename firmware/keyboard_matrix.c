@@ -1,5 +1,18 @@
 #include "keyboard_matrix.h"
 #include "key_positions.h"
+#include "img/gen/accordion_b_32_16.h"
+#include "img/gen/accordion_c_32_16.h"
+#include "img/gen/piano_32_16.h"
+#include "img/gen/wicki_hayden_32_16.h"
+#include "img/gen/six_plus_six_32_16.h"
+
+const key_mapping_t KEY_MAPPINGS[5] = {
+	{ &piano, "Piano", piano_32_16_bmp_size, piano_32_16_bmp_data},
+	{ &accordion_c, "C-Accordion", accordion_c_32_16_bmp_size, accordion_c_32_16_bmp_data },
+	{ &accordion_b, "B-Accordion", accordion_b_32_16_bmp_size, accordion_b_32_16_bmp_data },
+	{ &accordion_6plus6, "6+6", six_plus_six_32_16_bmp_size, six_plus_six_32_16_bmp_data },
+	{ &wicki_hayden, "Wicki-Hayden", wicki_hayden_32_16_bmp_size, wicki_hayden_32_16_bmp_data  },
+};
 
 uint8_t piano_lut[4][14] = {
 	{0,  0, 49, 51,  0, 54, 56, 58, 61, 63,  0, 66, 68,  0},

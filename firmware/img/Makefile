@@ -8,7 +8,7 @@ all: ${DEST_FILES}
 
 ${DEST_DIR}/%.h: %.bmp
 	mkdir -p gen
-	convert $< -monochrome ${DEST_DIR}/$<
+	convert $< -negate -monochrome ${DEST_DIR}/$<
 	cd ${DEST_DIR} && bin2c $< $(notdir $@)
 
 clean:

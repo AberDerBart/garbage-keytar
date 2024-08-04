@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.13)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 # Make a GATT header file from a BTstack GATT file
 # Pass the target library name library type and path to the GATT input file

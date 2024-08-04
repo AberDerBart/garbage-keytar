@@ -2,7 +2,6 @@
 #define KEYBOARD_H
 
 #include <stdbool.h>
-#include <stdint.h>
 
 void keyboard_init();
 

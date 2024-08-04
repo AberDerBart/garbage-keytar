@@ -1,8 +1,6 @@
 #include "keyboard.h"
 
 
-#include "bsp/board.h"
-
 #include "midi.h"
 #include "settings.h"
 #include "midi_note_table.h"
@@ -35,7 +33,10 @@ void handle_key(uint8_t key, bool pressed) {
     }
 
     if (pressed) {
-        if (key >= 58 && key <= 69) {
+	if (key >= 58 && key <= 61) {
+                midi_clear_notes();
+		set_key_mapping(key-58);
+	} else if (key >= 58 && key <= 69) {
             program = key - 58;
             midi_program_change(program);
         }
@@ -66,7 +67,7 @@ void handle_key(uint8_t key, bool pressed) {
         }
     }
 
-    uint8_t raw_note = accordion_c(key);
+    uint8_t raw_note = key_mapping->lookup(key);
     if (raw_note != 0) {
         if (pressed) {
             midi_note_on(raw_note + offset);

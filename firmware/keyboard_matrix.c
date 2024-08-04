@@ -46,7 +46,7 @@ uint8_t note_by_pattern(uint8_t keycode, uint8_t offset, int8_t col_step, int8_t
 		return 0;
 	}
 
-	return col * col_step + row * row_step;
+	return col * col_step + row * row_step + offset;
 }
 
 uint8_t piano(uint8_t keycode) {
@@ -54,11 +54,11 @@ uint8_t piano(uint8_t keycode) {
 }
 
 uint8_t accordion_c(uint8_t keycode) {
-	return note_by_pattern(keycode, 32, 3, -2);
+	return note_by_pattern(keycode, 36, 3, -2);
 }
 
 uint8_t accordion_b(uint8_t keycode) {
-	return note_by_pattern(keycode, 32, 3, -1);
+	return note_by_pattern(keycode, 38, 3, -1);
 }
 
 uint8_t accordion_6plus6(uint8_t keycode) {

@@ -5,6 +5,7 @@ use <keyboard.scad>
 use <parts.scad>
 use <display.scad>
 use <battery_cover.scad>
+use <captive_nut.scad>
 
 Z_OFFSET_TOP = 1;
 Z_PCB=4+W_WALL;
@@ -55,7 +56,7 @@ module case_footprint_right(){
   ]);
 }
 
-PCB_POSITION = [0.2,39,4+W_WALL];
+PCB_POSITION = [0.2,45,4+W_WALL];
 
 module pcb_anchor() {
   translate(PCB_POSITION)rotate([0,0,180])children();
@@ -94,6 +95,11 @@ module case_gaps() {
       pcb_feet(1);
     }
     pcb_anchor() at_pcb_screw_positions() insert_m3();
+
+    // captive nuts and screw holes for strap mounts
+    for (y=[55,-55]) {
+      translate([X_MIN+10,y,H_CASE/2])rotate([0,-90,0])captive_nut_screw_hole_m5($tolerance=0.1);
+    }
     
     // space for keyboard
     keyboard_anchor()keyboard(anchor="left",open_top=true);
@@ -188,23 +194,23 @@ module case_top_2d(positive=true){
   difference() {
     offset(positive ? -W_WALL-0.1: -W_WALL)case_footprint();
     offset(positive? 0.1:0)translate([keyboard_anchor().x+keyboard_overlap_top()+keyboard_top_max_x(),Y_MIN-1])square([10,Y_MAX-Y_MIN+2]);
-    if(positive)
-      for(pos=SCREW_POSITIONS)
-    {
-      translate(pos)circle(d=3.2);
+    if(positive){
+      for(pos=SCREW_POSITIONS) {
+        translate(pos)circle(d=3.2);
+      }
+      translate([PCB_POSITION.x,PCB_POSITION.y]) rotate([0,0,180])translate([23.86+11,37+26]){
+        offset(3)square([22,52], center=true);
+        translate([28/2+5,22])circle(d=2.8);
+        translate([-28/2-5,22])circle(d=2.8);
+        translate([28/2+5,-22])circle(d=2.8);
+        translate([-28/2-5,-22])circle(d=2.8);
+      }
+      translate([-50,32]) switch_mount_2d();
+      translate([PCB_POSITION.x+16,PCB_POSITION.y-11.5,0]){
+        battery_cover_cutout_2d();
+      }
+      translate([20,-23])rotate([0,0,30])display_cutout_2d();
     }
-    translate([PCB_POSITION.x,PCB_POSITION.y]) rotate([0,0,180])translate([23.86+11,37+26]){
-      offset(3)square([22,52], center=true);
-      translate([28/2+5,22])circle(d=2.8);
-      translate([-28/2-5,22])circle(d=2.8);
-      translate([28/2+5,-22])circle(d=2.8);
-      translate([-28/2-5,-22])circle(d=2.8);
-    }
-    translate([-50,32]) switch_mount_2d();
-    translate([PCB_POSITION.x+16,PCB_POSITION.y-11.5,0]){
-      battery_cover_cutout_2d();
-    }
-    translate([20,-23])rotate([0,0,30])display_cutout_2d();
   }
 }
 
@@ -251,11 +257,6 @@ module case_top_right(positive=true) {
 
 $fn=120;
 case_bottom();
-!union(){
-  //translate([0,0,10]) linear_extrude(3)case_top_2d();
-  translate([0,0,13])switch_case();
-  translate([16,28,13])battery_cover();
-}
 
 
 translate([100,0,0]){
@@ -263,4 +264,6 @@ translate([100,0,0]){
   translate([0,0,10])case_top_right();
 }
 
-//#color("#dd2222")case_top();
+#color("#dd2222")case_top();
+translate([0,0,H_CASE+3])switch_case();
+translate([16,33.5,H_CASE+3])battery_cover();

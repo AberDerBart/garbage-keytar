@@ -21,12 +21,17 @@ void midi_ble_client_init() {
                            SM_AUTHREQ_MITM_PROTECTION | SM_AUTHREQ_BONDING);
 
   printf("done\n");
+
+  ble_midi_client_scan_begin();
   ble_client_is_initialized = true;
   menu_update_bluetooth();
 }
 
 void midi_ble_client_deinit() {
   printf("deinit midi ble client: ");
+  ble_midi_client_scan_end();
+
+  ble_midi_client_request_disconnect();
 
   ble_midi_client_deinit();
 
@@ -46,9 +51,3 @@ void midi_ble_client_write(uint8_t len, uint8_t *msg) {
 
   ble_midi_client_stream_write(len, msg);
 }
-
-void midi_ble_client_scan_start() { ble_midi_client_scan_begin(); }
-
-void midi_ble_client_scan_stop() { ble_midi_client_scan_end(); }
-
-void midi_ble_client_dump_devices() { ble_midi_client_dump_midi_peripherals(); }

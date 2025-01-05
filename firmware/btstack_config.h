@@ -11,18 +11,23 @@
 #define ENABLE_LOG_ERROR
 #define ENABLE_PRINTF_HEXDUMP
 // should be helpful for throughput for long sysex messages
+#define ENABLE_LE_SECURE_CONNECTIONS 1
 // #define ENABLE_LE_DATA_LENGTH_EXTENSION
 
 // For the BLE-MIDI server
 #define BLE_MIDI_SERVER_MAX_CONNECTIONS 1
+// comment out to enable the Active Sensing real-time message from server to client
+#define BLE_MIDI_SERVER_FILTER_ACTIVE_SENSING_TO_BLE 1
 
 // for the client
-#if RUNNING_AS_CLIENT
-#define ENABLE_LE_CENTRAL
+// #if RUNNING_AS_CLIENT
+#define ENABLE_LE_CENTRAL 1
 #define MAX_NR_GATT_CLIENTS 1
-#else
-#define MAX_NR_GATT_CLIENTS 0
-#endif
+#define ENABLE_GATT_CLIENT_PAIRING 1
+#define ENABLE_LE_PRIVACY_ADDRESS_RESOLUTION 1
+// #else
+// #define MAX_NR_GATT_CLIENTS 0
+// #endif
 
 // BTstack configuration. buffers, sizes, ...
 #define HCI_OUTGOING_PRE_BUFFER_SIZE 4
@@ -39,7 +44,7 @@
 
 // Enable and configure HCI Controller to Host Flow Control to avoid cyw43 shared bus overrun
 #define ENABLE_HCI_CONTROLLER_TO_HOST_FLOW_CONTROL
-#define HCI_HOST_ACL_PACKET_LEN (255+4)
+#define HCI_HOST_ACL_PACKET_LEN (255 + 4)
 #define HCI_HOST_ACL_PACKET_NUM 3
 #define HCI_HOST_SCO_PACKET_LEN 120
 #define HCI_HOST_SCO_PACKET_NUM 3

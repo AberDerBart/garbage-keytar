@@ -106,16 +106,17 @@ void midi_ble_init() {
   sm_set_io_capabilities(IO_CAPABILITY_NO_INPUT_NO_OUTPUT);
   sm_set_authentication_requirements(SM_AUTHREQ_SECURE_CONNECTION | SM_AUTHREQ_BONDING);
   // register for SM events
-  sm_event_callback_registration.callback = &packet_handler;
+  sm_event_callback_registration.callback = &server_packet_handler;
   sm_add_event_handler(&sm_event_callback_registration);
-  midi_service_stream_init(packet_handler);
-
+  midi_service_stream_init(server_packet_handler);
 
   hci_power_control(HCI_POWER_ON);
 }
 
-void midi_ble_write(uint8_t n_bytes, uint8_t* midi_stream_bytes) {
-  if (con_handle == HCI_CON_HANDLE_INVALID) {
+void midi_ble_write(uint8_t n_bytes, uint8_t *midi_stream_bytes)
+{
+  if (con_handle == HCI_CON_HANDLE_INVALID)
+  {
     return;
   }
 

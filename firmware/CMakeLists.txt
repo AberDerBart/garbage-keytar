@@ -53,6 +53,7 @@ target_sources(${target_name} PRIVATE
  midi.c
  midi_ble.c
  midi_uart.c
+ midi_ble_client.c
  )
 
 my_pico_btstack_make_gatt_header(${target_name} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/midi-ble.gatt" "-I${CMAKE_CURRENT_LIST_DIR}/lib/pico-w-ble-midi-lib")
@@ -74,6 +75,7 @@ target_link_libraries(${target_name} PRIVATE
   pico_cyw43_arch_none
   ble_midi_service_lib
   ring_buffer_lib
+  ble_midi_client_lib
 )
 
 pico_enable_stdio_uart(${target_name} 1)

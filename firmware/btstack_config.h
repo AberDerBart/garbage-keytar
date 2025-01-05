@@ -16,7 +16,8 @@
 
 // For the BLE-MIDI server
 #define BLE_MIDI_SERVER_MAX_CONNECTIONS 1
-// comment out to enable the Active Sensing real-time message from server to client
+// comment out to enable the Active Sensing real-time message from server to
+// client
 #define BLE_MIDI_SERVER_FILTER_ACTIVE_SENSING_TO_BLE 1
 
 // for the client
@@ -38,11 +39,13 @@
 #define MAX_NR_WHITELIST_ENTRIES 16
 #define MAX_NR_LE_DEVICE_DB_ENTRIES 16
 
-// Limit number of ACL/SCO Buffer to use by stack to avoid cyw43 shared bus overrun
+// Limit number of ACL/SCO Buffer to use by stack to avoid cyw43 shared bus
+// overrun
 #define MAX_NR_CONTROLLER_ACL_BUFFERS 3
 #define MAX_NR_CONTROLLER_SCO_PACKETS 3
 
-// Enable and configure HCI Controller to Host Flow Control to avoid cyw43 shared bus overrun
+// Enable and configure HCI Controller to Host Flow Control to avoid cyw43
+// shared bus overrun
 #define ENABLE_HCI_CONTROLLER_TO_HOST_FLOW_CONTROL
 #define HCI_HOST_ACL_PACKET_LEN (255 + 4)
 #define HCI_HOST_ACL_PACKET_NUM 3
@@ -65,4 +68,4 @@
 #define ENABLE_SOFTWARE_AES128
 #define ENABLE_MICRO_ECC_FOR_LE_SECURE_CONNECTIONS
 
-#endif // MICROPY_INCLUDED_EXTMOD_BTSTACK_BTSTACK_CONFIG_H
+#endif  // MICROPY_INCLUDED_EXTMOD_BTSTACK_BTSTACK_CONFIG_H

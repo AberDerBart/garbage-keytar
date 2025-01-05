@@ -26,19 +26,18 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "pico/stdlib.h"
 #include "class/hid/hid.h"
-#include "tusb.h"
-#include "tusb_config.h"
-
 #include "control.h"
 #include "display.h"
-#include "midi.h"
-#include "midi_uart.h"
-#include "midi_ble.h"
 #include "keyboard.h"
+#include "midi.h"
+#include "midi_ble.h"
+#include "midi_uart.h"
+#include "pico/stdlib.h"
 #include "pitchbend.h"
 #include "settings.h"
+#include "tusb.h"
+#include "tusb_config.h"
 
 extern void hid_task(void);
 
@@ -54,8 +53,8 @@ int main(void) {
   midi_uart_init();
   midi_ble_init();
 
-  //pitchbend_init();
-  //control_init();
+  // pitchbend_init();
+  // control_init();
   display_init();
 
   printf("all set up\n");
@@ -66,9 +65,8 @@ int main(void) {
 
     // control_task();
 
-    //pitchbend_task();
+    // pitchbend_task();
   }
 
   return 0;
 }
-

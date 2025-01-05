@@ -1,9 +1,8 @@
 #ifndef MAIN_HOST_H
 #define MAIN_HOST_H
 
-#include "tusb.h"
 #include "pico/util/queue.h"
-
+#include "tusb.h"
 
 typedef enum {
   UNKNOWN = 0,

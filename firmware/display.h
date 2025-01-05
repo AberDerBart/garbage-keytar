@@ -1,6 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 #include <stdbool.h>
+
 #include "keyboard_matrix.h"
 
 typedef enum {
@@ -15,10 +16,10 @@ typedef struct {
   bool bluetooth;
   bool charging;
   battery_state_t battery;
-  const key_mapping_t* key_mapping;
+  const key_mapping_t *key_mapping;
 } display_state_t;
 
-display_state_t* display_get_state_for_update();
+display_state_t *display_get_state_for_update();
 
 void display_init();
 

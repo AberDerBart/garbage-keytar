@@ -1,11 +1,11 @@
-#include "midi.h"
+#include "midi_uart.h"
 
 #include <stdint.h>
 #include <stdio.h>
 
 #include "hardware/gpio.h"
 #include "hardware/uart.h"
-#include "midi_uart.h"
+#include "midi.h"
 
 #define UART_ID uart1
 #define BAUD_RATE 31250
@@ -15,23 +15,23 @@
 bool midi_uart_initialized = false;
 
 void midi_uart_init() {
-    printf("init midi uart: ");
-    uart_init(UART_ID, BAUD_RATE);
-    gpio_set_function(MIDI_OUT_PIN, GPIO_FUNC_UART);
-    gpio_set_function(MIDI_IN_PIN, GPIO_FUNC_UART);
-    midi_uart_initialized = uart_is_enabled(UART_ID);
-    if(midi_uart_initialized){
-      printf("done\n");
-    }else{
-      printf("failed\n");
-    }
+  printf("init midi uart: ");
+  uart_init(UART_ID, BAUD_RATE);
+  gpio_set_function(MIDI_OUT_PIN, GPIO_FUNC_UART);
+  gpio_set_function(MIDI_IN_PIN, GPIO_FUNC_UART);
+  midi_uart_initialized = uart_is_enabled(UART_ID);
+  if (midi_uart_initialized) {
+    printf("done\n");
+  } else {
+    printf("failed\n");
+  }
 }
 
-void midi_uart_write(uint8_t len, uint8_t* msg) {
-  if(!midi_uart_initialized) {
+void midi_uart_write(uint8_t len, uint8_t *msg) {
+  if (!midi_uart_initialized) {
     return;
   }
-  for(uint8_t i = 0; i < len; i++) {
+  for (uint8_t i = 0; i < len; i++) {
     uart_putc(UART_ID, msg[i]);
   }
 }

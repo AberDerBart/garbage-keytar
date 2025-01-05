@@ -50,31 +50,37 @@ keyboard_event_message_t keyboard_event_message;
 
 mutex_t keyboard_event_mutex;
 
-void set_keyboard_event_message(keyboard_event_message_type type, hid_keyboard_report_t const * report) {
+void set_keyboard_event_message(keyboard_event_message_type type, hid_keyboard_report_t const *report)
+{
   enter_critical();
 
   keyboard_event_message.read = false;
   keyboard_event_message.type = type;
-  if(report){
+  if (report)
+  {
     memcpy(&(keyboard_event_message.report), report, sizeof(hid_keyboard_report_t));
   }
 
   exit_critical();
 }
 
-void send_usb_ready() {
+void send_usb_ready()
+{
   set_keyboard_event_message(USB_READY, NULL);
 }
 
-void send_connected() {
+void send_connected()
+{
   set_keyboard_event_message(KEYBOARD_CONNECTED, NULL);
 }
 
-void send_disconnected() {
+void send_disconnected()
+{
   set_keyboard_event_message(KEYBOARD_DISCONNECTED, NULL);
 }
 
-void send_report(hid_keyboard_report_t const * report) {
+void send_report(hid_keyboard_report_t const *report)
+{
   set_keyboard_event_message(KEYBOARD_REPORT, report);
 }
 
@@ -82,30 +88,29 @@ void send_report(hid_keyboard_report_t const * report) {
 // MACRO CONSTANT TYPEDEF PROTYPES
 //--------------------------------------------------------------------+
 
-
-
 /*------------- MAIN -------------*/
 
 #define PIO_USB_DP_PIN 2
 // NOTE: The D- pin is hardcoded to the configured D+ pin + 1
 
 // core1: handle host events
-void core1_main() {
-  flash_safe_execute_core_init(); 	
+void core1_main()
+{
+  flash_safe_execute_core_init();
   sleep_ms(10);
 
   // Use tuh_configure() to pass pio configuration to the host stack
   pio_usb_configuration_t pio_cfg = PIO_USB_DEFAULT_CONFIG;
 
   pio_cfg.pin_dp = PIO_USB_DP_PIN; // see above
-  pio_cfg.pio_tx_num = 1; // 0
-  pio_cfg.sm_tx = 3; // 0
-  pio_cfg.tx_ch = 3; // 0
-  pio_cfg.pio_rx_num = 0; // PIO_USB_RX_DEFAULT; // 1
-  pio_cfg.sm_rx = 2; // 0
-  pio_cfg.sm_eop = 3; // 1
+  pio_cfg.pio_tx_num = 1;          // 0
+  pio_cfg.sm_tx = 3;               // 0
+  pio_cfg.tx_ch = 3;               // 0
+  pio_cfg.pio_rx_num = 0;          // PIO_USB_RX_DEFAULT; // 1
+  pio_cfg.sm_rx = 2;               // 0
+  pio_cfg.sm_eop = 3;              // 1
   pio_cfg.alarm_pool = NULL;
-  pio_cfg.debug_pin_rx = PIO_USB_DEBUG_PIN_NONE; // -1
+  pio_cfg.debug_pin_rx = PIO_USB_DEBUG_PIN_NONE;  // -1
   pio_cfg.debug_pin_eop = PIO_USB_DEBUG_PIN_NONE; // -1
 
   tuh_configure(1, TUH_CFGID_RPI_PIO_USB_CONFIGURATION, &pio_cfg);
@@ -116,7 +121,8 @@ void core1_main() {
 
   send_usb_ready();
 
-  while (true) {
+  while (true)
+  {
     tuh_task(); // tinyusb host task
   }
 }
@@ -131,48 +137,55 @@ uint8_t connected_kbd_address = 0;
 // can be used to parse common/simple enough descriptor.
 // Note: if report descriptor length > CFG_TUH_ENUMERATION_BUFSIZE, it will be skipped
 // therefore report_desc = NULL, desc_len = 0
-void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* desc_report, uint16_t desc_len) {
-  (void) desc_report;
-  (void) desc_len;
-  (void) dev_addr;
-  (void) instance;
+void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance, uint8_t const *desc_report, uint16_t desc_len)
+{
+  (void)desc_report;
+  (void)desc_len;
+  (void)dev_addr;
+  (void)instance;
 
   uint8_t const itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
 
-  if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD) {
+  if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD)
+  {
     connected_kbd_address = dev_addr;
     send_connected();
-    if (!tuh_hid_receive_report(dev_addr, instance) ) {
+    if (!tuh_hid_receive_report(dev_addr, instance))
+    {
       tud_cdc_write_str("Error: cannot request report\r\n");
     }
   }
 }
 
 // Invoked when device with hid interface is un-mounted
-void tuh_hid_umount_cb(uint8_t dev_addr, uint8_t instance) {
-  (void) instance;
+void tuh_hid_umount_cb(uint8_t dev_addr, uint8_t instance)
+{
+  (void)instance;
 
-  if (dev_addr == connected_kbd_address) {
+  if (dev_addr == connected_kbd_address)
+  {
     send_disconnected();
     connected_kbd_address = 0;
   }
 }
 
 // Invoked when received report from device via interrupt endpoint
-void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t const* report, uint16_t len) {
-  (void) len;
+void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance, uint8_t const *report, uint16_t len)
+{
+  (void)len;
   uint8_t const itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
 
-  switch(itf_protocol) {
-    case HID_ITF_PROTOCOL_KEYBOARD:
-      send_report((hid_keyboard_report_t const *) report);
-      break;
+  switch (itf_protocol)
+  {
+  case HID_ITF_PROTOCOL_KEYBOARD:
+    send_report((hid_keyboard_report_t const *)report);
+    break;
   }
 
   // continue to request to receive report
-  if ( !tuh_hid_receive_report(dev_addr, instance) ) {
+  if (!tuh_hid_receive_report(dev_addr, instance))
+  {
     send_disconnected();
-    //tud_cdc_write_str("Error: cannot request report\r\n");
+    // tud_cdc_write_str("Error: cannot request report\r\n");
   }
 }
-

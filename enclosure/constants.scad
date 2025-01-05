@@ -1,1 +1,16 @@
+use <pcb.scad>
+
+Y_MIN=-78.5;
+Y_MAX=78.5;
+X_MIN=-73;
+X_MAX=73;
+
+X_MIN_RIGHT=0;
+X_MAX_RIGHT=55;
+
 W_WALL = 3;
+Z_PCB = 4+W_WALL;
+H_CASE = h_pcb()+Z_PCB;
+H_BORDER=2;
+
+R_CORNER=20;

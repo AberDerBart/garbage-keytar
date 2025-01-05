@@ -2,19 +2,18 @@
 #include <stdint.h>
 typedef struct {
   uint8_t (*lookup)(uint8_t);
-  char *name;
   unsigned long icon_size;
-  unsigned char *icon_data;
-} key_mapping_t;
+  unsigned char* icon_data;
+} keymap_t;
 
-extern const key_mapping_t KEY_MAPPINGS[5];
+extern keymap_t* default_keymap;
 
-uint8_t piano(uint8_t keycode);
+void set_keymap_piano();
 
-uint8_t accordion_c(uint8_t keycode);
+void set_keymap_accordion_b();
 
-uint8_t accordion_b(uint8_t keycode);
+void set_keymap_accordion_c();
 
-uint8_t accordion_6plus6(uint8_t keycode);
+void set_keymap_accordion_6plus6();
 
-uint8_t wicki_hayden(uint8_t keycode);
+void set_keymap_wicki_hayden();

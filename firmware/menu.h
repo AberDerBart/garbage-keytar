@@ -5,6 +5,7 @@
 
 typedef struct menu_item_t {
   char *label;
+  void (*action)();
   struct menu_item_t *parent;
   struct menu_item_t *children[];
 } menu_item_t;

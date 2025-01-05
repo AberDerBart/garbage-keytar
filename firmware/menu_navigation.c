@@ -103,8 +103,15 @@ void menu_select() {
   }
 
   menu_item_t* target = state->current->children[state->index];
+
+  if (target->action) {
+    target->action();
+  }
+
   if (menu_len(target)) {
     state->current = target;
     state->index = 0;
+  } else {
+    menu_close();
   }
 }

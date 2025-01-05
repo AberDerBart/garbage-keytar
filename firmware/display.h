@@ -17,7 +17,7 @@ typedef struct {
   bool bluetooth;
   bool charging;
   battery_state_t battery;
-  const key_mapping_t *key_mapping;
+  const keymap_t *keymap;
   menu_state_t menu_state;
 } display_state_t;
 

@@ -8,6 +8,7 @@
 #include "img/gen/bluetooth_8_16.h"
 #include "img/gen/charge_8_16.h"
 #include "img/gen/keyboard_24_16.h"
+#include "menu_navigation.h"
 #include "pico-ssd1306/ssd1306.h"
 #include "settings.h"
 #include "stdio.h"
@@ -62,7 +63,7 @@ void display_init() {
   state.bluetooth = false;
   state.charging = false;
   state.battery = EMPTY;
-  state.key_mapping = key_mapping;
+  state.keymap = default_keymap;
 
   memcpy(&prev_state, &state, sizeof(state));
 
@@ -107,9 +108,8 @@ void draw_main() {
       break;
   }
 
-  ssd1306_bmp_show_image_with_offset(&disp, state.key_mapping->icon_data,
-                                     state.key_mapping->icon_size,
-                                     KEY_MAPPING_POS);
+  ssd1306_bmp_show_image_with_offset(&disp, state.keymap->icon_data,
+                                     state.keymap->icon_size, KEY_MAPPING_POS);
 }
 
 void draw_menu() {

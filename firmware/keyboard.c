@@ -2,7 +2,9 @@
 
 #include "display.h"
 #include "keyboard_matrix.h"
+#include "keyboard_scan_codes.h"
 #include "main_host.h"
+#include "menu.h"
 #include "midi.h"
 #include "midi_note_table.h"
 #include "pico/flash.h"
@@ -29,6 +31,24 @@ void handle_key(uint8_t key, bool pressed) {
   }
 
   if (pressed) {
+    switch (key) {
+      case SC_ESC:
+        menu_toggle();
+        return;
+      case SC_ENTER:
+        menu_select();
+        return;
+      case SC_BSPC:
+        menu_parent();
+        return;
+      case SC_UP:
+        menu_prev();
+        return;
+      case SC_DOWN:
+        menu_next();
+        return;
+    }
+
     if (key >= 58 && key <= 61) {
       midi_clear_notes();
       set_key_mapping(key - 58);

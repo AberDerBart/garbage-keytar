@@ -21,8 +21,8 @@
 
 void send(uint8_t len, uint8_t *msg) {
   midi_uart_write(len, msg);
-  midi_ble_write(len, msg);
-  midi_ble_client_write(len, msg);
+  midi_ble_server_write(len, msg);
+  midi_ble_server_write(len, msg);
 }
 
 void midi_note_on(uint8_t note) {

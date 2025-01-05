@@ -2,6 +2,7 @@
 
 #include "btstack.h"
 #include "display.h"
+#include "menu/bluetooth.h"
 #include "midi-ble.h"
 #include "midi_service_stream_handler.h"
 #include "pico/btstack_cyw43.h"
@@ -119,8 +120,10 @@ void server_packet_handler(uint8_t packet_type, uint16_t channel,
 
 static btstack_packet_callback_registration_t sm_event_callback_registration;
 
+bool ble_server_is_initialized = false;
+
 void midi_ble_init() {
-  printf("init ble midi\n");
+  printf("init ble midi server\n");
 
   if (cyw43_arch_init()) {
     printf("failed to initialise cyw43_arch\n");
@@ -141,9 +144,26 @@ void midi_ble_init() {
   midi_service_stream_init(server_packet_handler);
 
   hci_power_control(HCI_POWER_ON);
+  ble_server_is_initialized = true;
+  menu_update_bluetooth();
 }
 
-void midi_ble_write(uint8_t n_bytes, uint8_t *midi_stream_bytes) {
+void midi_ble_deinit() {
+  printf("deinit ble midi server\n");
+  midi_service_stream_deinit();
+  sm_remove_event_handler(&sm_event_callback_registration);
+  att_server_deinit();
+  sm_deinit();
+  l2cap_deinit();
+  cyw43_arch_deinit();
+
+  ble_server_is_initialized = false;
+  menu_update_bluetooth();
+}
+
+bool midi_ble_server_is_initialized() { return ble_server_is_initialized; }
+
+void midi_ble_server_write(uint8_t n_bytes, uint8_t *midi_stream_bytes) {
   if (con_handle == HCI_CON_HANDLE_INVALID) {
     return;
   }

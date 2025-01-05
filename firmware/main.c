@@ -51,7 +51,7 @@ int main(void) {
   keyboard_init();
 
   midi_uart_init();
-  midi_ble_init();
+  // midi_ble_init();
 
   // pitchbend_init();
   // control_init();

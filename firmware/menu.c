@@ -1,17 +1,13 @@
 #include <menu.h>
 #include <stddef.h>
 
+#include "ble_midi_client.h"
 #include "display.h"
 #include "keyboard_matrix.h"
+#include "menu/bluetooth.h"
+#include "midi_ble.h"
 
 menu_item_t menu_item_main;
-
-menu_item_t mi_bluetooth = {
-  label : "Bluetooth",
-  parent : &menu_item_main,
-  children : NULL,
-  action : NULL,
-};
 
 menu_item_t mi_keymap;
 
@@ -50,27 +46,28 @@ menu_item_t mi_keymap_wicki_hayden = {
   action : set_keymap_wicki_hayden,
 };
 
+menu_item_t* mi_children_keymap[] = {
+    &mi_keymap_piano,        &mi_keymap_accordion_b,
+    &mi_keymap_accordion_c,  &mi_keymap_accordion_6_plus_6,
+    &mi_keymap_wicki_hayden, NULL,
+};
+
 menu_item_t mi_keymap = {
   label : "Keymap",
   parent : &menu_item_main,
-  children : {
-      &mi_keymap_piano,
-      &mi_keymap_accordion_b,
-      &mi_keymap_accordion_c,
-      &mi_keymap_accordion_6_plus_6,
-      &mi_keymap_wicki_hayden,
-      NULL,
-  },
+  children : mi_children_keymap,
   action : NULL,
+};
+
+menu_item_t* menu_children[] = {
+    &mi_bluetooth,
+    &mi_keymap,
+    NULL,
 };
 
 menu_item_t menu_item_main = {
   label : NULL,
   parent : NULL,
-  children : {
-      &mi_bluetooth,
-      &mi_keymap,
-      NULL,
-  },
+  children : menu_children,
   action : NULL,
 };

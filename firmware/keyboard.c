@@ -4,7 +4,7 @@
 #include "keyboard_matrix.h"
 #include "keyboard_scan_codes.h"
 #include "main_host.h"
-#include "menu.h"
+#include "menu_navigation.h"
 #include "midi.h"
 #include "midi_note_table.h"
 #include "pico/flash.h"

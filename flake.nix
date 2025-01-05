@@ -27,6 +27,9 @@
           pkgs.minicom
           pkgs.imagemagick
           self.packages.${system}.bin2c
+          pkgs.python311
+          pkgs.python311Packages.pycryptodomex
+          pkgs.alsa-utils
         ];
         
         PICO_SDK_PATH = "./firmware/pico-sdk";

@@ -1,4 +1,5 @@
 #pragma once
+#include <stdint.h>
 
 void midi_uart_init();
 

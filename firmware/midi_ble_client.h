@@ -12,3 +12,8 @@ void midi_ble_client_write(uint8_t len, uint8_t* msg);
 
 uint8_t midi_ble_client_device_count();
 char* midi_ble_client_get_device_name(uint8_t index);
+
+bool midi_bli_client_is_connected();
+void midi_ble_client_disconnect();
+
+extern void (*midi_ble_client_connect[16])();

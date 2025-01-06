@@ -45,9 +45,10 @@ void midi_ble_client_deinit() {
 bool midi_ble_client_is_initialized() { return ble_client_is_initialized; }
 
 void midi_ble_client_write(uint8_t len, uint8_t* msg) {
-  if (!ble_midi_client_is_connected) {
+  if (!ble_midi_client_is_connected()) {
     return;
   }
+  printf("sending");
 
   ble_midi_client_stream_write(len, msg);
 }
@@ -59,3 +60,38 @@ uint8_t midi_ble_client_device_count() {
 char* midi_ble_client_get_device_name(uint8_t index) {
   return ble_midi_client_get_midi_peripheral_name(index);
 }
+
+bool midi_bli_client_is_connected() { return ble_midi_client_is_connected(); }
+
+void midi_ble_client_disconnect() {
+  ble_midi_client_request_disconnect();
+  ble_midi_client_scan_begin();
+}
+
+void midi_ble_client_connect_1() { ble_midi_client_request_connect(1); }
+void midi_ble_client_connect_2() { ble_midi_client_request_connect(2); }
+void midi_ble_client_connect_3() { ble_midi_client_request_connect(3); }
+void midi_ble_client_connect_4() { ble_midi_client_request_connect(4); }
+void midi_ble_client_connect_5() { ble_midi_client_request_connect(5); }
+void midi_ble_client_connect_6() { ble_midi_client_request_connect(6); }
+void midi_ble_client_connect_7() { ble_midi_client_request_connect(7); }
+void midi_ble_client_connect_8() { ble_midi_client_request_connect(8); }
+void midi_ble_client_connect_9() { ble_midi_client_request_connect(9); }
+void midi_ble_client_connect_10() { ble_midi_client_request_connect(10); }
+void midi_ble_client_connect_11() { ble_midi_client_request_connect(11); }
+void midi_ble_client_connect_12() { ble_midi_client_request_connect(12); }
+void midi_ble_client_connect_13() { ble_midi_client_request_connect(13); }
+void midi_ble_client_connect_14() { ble_midi_client_request_connect(14); }
+void midi_ble_client_connect_15() { ble_midi_client_request_connect(15); }
+void midi_ble_client_connect_16() { ble_midi_client_request_connect(16); }
+
+void (*midi_ble_client_connect[16])() = {
+    &midi_ble_client_connect_1,  &midi_ble_client_connect_2,
+    &midi_ble_client_connect_3,  &midi_ble_client_connect_4,
+    &midi_ble_client_connect_5,  &midi_ble_client_connect_6,
+    &midi_ble_client_connect_7,  &midi_ble_client_connect_8,
+    &midi_ble_client_connect_9,  &midi_ble_client_connect_10,
+    &midi_ble_client_connect_11, &midi_ble_client_connect_12,
+    &midi_ble_client_connect_13, &midi_ble_client_connect_14,
+    &midi_ble_client_connect_15, &midi_ble_client_connect_16,
+};

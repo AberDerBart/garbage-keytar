@@ -37,6 +37,13 @@ menu_item_t mi_client_connect = {
   action : NULL,
 };
 
+menu_item_t mi_client_disconnect = {
+  label : "Disconnect",
+  parent : &mi_bluetooth,
+  children : NULL,
+  action : midi_ble_client_disconnect,
+};
+
 menu_item_t mi_stop_client = {
   label : "Disable",
   parent : &mi_bluetooth,
@@ -72,9 +79,13 @@ bool menu_update_bluetooth() {
   if (midi_ble_client_is_initialized()) {
     mi_bluetooth.children = mi_bluetooth_children_client;
 
+    mi_bluetooth.children[0] = midi_bli_client_is_connected()
+                                   ? &mi_client_disconnect
+                                   : &mi_client_connect;
+
     uint8_t device_count = midi_ble_client_device_count();
     for (int i = 0; i < device_count; i++) {
-      mi_bluetooth_devices[i].action = NULL;
+      mi_bluetooth_devices[i].action = midi_ble_client_connect[i];
       mi_bluetooth_devices[i].children = NULL;
       mi_bluetooth_devices[i].label = midi_ble_client_get_device_name(i + 1);
       mi_bluetooth_devices[i].parent = &mi_client_connect;

@@ -16,3 +16,5 @@ typedef struct {
 } menu_state_t;
 
 extern menu_item_t menu_item_main;
+
+bool menu_update();

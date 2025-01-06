@@ -6,7 +6,7 @@
 	url = git@github.com:dhaillant/kicad-3dmodels.git
 [submodule "lib/pico-w-ble-midi-lib"]
 	path = firmware/lib/pico-w-ble-midi-lib
-	url = git@github.com:rppicomidi/pico-w-ble-midi-lib.git
+	url = git@github.com:AberDerBart/pico-w-ble-midi-lib.git
 [submodule "lib/ring_buffer_lib"]
 	path = firmware/lib/ring_buffer_lib
 	url = git@github.com:rppicomidi/ring_buffer_lib.git

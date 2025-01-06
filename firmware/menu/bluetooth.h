@@ -4,4 +4,4 @@
 
 extern menu_item_t mi_bluetooth;
 
-void menu_update_bluetooth();
+bool menu_update_bluetooth();

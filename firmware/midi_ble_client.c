@@ -44,10 +44,18 @@ void midi_ble_client_deinit() {
 
 bool midi_ble_client_is_initialized() { return ble_client_is_initialized; }
 
-void midi_ble_client_write(uint8_t len, uint8_t *msg) {
+void midi_ble_client_write(uint8_t len, uint8_t* msg) {
   if (!ble_midi_client_is_connected) {
     return;
   }
 
   ble_midi_client_stream_write(len, msg);
+}
+
+uint8_t midi_ble_client_device_count() {
+  return ble_midi_client_get_n_midi_peripherals();
+}
+
+char* midi_ble_client_get_device_name(uint8_t index) {
+  return ble_midi_client_get_midi_peripheral_name(index);
 }

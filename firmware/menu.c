@@ -71,3 +71,5 @@ menu_item_t menu_item_main = {
   children : menu_children,
   action : NULL,
 };
+
+bool menu_update() { return menu_update_bluetooth(); }

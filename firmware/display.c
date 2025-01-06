@@ -142,7 +142,7 @@ void display_task() {
     return;
   }
 
-  if (!memcmp(&state, &prev_state, sizeof(state))) {
+  if (!memcmp(&state, &prev_state, sizeof(state)) && !menu_update()) {
     // No changes, skip rendering
     return;
   }

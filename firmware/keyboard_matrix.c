@@ -3,6 +3,7 @@
 #include "display.h"
 #include "img/gen/accordion_b_32_16.h"
 #include "img/gen/accordion_c_32_16.h"
+#include "img/gen/guitar_32_16.h"
 #include "img/gen/piano_32_16.h"
 #include "img/gen/six_plus_six_32_16.h"
 #include "img/gen/wicki_hayden_32_16.h"
@@ -108,5 +109,17 @@ keymap_t keymap_wicki_hayden = {
 };
 
 void set_keymap_wicki_hayden() { set_keymap(&keymap_wicki_hayden); }
+
+uint8_t lookup_guitar(uint8_t keycode) {
+  return note_by_pattern(keycode, 40, 1, 7);
+}
+
+keymap_t keymap_guitar = {
+  lookup : &lookup_guitar,
+  icon_size : guitar_32_16_bmp_size,
+  icon_data : guitar_32_16_bmp_data,
+};
+
+void set_keymap_guitar() { set_keymap(&keymap_guitar); }
 
 keymap_t* default_keymap = &keymap_piano;

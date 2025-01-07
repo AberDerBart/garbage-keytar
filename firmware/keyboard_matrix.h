@@ -17,3 +17,5 @@ void set_keymap_accordion_c();
 void set_keymap_accordion_6plus6();
 
 void set_keymap_wicki_hayden();
+
+void set_keymap_guitar();

@@ -44,3 +44,8 @@ void midi_clear_notes() {
   uint8_t msg[3] = {CMD_CC, CONTROL_ALL_NOTES_OFF_B1, CONTROL_ALL_NOTES_OFF_B2};
   send(3, msg);
 }
+
+void midi_pitchbend(uint8_t low, uint8_t high) {
+  uint8_t msg[3] = {CMD_PITCHBEND, low, high};
+  send(3, msg);
+}

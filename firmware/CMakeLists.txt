@@ -58,6 +58,7 @@ target_sources(${target_name} PRIVATE
  menu_navigation.c
  menu/bluetooth.c
  menu/keymap.c
+ pitchbend.c
  )
 
 my_pico_btstack_make_gatt_header(${target_name} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/midi-ble.gatt" "-I${CMAKE_CURRENT_LIST_DIR}/lib/pico-w-ble-midi-lib")
@@ -74,6 +75,7 @@ target_link_libraries(${target_name} PRIVATE
   tinyusb_host
   pico_stdlib
   hardware_i2c
+  hardware_adc
   pico_btstack_ble
   pico_btstack_cyw43
   pico_cyw43_arch_none

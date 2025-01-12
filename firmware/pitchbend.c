@@ -7,11 +7,11 @@
 #define PITCHBEND_ADC_INPUT 2
 #define PITCHBEND_PIN 28
 
-#define CENTER_VALUE_MIN 2040
-#define CENTER_VALUE_MAX 2060
+#define CENTER_VALUE_MIN 1520
+#define CENTER_VALUE_MAX 2160
 
-#define MIN_VALUE 20
-#define MAX_VALUE 3900
+#define MIN_VALUE 200
+#define MAX_VALUE 3600
 
 #define OFF_THRESHOLD_VALUE 4000
 
@@ -19,9 +19,9 @@
 typedef uint16_t uint14_t;
 
 #define UINT14_MIN 0
-#define UINT14_MAX 16384
+#define UINT14_MAX 0x3fff
 
-#define PITCHBEND_CENTER 8192
+#define PITCHBEND_CENTER 0x2000
 
 struct pitchbend_value {
   uint8_t high;
@@ -30,13 +30,6 @@ struct pitchbend_value {
 
 static struct pitchbend_value last_pitchbend;
 
-void pitchbend_init() {
-  adc_init();
-  adc_gpio_init(PITCHBEND_PIN);
-
-  last_pitchbend = to_pitchbend(PITCHBEND_CENTER);
-}
-
 struct pitchbend_value to_pitchbend(uint16_t value) {
   struct pitchbend_value result = {
     low : value & 0x7f,
@@ -44,6 +37,13 @@ struct pitchbend_value to_pitchbend(uint16_t value) {
   };
 
   return result;
+}
+
+void pitchbend_init() {
+  adc_init();
+  adc_gpio_init(PITCHBEND_PIN);
+
+  last_pitchbend = to_pitchbend(PITCHBEND_CENTER);
 }
 
 struct pitchbend_value pitchbend_read() {
@@ -58,12 +58,12 @@ struct pitchbend_value pitchbend_read() {
     return to_pitchbend(PITCHBEND_CENTER);
   }
 
-  if (adc_value < MIN_VALUE) {
+  if (adc_value <= MIN_VALUE) {
     // max bend down
     return to_pitchbend(UINT14_MIN);
   }
 
-  if (adc_value > MAX_VALUE) {
+  if (adc_value >= MAX_VALUE) {
     // max bend up
     return to_pitchbend(UINT14_MAX);
   }
@@ -80,10 +80,10 @@ struct pitchbend_value pitchbend_read() {
 
   if (adc_value > CENTER_VALUE_MAX) {
     // bending up, adc_value is between CENTER_VALUE_MAX and MAX_VALUE
-    uint32_t diff_center = adc_value - MIN_VALUE;
+    uint32_t diff_center = adc_value - CENTER_VALUE_MAX;
     uint32_t pitchbend_range = UINT14_MAX - PITCHBEND_CENTER;
-    uint32_t adc_range = CENTER_VALUE_MIN - MIN_VALUE;
-    uint32_t v = diff_center * pitchbend_range / adc_range;
+    uint32_t adc_range = MAX_VALUE - CENTER_VALUE_MAX;
+    uint32_t v = diff_center * pitchbend_range / adc_range + PITCHBEND_CENTER;
 
     return to_pitchbend(v);
   }

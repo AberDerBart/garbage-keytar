@@ -53,7 +53,7 @@ int main(void) {
   midi_uart_init();
   // midi_ble_init();
 
-  // pitchbend_init();
+  pitchbend_init();
   // control_init();
   display_init();
 
@@ -65,7 +65,7 @@ int main(void) {
 
     // control_task();
 
-    // pitchbend_task();
+    pitchbend_task();
   }
 
   return 0;

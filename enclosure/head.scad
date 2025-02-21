@@ -5,6 +5,10 @@ use <parts.scad>
 use <bartscad/poly.scad>
 
 use <head/pitch_wheel.scad>
+use <head/neck.scad>
+use <bartscad/stack.scad>
+
+include <keyboard.scad>
 
 SCREW_POSITIONS_RIGHT = [
   [X_MAX_RIGHT-15, Y_MIN+15],
@@ -45,6 +49,10 @@ module case_top_right(positive=true) {
   }
 }
 
+module neck_anchor(){
+  translate([X_MAX_RIGHT, -30, 0])multmatrix([[0,0,1],[1,0,0],[0,1,0]]) children();
+}
+
 module case_gaps_right() {
   // space for keyboard
   keyboard_anchor_right()keyboard(anchor="right",open_top=true);
@@ -61,21 +69,46 @@ module case_gaps_right() {
   for(pos=SCREW_POSITIONS_RIGHT){
     translate([0,0,H_CASE])translate(pos) insert_m3();
   }
+
+  neck_anchor(){
+    for_neck_screw_positions(){
+      translate([0,0,-100])cylinder(d=4.4,h=101);
+      translate([0,0,-60])let($fn=6) cylinder(d=7.66+0.2,h=25);
+    }
+    neck_cable_channel([[0,18,-45]]);
+    #translate([0,0,-45])linear_extrude(10){
+      polygon([
+        [-7.5,21.5],
+        [-7.5-10,8.6],
+        [-7.5-10,5],
+        [-7.5,5],
+        [-7.5,8.8],
+        [-5,14.5],
+      ]);
+    }
+  }
+
+  translate([0,0,8.8-6])linear_extrude(6){
+    polygon([
+      [10,-30-7.5],
+      [10,-30-17.5],
+      [8,-W_BOTTOM/2],
+      [0,-W_BOTTOM/2],
+      [0,-W_BOTTOM/2+2],
+      [4,-W_BOTTOM/2+2],
+      [8,-30-7.5],
+    ]);
+  }
+
+  #translate([X_MAX_RIGHT-25,-Y_MAX+15]){
+    cylinder(d=5.4,h=100, center=true);
+    let($fn=6)translate([0,0,10])cylinder(d=9,h=100);
+  }
 }
+
+$fn=150;
 
 case_bottom_right();
 //case_top_right(true);
 
-translate([100,-50])rotate([90,0,90]){
-  translate([0,21.5]){
-    wheel();
-    foot();
-  }
-
-  linear_extrude(100,center=true) poly([
-    fillet([-20,0],17),
-    fillet([20,0], 17),
-    fillet([20,27], 3),
-    [-20,27],
-  ]);
-}
+//neck_anchor() translate([0,0,10])neck();

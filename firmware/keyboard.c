@@ -47,6 +47,12 @@ void handle_key(uint8_t key, bool pressed) {
       case SC_DOWN:
         menu_next();
         return;
+      case SC_LEFT:
+        menu_dec();
+        return;
+      case SC_RIGHT:
+        menu_inc();
+        return;
     }
 
     if (key >= 58 && key <= 69) {

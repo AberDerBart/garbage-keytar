@@ -112,15 +112,27 @@ void draw_main() {
                                      state.keymap->icon_size, KEY_MAPPING_POS);
 }
 
+#define W_CHARACTER 6
+#define H_CHARACTER 8
+#define FONT_SCALE 1
+
 void draw_menu() {
   if (!state.menu_state.current) {
     return;
   }
   for (uint8_t i = 0; i < menu_len(state.menu_state.current); i++) {
     menu_item_t* child = state.menu_state.current->children[i];
-    ssd1306_draw_string(&disp, 8, i * 8, 1, child->label);
+    ssd1306_draw_string(&disp, W_CHARACTER, i * H_CHARACTER, FONT_SCALE,
+                        child->label);
+    if (child->get_value) {
+      char* value = child->get_value();
+
+      uint8_t len = strlen(value);
+      ssd1306_draw_string(&disp, 128 - len * W_CHARACTER, i * H_CHARACTER,
+                          FONT_SCALE, value);
+    }
     if (state.menu_state.index == i) {
-      ssd1306_draw_char(&disp, 0, i * 8, 1, '>');
+      ssd1306_draw_char(&disp, 0, i * H_CHARACTER, FONT_SCALE, '>');
     }
   }
 };
@@ -142,7 +154,8 @@ void display_task() {
     return;
   }
 
-  if (!memcmp(&state, &prev_state, sizeof(state)) && !menu_update()) {
+  if (!memcmp(&state, &prev_state, sizeof(state)) &&
+      (!state.menu_state.current || !menu_update())) {
     // No changes, skip rendering
     return;
   }

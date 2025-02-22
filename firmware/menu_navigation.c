@@ -24,6 +24,15 @@ menu_state_t* get_menu_state() {
   return &display_get_state_for_update()->menu_state;
 }
 
+menu_item_t* get_highlighted_menu_item() {
+  menu_state_t* state = get_menu_state();
+  if (!state->current) {
+    return NULL;
+  }
+
+  return state->current->children[state->index];
+}
+
 void menu_open() {
   menu_state_t* state = get_menu_state();
   if (state->current) {
@@ -82,6 +91,22 @@ void menu_next() {
     state->index += 1;
   }
 };
+
+void menu_inc() {
+  menu_item_t* target = get_highlighted_menu_item();
+
+  if (target->change) {
+    target->change(1);
+  }
+}
+
+void menu_dec() {
+  menu_item_t* target = get_highlighted_menu_item();
+
+  if (target->change) {
+    target->change(-1);
+  }
+}
 
 void menu_parent() {
   menu_state_t* state = get_menu_state();

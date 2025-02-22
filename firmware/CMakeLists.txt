@@ -58,7 +58,9 @@ target_sources(${target_name} PRIVATE
  menu_navigation.c
  menu/bluetooth.c
  menu/keymap.c
+ menu/envelope.c
  pitchbend.c
+ adsr.c
  )
 
 my_pico_btstack_make_gatt_header(${target_name} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/midi-ble.gatt" "-I${CMAKE_CURRENT_LIST_DIR}/lib/pico-w-ble-midi-lib")

@@ -8,6 +8,8 @@ typedef struct menu_item_t {
   void (*action)();
   struct menu_item_t *parent;
   struct menu_item_t **children;
+  void (*change)(int8_t steps);
+  char *(*get_value)();
 } menu_item_t;
 
 typedef struct {

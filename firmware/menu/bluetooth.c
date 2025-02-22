@@ -11,6 +11,8 @@ menu_item_t mi_bluetooth_server_start = {
   parent : &mi_bluetooth,
   children : NULL,
   action : midi_ble_init,
+  change : NULL,
+  get_value : NULL,
 };
 
 menu_item_t mi_stop_server = {
@@ -18,6 +20,8 @@ menu_item_t mi_stop_server = {
   parent : &mi_bluetooth,
   children : NULL,
   action : midi_ble_deinit,
+  change : NULL,
+  get_value : NULL,
 };
 
 menu_item_t mi_bluetooth_start_client = {
@@ -25,6 +29,8 @@ menu_item_t mi_bluetooth_start_client = {
   parent : &mi_bluetooth,
   children : NULL,
   action : midi_ble_client_init,
+  change : NULL,
+  get_value : NULL,
 };
 
 menu_item_t mi_bluetooth_devices[16];
@@ -35,6 +41,8 @@ menu_item_t mi_client_connect = {
   parent : &mi_bluetooth,
   children : mi_bluetooth_device_list,
   action : NULL,
+  change : NULL,
+  get_value : NULL,
 };
 
 menu_item_t mi_client_disconnect = {
@@ -42,6 +50,17 @@ menu_item_t mi_client_disconnect = {
   parent : &mi_bluetooth,
   children : NULL,
   action : midi_ble_client_disconnect,
+  change : NULL,
+  get_value : NULL,
+};
+
+menu_item_t mi_client_remember_connection = {
+  label : "Remeber connection",
+  parent : &mi_bluetooth,
+  children : NULL,
+  action : NULL,
+  change : NULL,
+  get_value : NULL,
 };
 
 menu_item_t mi_stop_client = {
@@ -49,6 +68,8 @@ menu_item_t mi_stop_client = {
   parent : &mi_bluetooth,
   children : NULL,
   action : midi_ble_client_deinit,
+  change : NULL,
+  get_value : NULL,
 };
 
 menu_item_t* mi_bluetooth_children_off[] = {
@@ -59,6 +80,7 @@ menu_item_t* mi_bluetooth_children_off[] = {
 
 menu_item_t* mi_bluetooth_children_client[] = {
     &mi_client_connect,
+    &mi_client_remember_connection,
     &mi_stop_client,
     NULL,
 };
@@ -73,6 +95,8 @@ menu_item_t mi_bluetooth = {
   parent : &menu_item_main,
   children : mi_bluetooth_children_off,
   action : NULL,
+  change : NULL,
+  get_value : NULL,
 };
 
 bool menu_update_bluetooth() {

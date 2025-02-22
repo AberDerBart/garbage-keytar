@@ -11,4 +11,7 @@ void menu_prev();
 void menu_next();
 void menu_parent();
 
+void menu_inc();
+void menu_dec();
+
 void menu_select();

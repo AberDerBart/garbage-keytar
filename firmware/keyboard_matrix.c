@@ -1,5 +1,8 @@
 #include "keyboard_matrix.h"
 
+#include <stddef.h>
+
+#include "config.h"
 #include "display.h"
 #include "img/gen/accordion_b_32_16.h"
 #include "img/gen/accordion_c_32_16.h"
@@ -123,3 +126,29 @@ keymap_t keymap_guitar = {
 void set_keymap_guitar() { set_keymap(&keymap_guitar); }
 
 keymap_t* default_keymap = &keymap_piano;
+
+#define N_KEYMAPS 6
+
+keymap_t* keymaps[N_KEYMAPS] = {
+    &keymap_piano,        &keymap_accordion_c,
+    &keymap_accordion_b,  &keymap_accordion_6plus6,
+    &keymap_wicki_hayden, &keymap_guitar,
+};
+
+uint8_t get_keymap_index() {
+  keymap_t* current_keymap = display_get_state_for_update()->keymap;
+  for (uint8_t i = 0; i < N_KEYMAPS; i++) {
+    if (keymaps[i] == current_keymap) {
+      return i;
+    }
+  }
+  return 0;
+}
+
+void set_keymap_by_index(uint8_t index) {
+  if (index >= N_KEYMAPS) {
+    return;
+  }
+
+  set_keymap(keymaps[index]);
+}

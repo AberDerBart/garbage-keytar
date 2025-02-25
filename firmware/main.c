@@ -26,7 +26,9 @@
 #include <stdio.h>
 #include <string.h>
 
+#include "adsr.h"
 #include "class/hid/hid.h"
+#include "config.h"
 #include "control.h"
 #include "display.h"
 #include "keyboard.h"
@@ -56,6 +58,8 @@ int main(void) {
   pitchbend_init();
   // control_init();
   display_init();
+
+  config_init();
 
   printf("all set up\n");
 

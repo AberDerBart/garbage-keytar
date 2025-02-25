@@ -19,3 +19,7 @@ void set_keymap_accordion_6plus6();
 void set_keymap_wicki_hayden();
 
 void set_keymap_guitar();
+
+uint8_t get_keymap_index();
+
+void set_keymap_by_index(uint8_t index);

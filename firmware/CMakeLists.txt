@@ -44,24 +44,25 @@ add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/lib/ring_buffer_lib")
 set(target_name keytar)
 add_executable(${target_name})
 target_sources(${target_name} PRIVATE
- main.c
- display.c
- pico-ssd1306/ssd1306.c
- settings.c
- keyboard.c
- keyboard_matrix.c
- midi.c
- midi_ble.c
- midi_uart.c
- midi_ble_client.c
- menu.c
- menu_navigation.c
- menu/bluetooth.c
- menu/keymap.c
- menu/envelope.c
- pitchbend.c
- adsr.c
- )
+  main.c
+  display.c
+  pico-ssd1306/ssd1306.c
+  settings.c
+  keyboard.c
+  keyboard_matrix.c
+  midi.c
+  midi_ble.c
+  midi_uart.c
+  midi_ble_client.c
+  menu.c
+  menu_navigation.c
+  menu/bluetooth.c
+  menu/keymap.c
+  menu/envelope.c
+  pitchbend.c
+  adsr.c
+  config.c
+)
 
 my_pico_btstack_make_gatt_header(${target_name} PRIVATE "${CMAKE_CURRENT_LIST_DIR}/midi-ble.gatt" "-I${CMAKE_CURRENT_LIST_DIR}/lib/pico-w-ble-midi-lib")
 
@@ -69,6 +70,7 @@ my_pico_btstack_make_gatt_header(${target_name} PRIVATE "${CMAKE_CURRENT_LIST_DI
  # print memory usage, enable all warnings
 target_link_options(${target_name} PRIVATE -Xlinker --print-memory-usage)
 target_compile_options(${target_name} PRIVATE ) #-Wall -Wextra
+target_compile_definitions(${target_name} PRIVATE PICO_FLASH_ASSUME_CORE1_SAFE=1)
 
 # needed so tinyusb can find tusb_config.h
 target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_LIST_DIR} )
@@ -78,9 +80,11 @@ target_link_libraries(${target_name} PRIVATE
   pico_stdlib
   hardware_i2c
   hardware_adc
+  hardware_flash
   pico_btstack_ble
   pico_btstack_cyw43
   pico_cyw43_arch_none
+  pico_flash
   ble_midi_service_lib
   ring_buffer_lib
   ble_midi_client_lib

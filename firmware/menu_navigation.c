@@ -2,6 +2,7 @@
 
 #include <stddef.h>
 
+#include "config.h"
 #include "display.h"
 #include "menu.h"
 
@@ -47,6 +48,7 @@ void menu_close() {
   menu_state_t* state = get_menu_state();
   state->current = NULL;
   state->index = 0;
+  config_save();
 };
 
 void menu_toggle() {

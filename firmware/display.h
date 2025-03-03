@@ -2,21 +2,15 @@
 #define DISPLAY_H
 #include <stdbool.h>
 
+#include "battery.h"
 #include "keyboard_matrix.h"
 #include "menu.h"
-
-typedef enum {
-  EMPTY = 0,
-  LOW = 1,
-  MEDIUM = 2,
-  FULL = 3,
-} battery_state_t;
 
 typedef struct {
   bool keyboard;
   bool bluetooth;
   bool charging;
-  battery_state_t battery;
+  battery_level_t battery;
   keymap_t *keymap;
   menu_state_t menu_state;
 } display_state_t;

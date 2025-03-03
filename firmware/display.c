@@ -1,5 +1,6 @@
 #include "display.h"
 
+#include "battery.h"
 #include "hardware/i2c.h"
 #include "img/gen/battery_empty_24_16.h"
 #include "img/gen/battery_full_24_16.h"
@@ -153,6 +154,9 @@ void display_task() {
   if (!display_initialized) {
     return;
   }
+
+  state.charging = battery_is_charging();
+  state.battery = battery_get_level();
 
   if (!memcmp(&state, &prev_state, sizeof(state)) &&
       (!state.menu_state.current || !menu_update())) {

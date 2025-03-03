@@ -27,6 +27,7 @@
 #include <string.h>
 
 #include "adsr.h"
+#include "battery.h"
 #include "class/hid/hid.h"
 #include "config.h"
 #include "control.h"
@@ -54,6 +55,7 @@ int main(void) {
 
   midi_uart_init();
   // midi_ble_init();
+  battery_init();
 
   pitchbend_init();
   // control_init();

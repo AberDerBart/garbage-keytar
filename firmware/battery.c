@@ -11,6 +11,12 @@
 
 #define MAX_ADC_VALUE ((1 << 12) - 1)
 
+#define VOLTAGE_THRESHOLD_LOW 3.2
+#define VOLTAGE_THRESHOLD_MEDIUM 3.6
+#define VOLTAGE_THRESHOLD_FULL 3.9
+
+#define VOLTAGE_HISTERESIS 0.05
+
 void battery_init() {
   gpio_init(CHARGING_PIN);
   gpio_set_dir(CHARGING_PIN, GPIO_IN);
@@ -36,16 +42,38 @@ float battery_get_voltage() {
   return input_voltage * 2.;
 }
 
-battery_level_t battery_get_level() {
-  float batt_voltage = battery_get_voltage();
+const float voltage_thresholds[3] = {
+    VOLTAGE_THRESHOLD_LOW,
+    VOLTAGE_THRESHOLD_MEDIUM,
+    VOLTAGE_THRESHOLD_FULL,
+};
 
-  if (batt_voltage < 3.2) {
-    return EMPTY;
-  } else if (batt_voltage < 3.83) {
-    return LOW;
-  } else if (batt_voltage < 4.03) {
-    return MEDIUM;
+battery_level_t battery_get_level() {
+  static float last_level = FULL;
+
+  // shortcut if charging circuit reports fully charged
+  if (battery_is_fully_charged()) {
+    last_level = FULL;
+    return FULL;
   }
 
+  float v = battery_get_voltage();
+
+  for (battery_level_t target = EMPTY; target < FULL; target++) {
+    // if we are below the threshold of the next level, return target level
+    if (v < voltage_thresholds[target + 1]) {
+      last_level = target;
+      return target;
+    }
+    // if charging, VOLTAGE_HISTERESIS has to be surpassed as well
+    if (last_level == target &&
+        v < voltage_thresholds[target + 1] + VOLTAGE_HISTERESIS) {
+      last_level = target;
+      return target;
+    }
+  }
+
+  // if the level is above anything above, return FULL
+  last_level = FULL;
   return FULL;
 }

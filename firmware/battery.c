@@ -15,7 +15,7 @@
 #define VOLTAGE_THRESHOLD_MEDIUM 3.6
 #define VOLTAGE_THRESHOLD_FULL 3.9
 
-#define VOLTAGE_HISTERESIS 0.05
+#define VOLTAGE_HISTERESIS 0.07
 
 void battery_init() {
   gpio_init(CHARGING_PIN);

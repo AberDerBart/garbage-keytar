@@ -4,6 +4,7 @@
 #include "display.h"
 #include "menu/bluetooth.h"
 #include "midi-ble.h"
+#include "midi_ble_client.h"
 #include "midi_service_stream_handler.h"
 #include "pico/btstack_cyw43.h"
 #include "pico/cyw43_arch.h"
@@ -122,7 +123,28 @@ static btstack_packet_callback_registration_t sm_event_callback_registration;
 
 bool ble_server_is_initialized = false;
 
+ble_state_t initial_state = {
+    .mode = OFF,
+    .connected_addr = {0, 0, 0, 0, 0, 0},
+    .connected_addr_type = 0,
+};
+
 void midi_ble_init() {
+  switch (initial_state.mode) {
+    case SERVER:
+      midi_ble_server_init();
+      return;
+    case CLIENT:
+      midi_ble_client_init_with_addr(initial_state.connected_addr_type,
+                                     initial_state.connected_addr);
+      return;
+    case OFF:
+    default:
+      return;
+  }
+}
+
+void midi_ble_server_init() {
   printf("init ble midi server\n");
 
   if (cyw43_arch_init()) {
@@ -169,4 +191,24 @@ void midi_ble_server_write(uint8_t n_bytes, uint8_t *midi_stream_bytes) {
   }
 
   midi_service_stream_write(con_handle, n_bytes, midi_stream_bytes);
+}
+
+void midi_ble_set_initial_state(ble_state_t *state) {
+  memcpy(&initial_state, state, sizeof(ble_state_t));
+}
+
+ble_state_t *midi_ble_get_state() {
+  memset(initial_state.connected_addr, 0, sizeof(initial_state.connected_addr));
+  initial_state.connected_addr_type = 0;
+  initial_state.mode = OFF;
+
+  if (midi_ble_server_is_initialized()) {
+    initial_state.mode = SERVER;
+  } else if (midi_ble_client_is_connected()) {
+    initial_state.mode = CLIENT;
+    midi_ble_get_last_connected(&initial_state.connected_addr_type,
+                                initial_state.connected_addr);
+  }
+
+  return &initial_state;
 }

@@ -6,7 +6,7 @@
 
 bool ble_client_is_initialized = false;
 
-void midi_ble_client_init() {
+void midi_ble_client_init_with_addr(int addr_type, uint8_t *addr) {
   printf("init midi ble client: ");
 
   if (cyw43_arch_init()) {
@@ -22,10 +22,18 @@ void midi_ble_client_init() {
 
   printf("done\n");
 
-  ble_midi_client_scan_begin();
+  if (addr == NULL) {
+    ble_midi_client_scan_begin();
+  } else {
+    ble_midi_client_set_last_connected(addr_type, addr);
+    ble_midi_client_request_connect(0);
+  }
+
   ble_client_is_initialized = true;
   menu_update_bluetooth();
 }
+
+void midi_ble_client_init() { midi_ble_client_init_with_addr(0, NULL); }
 
 void midi_ble_client_deinit() {
   printf("deinit midi ble client: ");
@@ -44,7 +52,7 @@ void midi_ble_client_deinit() {
 
 bool midi_ble_client_is_initialized() { return ble_client_is_initialized; }
 
-void midi_ble_client_write(uint8_t len, uint8_t* msg) {
+void midi_ble_client_write(uint8_t len, uint8_t *msg) {
   if (!ble_midi_client_is_connected()) {
     return;
   }
@@ -57,11 +65,11 @@ uint8_t midi_ble_client_device_count() {
   return ble_midi_client_get_n_midi_peripherals();
 }
 
-char* midi_ble_client_get_device_name(uint8_t index) {
+char *midi_ble_client_get_device_name(uint8_t index) {
   return ble_midi_client_get_midi_peripheral_name(index);
 }
 
-bool midi_bli_client_is_connected() { return ble_midi_client_is_connected(); }
+bool midi_ble_client_is_connected() { return ble_midi_client_is_connected(); }
 
 void midi_ble_client_disconnect() {
   ble_midi_client_request_disconnect();
@@ -95,3 +103,7 @@ void (*midi_ble_client_connect[16])() = {
     &midi_ble_client_connect_13, &midi_ble_client_connect_14,
     &midi_ble_client_connect_15, &midi_ble_client_connect_16,
 };
+
+void midi_ble_get_last_connected(int *addr_type_target, uint8_t *addr_target) {
+  *addr_type_target = ble_midi_client_get_last_conntected(addr_target);
+}

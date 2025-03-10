@@ -54,7 +54,6 @@ int main(void) {
   keyboard_init();
 
   midi_uart_init();
-  // midi_ble_init();
   battery_init();
 
   pitchbend_init();
@@ -62,6 +61,8 @@ int main(void) {
   display_init();
 
   config_init();
+
+  midi_ble_init();
 
   printf("all set up\n");
 

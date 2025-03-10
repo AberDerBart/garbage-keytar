@@ -10,7 +10,7 @@ menu_item_t mi_bluetooth_server_start = {
   label : "Start server",
   parent : &mi_bluetooth,
   children : NULL,
-  action : midi_ble_init,
+  action : midi_ble_server_init,
   change : NULL,
   get_value : NULL,
 };
@@ -103,7 +103,7 @@ bool menu_update_bluetooth() {
   if (midi_ble_client_is_initialized()) {
     mi_bluetooth.children = mi_bluetooth_children_client;
 
-    mi_bluetooth.children[0] = midi_bli_client_is_connected()
+    mi_bluetooth.children[0] = midi_ble_client_is_connected()
                                    ? &mi_client_disconnect
                                    : &mi_client_connect;
 

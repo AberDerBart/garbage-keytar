@@ -19,7 +19,7 @@ uint8_t note_by_lut(uint8_t keycode, uint8_t lut[4][14]) {
   int8_t row = keycode2row[keycode];
   int8_t col = keycode2column[keycode];
 
-  if (row < 1 || col < 0 || row > 4 || col) {
+  if (row <= 0 || col < 0 || row > 4 || col >= 14) {
     return 0;
   }
 
@@ -114,7 +114,7 @@ keymap_t keymap_wicki_hayden = {
 void set_keymap_wicki_hayden() { set_keymap(&keymap_wicki_hayden); }
 
 uint8_t lookup_guitar(uint8_t keycode) {
-  return note_by_pattern(keycode, 40, 1, 7);
+  return note_by_pattern(keycode, 40, 1, 5);
 }
 
 keymap_t keymap_guitar = {

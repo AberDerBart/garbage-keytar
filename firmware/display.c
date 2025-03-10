@@ -111,6 +111,10 @@ void draw_main() {
 
   ssd1306_bmp_show_image_with_offset(&disp, state.keymap->icon_data,
                                      state.keymap->icon_size, KEY_MAPPING_POS);
+
+  char buffer[16];
+  snprintf(buffer, 15, "%.2fV", battery_get_voltage());
+  ssd1306_draw_string(&disp, 0, 20, 1, buffer);
 }
 
 #define W_CHARACTER 6

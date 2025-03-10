@@ -197,18 +197,26 @@ void midi_ble_set_initial_state(ble_state_t *state) {
   memcpy(&initial_state, state, sizeof(ble_state_t));
 }
 
+ble_state_t *midi_ble_get_initial_state() { return &initial_state; }
+
+ble_state_t ble_state;
+
 ble_state_t *midi_ble_get_state() {
-  memset(initial_state.connected_addr, 0, sizeof(initial_state.connected_addr));
-  initial_state.connected_addr_type = 0;
-  initial_state.mode = OFF;
+  memset(ble_state.connected_addr, 0, sizeof(ble_state.connected_addr));
+  ble_state.connected_addr_type = 0;
+  ble_state.mode = OFF;
 
   if (midi_ble_server_is_initialized()) {
-    initial_state.mode = SERVER;
+    ble_state.mode = SERVER;
   } else if (midi_ble_client_is_connected()) {
-    initial_state.mode = CLIENT;
-    midi_ble_get_last_connected(&initial_state.connected_addr_type,
-                                initial_state.connected_addr);
+    ble_state.mode = CLIENT;
+    midi_ble_get_last_connected(&ble_state.connected_addr_type,
+                                ble_state.connected_addr);
   }
 
-  return &initial_state;
+  return &ble_state;
+}
+
+void midi_ble_set_state_as_initial() {
+  midi_ble_set_initial_state(midi_ble_get_state());
 }

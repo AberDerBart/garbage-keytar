@@ -5,10 +5,11 @@
 
 #include "adsr.h"
 #include "keyboard_matrix.h"
+#include "midi_ble.h"
 #include "pico/flash.h"
 
 #define CONFIG_FLASH_OFFSET (PICO_FLASH_SIZE_BYTES - FLASH_SECTOR_SIZE)
-#define CONFIG_VERSION 1
+#define CONFIG_VERSION 2
 #define CONFIG_MAGIC_NUMBER 0x4e62
 
 typedef struct {
@@ -17,6 +18,8 @@ typedef struct {
 
   uint8_t keymap_index;
   adsr_settings_t adsr;
+
+  ble_state_t ble;
 } config_t;
 
 const config_t *saved_config =
@@ -38,6 +41,7 @@ void load_internal() {
   // apply config data
   set_keymap_by_index(saved_config->keymap_index);
   memcpy(&adsr_settings, &(saved_config->adsr), sizeof(adsr_settings));
+  midi_ble_set_initial_state(&(saved_config->ble));
 }
 
 void config_init() {
@@ -54,6 +58,7 @@ void save_internal() {
   // collect config data
   config.keymap_index = get_keymap_index();
   memcpy(&config.adsr, &adsr_settings, sizeof(adsr_settings));
+  memcpy(&config.ble, midi_ble_get_initial_state(), sizeof(ble_state_t));
 
   // only write if necessary
   if (!memcmp(&config, saved_config, sizeof(config_t))) {

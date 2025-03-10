@@ -24,4 +24,8 @@ typedef struct {
   int connected_addr_type;
 } ble_state_t;
 
+void midi_ble_set_initial_state(ble_state_t* state);
+ble_state_t* midi_ble_get_initial_state();
+
 ble_state_t* midi_ble_get_state();
+void midi_ble_set_state_as_initial();

@@ -58,7 +58,7 @@ menu_item_t mi_client_remember_connection = {
   label : "Remeber connection",
   parent : &mi_bluetooth,
   children : NULL,
-  action : NULL,
+  action : midi_ble_set_state_as_initial,
   change : NULL,
   get_value : NULL,
 };

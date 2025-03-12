@@ -99,11 +99,9 @@ void server_packet_handler(uint8_t packet_type, uint16_t channel,
           con_handle =
               gattservice_subevent_spp_service_connected_get_con_handle(packet);
           printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_CONNECTED event\r\n");
-          display_get_state_for_update()->bluetooth = true;
           break;
         case GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED:
           printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED event\r\n");
-          display_get_state_for_update()->bluetooth = false;
           con_handle = HCI_CON_HANDLE_INVALID;
           break;
         default:
@@ -117,6 +115,10 @@ void server_packet_handler(uint8_t packet_type, uint16_t channel,
     default:
       break;
   }
+}
+
+bool midi_ble_is_connected() {
+  return con_handle != HCI_CON_HANDLE_INVALID || midi_ble_client_is_connected();
 }
 
 static btstack_packet_callback_registration_t sm_event_callback_registration;
@@ -181,6 +183,7 @@ void midi_ble_deinit() {
 
   ble_server_is_initialized = false;
   menu_update_bluetooth();
+  con_handle = HCI_CON_HANDLE_INVALID;
 }
 
 bool midi_ble_server_is_initialized() { return ble_server_is_initialized; }

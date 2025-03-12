@@ -10,6 +10,8 @@ void midi_ble_deinit();
 
 bool midi_ble_server_is_initialized();
 
+bool midi_ble_is_connected();
+
 void midi_ble_server_write(uint8_t len, uint8_t* msg);
 
 typedef enum {

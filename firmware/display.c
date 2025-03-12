@@ -10,6 +10,7 @@
 #include "img/gen/charge_8_16.h"
 #include "img/gen/keyboard_24_16.h"
 #include "menu_navigation.h"
+#include "midi_ble.h"
 #include "pico-ssd1306/ssd1306.h"
 #include "settings.h"
 #include "stdio.h"
@@ -161,6 +162,7 @@ void display_task() {
 
   state.charging = battery_is_charging();
   state.battery = battery_get_level();
+  state.bluetooth = midi_ble_is_connected();
 
   if (!memcmp(&state, &prev_state, sizeof(state)) &&
       (!state.menu_state.current || !menu_update())) {

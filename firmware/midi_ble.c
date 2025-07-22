@@ -8,6 +8,7 @@
 #include "midi_service_stream_handler.h"
 #include "pico/btstack_cyw43.h"
 #include "pico/cyw43_arch.h"
+#include "ui_stack.h"
 
 #define APP_AD_FLAGS 0x06
 const uint8_t adv_data[] = {
@@ -99,10 +100,12 @@ void server_packet_handler(uint8_t packet_type, uint16_t channel,
           con_handle =
               gattservice_subevent_spp_service_connected_get_con_handle(packet);
           printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_CONNECTED event\r\n");
+          ui_render();
           break;
         case GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED:
           printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED event\r\n");
           con_handle = HCI_CON_HANDLE_INVALID;
+          ui_render();
           break;
         default:
           break;

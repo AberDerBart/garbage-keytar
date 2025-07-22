@@ -143,6 +143,7 @@ void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance,
   if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD) {
     printf("USB keyboard connected\n");
     keyboard_connected = true;
+    ui_render();
     tuh_hid_receive_report(dev_addr, instance);
   } else {
     printf("unkonwn USB device connected\n");

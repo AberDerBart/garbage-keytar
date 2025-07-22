@@ -104,7 +104,10 @@ keymap_t keymap_guitar = {
 
 keymap_t* keymap = &keymap_piano;
 
-void set_keymap(keymap_t* new_keymap) { keymap = new_keymap; }
+void set_keymap(keymap_t* new_keymap) {
+  keymap = new_keymap;
+  ui_render();
+}
 
 keymap_t* keymap_get() { return keymap; }
 

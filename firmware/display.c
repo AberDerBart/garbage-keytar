@@ -50,9 +50,9 @@ void display_init() {
 
   ssd1306_set_rotation(&disp, ROT_180);
 
-  ui_set_default_element(&ui_status);
+  ui_init(&disp, &ui_status);
 
-  ui_render(&disp);
+  ui_render();
 }
 
 void display_task() {

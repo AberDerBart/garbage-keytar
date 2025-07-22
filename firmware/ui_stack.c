@@ -4,11 +4,29 @@
 
 #include "display.h"
 
+typedef struct ui_stack_layer_t {
+  ui_element_t* element;
+  struct ui_stack_layer_t* up;
+} ui_stack_layer_t;
+
+typedef struct ui_stack_t {
+  ui_stack_layer_t* current;
+  uint8_t stack_size;
+  ui_element_t* default_element;
+  ssd1306_t* display;
+} ui_stack_t;
+
 ui_stack_t ui_stack = {
     .current = NULL,
     .stack_size = 0,
     .default_element = NULL,
+    .display = NULL,
 };
+
+void ui_init(ssd1306_t* display, ui_element_t* default_element) {
+  ui_stack.display = display;
+  ui_stack.default_element = default_element;
+}
 
 void ui_push(ui_element_t* element) {
   ui_stack_layer_t* new_layer = malloc(sizeof(ui_stack_layer_t));
@@ -36,15 +54,22 @@ void ui_pop() {
   free(popped);
 }
 
-void ui_render(ssd1306_t* display) {
-  if (!ui_stack.current) {
-    if (!ui_stack.default_element) {
-      return;
-    }
-    ui_stack.default_element->render(ui_stack.default_element, display);
+void ui_render() {
+  if (!ui_stack.display) {
     return;
   }
-  ui_stack.current->element->render(ui_stack.current->element, display);
+
+  ui_element_t* element = NULL;
+  if (ui_stack.current) {
+    element = ui_stack.current->element;
+  } else if (ui_stack.default_element) {
+    element = ui_stack.default_element;
+  } else {
+    // no element to render
+    return;
+  }
+
+  element->render(element, ui_stack.display);
 }
 
 void ui_navigate(ui_nav_t nav) {
@@ -56,7 +81,7 @@ void ui_navigate(ui_nav_t nav) {
       return;
     }
     (ui_stack.default_element->navigate)(ui_stack.current->element, nav);
-    ui_render(get_display());
+    ui_render();
     return;
   }
   if (!ui_stack.current->element->navigate) {
@@ -73,7 +98,7 @@ void ui_navigate(ui_nav_t nav) {
       ui_stack.current->element->navigate(ui_stack.current->element, nav);
   }
 
-  ui_render(get_display());
+  ui_render();
 }
 
 void ui_clear() {

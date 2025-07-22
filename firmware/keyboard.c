@@ -4,12 +4,12 @@
 #include "keyboard_matrix.h"
 #include "keyboard_scan_codes.h"
 #include "main_host.h"
-#include "menu_navigation.h"
 #include "midi.h"
 #include "midi_note_table.h"
 #include "pico/flash.h"
 #include "pico/multicore.h"
 #include "settings.h"
+#include "ui_stack.h"
 
 // core1: handle host events
 extern void core1_main();
@@ -33,25 +33,25 @@ void handle_key(uint8_t key, bool pressed) {
   if (pressed) {
     switch (key) {
       case SC_ESC:
-        menu_toggle();
+        ui_navigate(CLOSE);
         return;
       case SC_ENTER:
-        menu_select();
+        ui_navigate(ENTER);
         return;
       case SC_BSPC:
-        menu_parent();
+        ui_navigate(RETURN);
         return;
       case SC_UP:
-        menu_prev();
+        ui_navigate(UP);
         return;
       case SC_DOWN:
-        menu_next();
+        ui_navigate(DOWN);
         return;
       case SC_LEFT:
-        menu_dec();
+        ui_navigate(LEFT);
         return;
       case SC_RIGHT:
-        menu_inc();
+        ui_navigate(RIGHT);
         return;
     }
 
@@ -86,7 +86,7 @@ void handle_key(uint8_t key, bool pressed) {
     }
   }
 
-  uint8_t raw_note = display_get_state_for_update()->keymap->lookup(key);
+  uint8_t raw_note = keymap_get()->lookup(key);
   if (raw_note != 0) {
     if (pressed) {
       midi_note_on(raw_note + offset);
@@ -134,13 +134,15 @@ void process_kbd_report(hid_keyboard_report_t const *p_new_report) {
 
 CFG_TUSB_MEM_SECTION static hid_keyboard_report_t usb_keyboard_report;
 
+bool keyboard_connected = false;
+
 void tuh_hid_mount_cb(uint8_t dev_addr, uint8_t instance,
                       uint8_t const *desc_report, uint16_t desc_len) {
   /* Ask for a report only if this is a keyboard device */
   uint8_t const itf_protocol = tuh_hid_interface_protocol(dev_addr, instance);
   if (itf_protocol == HID_ITF_PROTOCOL_KEYBOARD) {
     printf("USB keyboard connected\n");
-    display_get_state_for_update()->keyboard = true;
+    keyboard_connected = true;
     tuh_hid_receive_report(dev_addr, instance);
   } else {
     printf("unkonwn USB device connected\n");
@@ -156,3 +158,5 @@ void tuh_hid_report_received_cb(uint8_t dev_addr, uint8_t instance,
       break;
   }
 }
+
+bool keyboard_get_connected() { return keyboard_connected; }

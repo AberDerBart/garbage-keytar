@@ -72,7 +72,7 @@ int main(void) {
 
     // control_task();
 
-    pitchbend_task();
+    // pitchbend_task();
   }
 
   return 0;

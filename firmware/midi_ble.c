@@ -169,7 +169,7 @@ void midi_ble_server_init() {
 
   hci_power_control(HCI_POWER_ON);
   ble_server_is_initialized = true;
-  menu_update_bluetooth();
+  // menu_update_bluetooth();
 }
 
 void midi_ble_deinit() {
@@ -182,7 +182,7 @@ void midi_ble_deinit() {
   cyw43_arch_deinit();
 
   ble_server_is_initialized = false;
-  menu_update_bluetooth();
+  // menu_update_bluetooth();
   con_handle = HCI_CON_HANDLE_INVALID;
 }
 

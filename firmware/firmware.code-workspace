@@ -7,6 +7,8 @@
 	"settings": {
 		"files.associations": {
 			"*.h": "c",
+			"cstdlib": "c",
+			"memory": "c"
 		},
 		"C_Cpp.clang_format_style": "Google"
 	}

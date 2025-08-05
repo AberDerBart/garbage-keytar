@@ -11,7 +11,10 @@ typedef struct menu_item_keymap_t {
   keymap_t* keymap;
 } menu_item_keymap_t;
 
-void select_keymap_action(menu_item_t* mi) {
+void select_keymap_nav(menu_item_t* mi, ui_nav_t nav) {
+  if (nav != ENTER) {
+    return;
+  }
   menu_item_keymap_t* self = (menu_item_keymap_t*)mi;
   set_keymap(self->keymap);
   ui_clear();
@@ -20,7 +23,7 @@ void select_keymap_action(menu_item_t* mi) {
 menu_item_keymap_t mi_keymap_piano = {
   base : {
     label : "Piano",
-    action : select_keymap_action,
+    navigate : select_keymap_nav,
     free : NULL,
   },
   keymap : &keymap_piano,
@@ -29,7 +32,7 @@ menu_item_keymap_t mi_keymap_piano = {
 menu_item_keymap_t mi_keymap_accordion_c = {
   base : {
     label : "C-Accordion",
-    action : select_keymap_action,
+    navigate : select_keymap_nav,
     free : NULL,
   },
   keymap : &keymap_accordion_c,
@@ -38,7 +41,7 @@ menu_item_keymap_t mi_keymap_accordion_c = {
 menu_item_keymap_t mi_keymap_accordion_b = {
   base : {
     label : "B-Accordion",
-    action : select_keymap_action,
+    navigate : select_keymap_nav,
     free : NULL,
   },
   keymap : &keymap_accordion_b,
@@ -47,7 +50,7 @@ menu_item_keymap_t mi_keymap_accordion_b = {
 menu_item_keymap_t mi_keymap_accordion_6plus6 = {
   base : {
     label : "6+6",
-    action : select_keymap_action,
+    navigate : select_keymap_nav,
     free : NULL,
   },
   keymap : &keymap_accordion_6plus6,
@@ -56,7 +59,7 @@ menu_item_keymap_t mi_keymap_accordion_6plus6 = {
 menu_item_keymap_t mi_keymap_wicki_hayden = {
   base : {
     label : "Wicki-Hayden",
-    action : select_keymap_action,
+    navigate : select_keymap_nav,
     free : NULL,
   },
   keymap : &keymap_wicki_hayden,
@@ -65,7 +68,7 @@ menu_item_keymap_t mi_keymap_wicki_hayden = {
 menu_item_keymap_t mi_keymap_guitar = {
   base : {
     label : "Guitar",
-    action : select_keymap_action,
+    navigate : select_keymap_nav,
     free : NULL,
   },
   keymap : &keymap_guitar,

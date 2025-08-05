@@ -5,25 +5,37 @@
 #include "./keymap.h"
 #include "ui_stack.h"
 
-void bluetooth_action(menu_item_t* _) { push_menu_bluetooth(); }
+void bluetooth_nav(menu_item_t* _, ui_nav_t nav) {
+  if (nav == ENTER) {
+    push_menu_bluetooth();
+  }
+}
 menu_item_t m_i_bluetooth = {
-    .label = "Bluetooth",
-    .action = bluetooth_action,
-    .free = NULL,
+  label : "Bluetooth",
+  navigate : bluetooth_nav,
+  free : NULL,
 };
 
-void keymap_action(menu_item_t* _) { push_menu_keymap(); }
+void keymap_nav(menu_item_t* _, ui_nav_t nav) {
+  if (nav == ENTER) {
+    push_menu_keymap();
+  }
+}
 menu_item_t m_i_keymap = {
-    .label = "Keymap",
-    .action = keymap_action,
-    .free = NULL,
+  label : "Keymap",
+  navigate : keymap_nav,
+  free : NULL,
 };
 
-void envelope_action(menu_item_t* _) { push_menu_envelope(); }
+void envelope_nav(menu_item_t* _, ui_nav_t nav) {
+  if (nav == ENTER) {
+    push_menu_envelope();
+  }
+}
 menu_item_t m_i_envelope = {
-    .label = "Envelope",
-    .action = envelope_action,
-    .free = NULL,
+  label : "Envelope",
+  navigate : envelope_nav,
+  free : NULL,
 };
 
 menu_item_t* main_menu_items[] = {

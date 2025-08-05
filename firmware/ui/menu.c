@@ -1,7 +1,8 @@
+#include "./menu.h"
+
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "./menu.h"
 #include "ui_stack.h"
 
 #define W_CHARACTER 6
@@ -37,15 +38,11 @@ void navigate_menu(ui_element_t* item, ui_nav_t nav) {
         self->scroll = self->index - 8 + 1;
       }
       break;
-    case ENTER:
-      if (!self->items[self->index]->action) {
+    default:
+      if (!self->items[self->index]->navigate) {
         return;
       }
-      (self->items[self->index]->action)(self->items[self->index]);
-      break;
-    case LEFT:
-    case RIGHT:
-    default:
+      (self->items[self->index]->navigate)(self->items[self->index], nav);
       break;
   }
 }

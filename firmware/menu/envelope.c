@@ -4,27 +4,27 @@
 #include "ui/menu.h"
 
 menu_item_t mi_attack = {
-    .label = "Attack",
-    .action = NULL,
-    .free = NULL,
+  label : "Attack",
+  navigate : NULL,
+  free : NULL,
 };
 
 menu_item_t mi_decay = {
-    .label = "Decay",
-    .action = NULL,
-    .free = NULL,
+  label : "Decay",
+  navigate : NULL,
+  free : NULL,
 };
 
 menu_item_t mi_sustain = {
-    .label = "Sustain",
-    .action = NULL,
-    .free = NULL,
+  label : "Sustain",
+  navigate : NULL,
+  free : NULL,
 };
 
 menu_item_t mi_release = {
-    .label = "Release",
-    .action = NULL,
-    .free = NULL,
+  label : "Release",
+  navigate : NULL,
+  free : NULL,
 };
 
 menu_item_t* envelope_menu_items[] = {

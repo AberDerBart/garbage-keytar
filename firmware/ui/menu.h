@@ -3,7 +3,7 @@
 
 typedef struct menu_item_t {
   char* label;
-  void (*action)(struct menu_item_t*);
+  void (*navigate)(struct menu_item_t*, ui_nav_t nav);
   void (*free)(struct menu_item_t*);
 } menu_item_t;
 

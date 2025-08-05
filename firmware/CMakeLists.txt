@@ -63,7 +63,7 @@ target_sources(${target_name} PRIVATE
   adsr.c
   config.c
   battery.c
-  ui_menu.c
+  ui/menu.c
   ui_stack.c
   ui/status.c
 )

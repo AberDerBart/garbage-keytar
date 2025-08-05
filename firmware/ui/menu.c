@@ -1,17 +1,24 @@
-#include "ui_menu.h"
-
 #include <stdint.h>
 #include <stdlib.h>
 
+#include "./menu.h"
 #include "ui_stack.h"
 
 #define W_CHARACTER 6
 #define H_CHARACTER 8
 #define FONT_SCALE 1
 
-void free_menu(ui_element_t* item) {
-  ui_menu_t* self = (ui_menu_t*)item;
-  free(self);
+void free_menu(ui_element_t* element) {
+  ui_menu_t* menu = (ui_menu_t*)element;
+
+  for (int i = 0; i < menu->length; i++) {
+    menu_item_t* item = menu->items[i];
+    if (item->free) {
+      (item->free)(item);
+    }
+  }
+
+  free(menu);
 }
 
 void navigate_menu(ui_element_t* item, ui_nav_t nav) {

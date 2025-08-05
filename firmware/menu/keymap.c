@@ -3,7 +3,7 @@
 #include <stddef.h>
 
 #include "keyboard_matrix.h"
-#include "ui_menu.h"
+#include "ui/menu.h"
 #include "ui_stack.h"
 
 typedef struct menu_item_keymap_t {
@@ -21,6 +21,7 @@ menu_item_keymap_t mi_keymap_piano = {
   base : {
     label : "Piano",
     action : select_keymap_action,
+    free : NULL,
   },
   keymap : &keymap_piano,
 };
@@ -29,6 +30,7 @@ menu_item_keymap_t mi_keymap_accordion_c = {
   base : {
     label : "C-Accordion",
     action : select_keymap_action,
+    free : NULL,
   },
   keymap : &keymap_accordion_c,
 };
@@ -37,6 +39,7 @@ menu_item_keymap_t mi_keymap_accordion_b = {
   base : {
     label : "B-Accordion",
     action : select_keymap_action,
+    free : NULL,
   },
   keymap : &keymap_accordion_b,
 };
@@ -45,6 +48,7 @@ menu_item_keymap_t mi_keymap_accordion_6plus6 = {
   base : {
     label : "6+6",
     action : select_keymap_action,
+    free : NULL,
   },
   keymap : &keymap_accordion_6plus6,
 };
@@ -53,6 +57,7 @@ menu_item_keymap_t mi_keymap_wicki_hayden = {
   base : {
     label : "Wicki-Hayden",
     action : select_keymap_action,
+    free : NULL,
   },
   keymap : &keymap_wicki_hayden,
 };
@@ -61,6 +66,7 @@ menu_item_keymap_t mi_keymap_guitar = {
   base : {
     label : "Guitar",
     action : select_keymap_action,
+    free : NULL,
   },
   keymap : &keymap_guitar,
 };

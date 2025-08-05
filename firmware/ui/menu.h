@@ -4,6 +4,7 @@
 typedef struct menu_item_t {
   char* label;
   void (*action)(struct menu_item_t*);
+  void (*free)(struct menu_item_t*);
 } menu_item_t;
 
 typedef struct ui_menu_t {

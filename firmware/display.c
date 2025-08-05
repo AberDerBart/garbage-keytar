@@ -8,8 +8,8 @@
 #include "settings.h"
 #include "stdio.h"
 #include "string.h"
+#include "ui/menu.h"
 #include "ui/status.h"
-#include "ui_menu.h"
 #include "ui_stack.h"
 
 #define SDA_PIN 8

@@ -8,7 +8,8 @@
 		"files.associations": {
 			"*.h": "c",
 			"cstdlib": "c",
-			"memory": "c"
+			"memory": "c",
+			"string_view": "c"
 		},
 		"C_Cpp.clang_format_style": "Google"
 	}

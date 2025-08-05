@@ -64,6 +64,7 @@ target_sources(${target_name} PRIVATE
   config.c
   battery.c
   ui/menu.c
+  ui/menu_items.c
   ui_stack.c
   ui/status.c
 )

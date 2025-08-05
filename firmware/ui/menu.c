@@ -13,12 +13,12 @@ void free_menu(ui_element_t* element) {
   ui_menu_t* menu = (ui_menu_t*)element;
 
   for (int i = 0; i < menu->length; i++) {
-    menu_item_t* item = menu->items[i];
+    ui_element_t* item = menu->items[i];
     if (item->free) {
       (item->free)(item);
     }
   }
-
+  free(menu->items);
   free(menu);
 }
 
@@ -59,7 +59,13 @@ ui_pos_t render_menu(ui_element_t* item, ssd1306_t* display, ui_pos_t pos) {
     if (index == self->index) {
       ssd1306_draw_char(display, 0, y, 1, '>');
     }
-    ssd1306_draw_string(display, 8, y, 1, self->items[index]->label);
+    ui_element_t* item = self->items[index];
+    ui_pos_t element_pos = {
+      x : pos.x + 8,
+      y : y,
+    };
+    item->render(item, display, element_pos);
+    // TODO: respect item render height
     y += 8;
   }
 
@@ -72,29 +78,25 @@ ui_pos_t render_menu(ui_element_t* item, ssd1306_t* display, ui_pos_t pos) {
   return new_pos;
 }
 
-void push_menu(menu_item_t** items) {
+ui_menu_t* push_menu(uint8_t item_capacity) {
   ui_menu_t* menu = malloc(sizeof(ui_menu_t));
   menu->base.free = free_menu;
   menu->base.navigate = navigate_menu;
   menu->base.render = render_menu;
 
-  menu->items = items;
+  menu->items = malloc(item_capacity * sizeof(ui_element_t*));
   menu->length = 0;
-  for (menu->length = 0; menu->items[menu->length]; menu->length++);
-
   menu->index = 0;
   menu->scroll = 0;
 
   ui_push((ui_element_t*)menu);
+
+  return menu;
 }
 
-void menu_add(ui_menu_t* menu, menu_item_t* item) {
-  for (int i = 0; i < menu->length; i++) {
-    if (!menu->items[i]) {
-      menu->items[i] = item;
-      return;
-    }
-  }
-};
-
 ui_element_t* menu_element(ui_menu_t* menu) { return (ui_element_t*)menu; };
+
+void menu_add(ui_menu_t* menu, ui_element_t* item) {
+  menu->items[menu->length] = item;
+  menu->length++;
+}

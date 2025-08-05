@@ -47,22 +47,29 @@ void navigate_menu(ui_element_t* item, ui_nav_t nav) {
   }
 }
 
-void render_menu(ui_element_t* item, ssd1306_t* display) {
+ui_pos_t render_menu(ui_element_t* item, ssd1306_t* display, ui_pos_t pos) {
   ui_menu_t* self = (ui_menu_t*)item;
 
   ssd1306_clear(display);
 
+  uint8_t y = pos.y;
   for (uint8_t i_line = 0; i_line < 8 && i_line + self->scroll < self->length;
        i_line++) {
     uint8_t index = self->scroll + i_line;
-    uint8_t y = i_line * 8;
     if (index == self->index) {
       ssd1306_draw_char(display, 0, y, 1, '>');
     }
     ssd1306_draw_string(display, 8, y, 1, self->items[index]->label);
+    y += 8;
   }
 
   ssd1306_show(display);
+
+  ui_pos_t new_pos = {
+    x : display->width,
+    y : y,
+  };
+  return new_pos;
 }
 
 void push_menu(menu_item_t** items) {

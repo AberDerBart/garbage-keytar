@@ -11,8 +11,14 @@ typedef enum ui_nav_t {
   CLOSE,
 } ui_nav_t;
 
+typedef struct ui_pos_t {
+  uint8_t x;
+  uint8_t y;
+} ui_pos_t;
+
 typedef struct ui_element_t {
-  void (*render)(struct ui_element_t* self, ssd1306_t* display);
+  ui_pos_t (*render)(struct ui_element_t* self, ssd1306_t* display,
+                     ui_pos_t pos);
   void (*navigate)(struct ui_element_t* self, ui_nav_t nav);
   void (*free)(struct ui_element_t* self);
 } ui_element_t;

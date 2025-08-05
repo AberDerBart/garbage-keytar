@@ -69,7 +69,12 @@ void ui_render() {
     return;
   }
 
-  element->render(element, ui_stack.display);
+  ui_pos_t pos = {
+    x : 0,
+    y : 0,
+  };
+
+  element->render(element, ui_stack.display, pos);
 }
 
 void ui_navigate(ui_nav_t nav) {

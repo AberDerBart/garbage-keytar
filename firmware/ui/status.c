@@ -15,52 +15,47 @@
 #include "pico-ssd1306/ssd1306.h"
 #include "ui_element.h"
 
-#define KEYBOARD_POS 0, 0
-#define BLUETOOTH_POS 48, 0
-#define CHARGE_POS 96, 0
-#define BATTERY_POS 104, 0
-#define KEY_MAPPING_POS 64, 0
-
-void render_status(ui_element_t* status, ssd1306_t* display) {
+ui_pos_t render_status(ui_element_t* status, ssd1306_t* display, ui_pos_t pos) {
   ssd1306_clear(display);
   if (keyboard_get_connected()) {
     ssd1306_bmp_show_image_with_offset(display, keyboard_24_16_bmp_data,
-                                       keyboard_24_16_bmp_size, KEYBOARD_POS);
+                                       keyboard_24_16_bmp_size, pos.x, pos.y);
   }
   if (midi_ble_is_connected()) {
     ssd1306_bmp_show_image_with_offset(display, bluetooth_8_16_bmp_data,
-                                       bluetooth_8_16_bmp_size, BLUETOOTH_POS);
+                                       bluetooth_8_16_bmp_size, pos.x + 48,
+                                       pos.y);
   }
   if (battery_is_charging()) {
     ssd1306_bmp_show_image_with_offset(display, charge_8_16_bmp_data,
-                                       charge_8_16_bmp_size, CHARGE_POS);
+                                       charge_8_16_bmp_size, pos.x + 96, pos.y);
   }
   switch (battery_get_level()) {
     case EMPTY:
       ssd1306_bmp_show_image_with_offset(display, battery_empty_24_16_bmp_data,
                                          battery_empty_24_16_bmp_size,
-                                         BATTERY_POS);
+                                         pos.x + 104, pos.y);
       break;
     case LOW:
       ssd1306_bmp_show_image_with_offset(display, battery_low_24_16_bmp_data,
                                          battery_low_24_16_bmp_size,
-                                         BATTERY_POS);
+                                         pos.x + 104, pos.y);
       break;
     case MEDIUM:
       ssd1306_bmp_show_image_with_offset(display, battery_medium_24_16_bmp_data,
                                          battery_medium_24_16_bmp_size,
-                                         BATTERY_POS);
+                                         pos.x + 104, pos.y);
       break;
     case FULL:
       ssd1306_bmp_show_image_with_offset(display, battery_full_24_16_bmp_data,
                                          battery_full_24_16_bmp_size,
-                                         BATTERY_POS);
+                                         pos.x + 104, pos.y);
       break;
   }
 
   keymap_t* keymap = keymap_get();
   ssd1306_bmp_show_image_with_offset(display, keymap->icon_data,
-                                     keymap->icon_size, KEY_MAPPING_POS);
+                                     keymap->icon_size, pos.x + 64, pos.y);
 
   // char buffer[16];
   // snprintf(buffer, 15, "%.2fV", battery_get_voltage());
@@ -68,6 +63,12 @@ void render_status(ui_element_t* status, ssd1306_t* display) {
   ssd1306_draw_string(display, 0, 20, 1, "test");
 
   ssd1306_show(display);
+
+  ui_pos_t new_pos = {
+    x : display->width,
+    y : display->height,
+  };
+  return new_pos;
 }
 
 void navigate_status(ui_element_t* status, ui_nav_t nav) {

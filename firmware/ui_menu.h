@@ -14,6 +14,6 @@ typedef struct ui_menu_t {
   uint8_t scroll;
 } ui_menu_t;
 
-void push_menu(uint8_t length, menu_item_t** items);
+void push_menu(menu_item_t** items);
 
 ui_element_t* menu_element(ui_menu_t* menu);

@@ -27,6 +27,7 @@ menu_item_t* main_menu_items[] = {
     &m_i_bluetooth,
     &m_i_keymap,
     &m_i_envelope,
+    NULL,
 };
 
-void push_menu_main() { push_menu(3, main_menu_items); }
+void push_menu_main() { push_menu(main_menu_items); }

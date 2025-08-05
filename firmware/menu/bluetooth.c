@@ -78,14 +78,14 @@ void push_menu_bluetooth() {
     } else {
       mi_bluetooth_children_client[0] = &mi_client_connect;
     }
-    push_menu(3, mi_bluetooth_children_client);
+    push_menu(mi_bluetooth_children_client);
     return;
   }
 
   if (midi_ble_server_is_initialized()) {
-    push_menu(1, mi_bluetooth_children_server);
+    push_menu(mi_bluetooth_children_server);
     return;
   }
 
-  push_menu(2, mi_bluetooth_children_off);
+  push_menu(mi_bluetooth_children_off);
 }

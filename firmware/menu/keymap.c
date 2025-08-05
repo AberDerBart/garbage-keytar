@@ -75,4 +75,4 @@ menu_item_keymap_t* mi_children_keymap[] = {
     NULL,
 };
 
-void push_menu_keymap() { push_menu(6, (menu_item_t**)mi_children_keymap); }
+void push_menu_keymap() { push_menu((menu_item_t**)mi_children_keymap); }

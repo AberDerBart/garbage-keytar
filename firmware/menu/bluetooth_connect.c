@@ -26,5 +26,6 @@ void push_menu_bluetooth_connect() {
     mi_bluetooth_devices[i].index = i;
     mi_bluetooth_device_list[i] = (menu_item_t*)&mi_bluetooth_devices[i];
   }
-  push_menu(device_count, mi_bluetooth_device_list);
+  mi_bluetooth_device_list[device_count] = NULL;
+  push_menu(mi_bluetooth_device_list);
 }

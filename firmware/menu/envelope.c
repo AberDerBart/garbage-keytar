@@ -29,4 +29,4 @@ menu_item_t* envelope_menu_items[] = {
     &mi_attack, &mi_decay, &mi_sustain, &mi_release, NULL,
 };
 
-void push_menu_envelope() { push_menu(4, envelope_menu_items); }
+void push_menu_envelope() { push_menu(envelope_menu_items); }

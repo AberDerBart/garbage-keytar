@@ -61,14 +61,15 @@ void render_menu(ui_element_t* item, ssd1306_t* display) {
   ssd1306_show(display);
 }
 
-void push_menu(uint8_t length, menu_item_t** items) {
+void push_menu(menu_item_t** items) {
   ui_menu_t* menu = malloc(sizeof(ui_menu_t));
   menu->base.free = free_menu;
   menu->base.navigate = navigate_menu;
   menu->base.render = render_menu;
 
-  menu->length = length;
   menu->items = items;
+  menu->length = 0;
+  for (menu->length = 0; menu->items[menu->length]; menu->length++);
 
   menu->index = 0;
   menu->scroll = 0;

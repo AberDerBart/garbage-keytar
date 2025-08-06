@@ -13,7 +13,7 @@
 #include "menu/main.h"
 #include "midi_ble.h"
 #include "pico-ssd1306/ssd1306.h"
-#include "ui_element.h"
+#include "ui/element.h"
 
 ui_pos_t render_status(ui_element_t* status, ssd1306_t* display, ui_pos_t pos,
                        bool focus) {

@@ -8,7 +8,7 @@
 #include "midi_service_stream_handler.h"
 #include "pico/btstack_cyw43.h"
 #include "pico/cyw43_arch.h"
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 #define APP_AD_FLAGS 0x06
 const uint8_t adv_data[] = {

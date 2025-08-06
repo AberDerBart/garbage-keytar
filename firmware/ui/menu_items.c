@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 void navigate_default_menu_item(ui_element_t* item, ui_nav_t nav) {
   if (nav != ENTER) {

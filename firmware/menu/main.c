@@ -5,7 +5,7 @@
 #include "./keymap.h"
 #include "ui/menu.h"
 #include "ui/menu_items.h"
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 void push_menu_main() {
   ui_menu_t* menu = push_menu(3);

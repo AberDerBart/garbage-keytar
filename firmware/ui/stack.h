@@ -1,5 +1,5 @@
 #pragma once
-#include "ui_element.h"
+#include "ui/element.h"
 
 void ui_init(ssd1306_t* display, ui_element_t* element);
 

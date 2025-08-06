@@ -9,7 +9,7 @@
 #include "pico/flash.h"
 #include "pico/multicore.h"
 #include "settings.h"
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 // core1: handle host events
 extern void core1_main();

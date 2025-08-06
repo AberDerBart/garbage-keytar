@@ -3,12 +3,12 @@
 #include "display.h"
 #include "keyboard_matrix.h"
 #include "keyboard_scan_codes.h"
-#include "main_host.h"
 #include "midi.h"
 #include "midi_note_table.h"
 #include "pico/flash.h"
 #include "pico/multicore.h"
 #include "settings.h"
+#include "tusb.h"
 #include "ui/stack.h"
 
 // core1: handle host events

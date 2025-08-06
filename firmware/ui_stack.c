@@ -74,7 +74,7 @@ void ui_render() {
     y : 0,
   };
 
-  element->render(element, ui_stack.display, pos);
+  element->render(element, ui_stack.display, pos, true);
 }
 
 void ui_navigate(ui_nav_t nav) {

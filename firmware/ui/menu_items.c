@@ -14,7 +14,7 @@ void navigate_default_menu_item(ui_element_t* item, ui_nav_t nav) {
 }
 
 ui_pos_t ui_menu_item_default_render(ui_element_t* item, ssd1306_t* display,
-                                     ui_pos_t pos) {
+                                     ui_pos_t pos, bool focus) {
   ui_menu_item_default_t* self = (ui_menu_item_default_t*)item;
   ssd1306_draw_string(display, pos.x, pos.y, 1, self->label);
   ui_pos_t new_pos = {
@@ -73,12 +73,12 @@ void ui_menu_item_uint8_navigate(ui_element_t* item, ui_nav_t nav) {
 }
 
 ui_pos_t ui_menu_item_uint8_render(ui_element_t* item, ssd1306_t* display,
-                                   ui_pos_t pos) {
+                                   ui_pos_t pos, bool focus) {
   ui_menu_item_uint8_t* self = (ui_menu_item_uint8_t*)item;
   ssd1306_draw_string(display, pos.x, pos.y, 1, self->label);
 
   char buf[6];
-  int charCount = sprintf(buf, "<%d>", *self->value);
+  int charCount = sprintf(buf, focus ? "<%d>" : "%d ", *self->value);
   ssd1306_draw_string(display, display->width - charCount * 8, pos.y, 1, buf);
 
   ui_pos_t new_pos = {

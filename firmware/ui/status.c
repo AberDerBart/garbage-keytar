@@ -15,7 +15,8 @@
 #include "pico-ssd1306/ssd1306.h"
 #include "ui_element.h"
 
-ui_pos_t render_status(ui_element_t* status, ssd1306_t* display, ui_pos_t pos) {
+ui_pos_t render_status(ui_element_t* status, ssd1306_t* display, ui_pos_t pos,
+                       bool focus) {
   ssd1306_clear(display);
   if (keyboard_get_connected()) {
     ssd1306_bmp_show_image_with_offset(display, keyboard_24_16_bmp_data,

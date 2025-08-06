@@ -47,7 +47,8 @@ void navigate_menu(ui_element_t* item, ui_nav_t nav) {
   }
 }
 
-ui_pos_t render_menu(ui_element_t* item, ssd1306_t* display, ui_pos_t pos) {
+ui_pos_t render_menu(ui_element_t* item, ssd1306_t* display, ui_pos_t pos,
+                     bool focus) {
   ui_menu_t* self = (ui_menu_t*)item;
 
   ssd1306_clear(display);
@@ -64,7 +65,7 @@ ui_pos_t render_menu(ui_element_t* item, ssd1306_t* display, ui_pos_t pos) {
       x : pos.x + 8,
       y : y,
     };
-    item->render(item, display, element_pos);
+    item->render(item, display, element_pos, focus && index == self->index);
     // TODO: respect item render height
     y += 8;
   }

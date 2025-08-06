@@ -15,20 +15,9 @@
 #define SDA_PIN 8
 #define SCL_PIN 9
 
-#define KEYBOARD_POS 0, 0
-#define BLUETOOTH_POS 48, 0
-#define CHARGE_POS 96, 0
-#define BATTERY_POS 104, 0
-#define KEY_MAPPING_POS 64, 0
-
-void draw_info();
-void draw_menu();
-
 ssd1306_t disp;
 
 bool display_initialized = false;
-
-void redraw();
 
 void display_init() {
   printf("init display\n");
@@ -54,13 +43,3 @@ void display_init() {
 
   ui_render();
 }
-
-void display_task() {
-  if (!display_initialized) {
-    return;
-  }
-
-  return;
-}
-
-ssd1306_t* get_display() { return &disp; }

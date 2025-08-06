@@ -68,7 +68,6 @@ int main(void) {
 
   while (1) {
     keyboard_task();
-    display_task();
 
     // control_task();
 

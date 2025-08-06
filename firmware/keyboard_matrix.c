@@ -11,6 +11,7 @@
 #include "img/gen/six_plus_six_32_16.h"
 #include "img/gen/wicki_hayden_32_16.h"
 #include "key_positions.h"
+#include "ui/stack.h"
 
 uint8_t note_by_lut(uint8_t keycode, uint8_t lut[4][14]) {
   if (keycode >= 128) {

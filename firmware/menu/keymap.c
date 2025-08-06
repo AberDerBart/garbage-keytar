@@ -5,7 +5,7 @@
 #include "keyboard_matrix.h"
 #include "ui/menu.h"
 #include "ui/menu_items.h"
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 void keymap_action(keymap_t* keymap) {
   set_keymap(keymap);

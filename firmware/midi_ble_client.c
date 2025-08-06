@@ -3,7 +3,7 @@
 #include "ble_midi_client.h"
 #include "menu/bluetooth.h"
 #include "pico/cyw43_arch.h"
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 bool ble_client_is_initialized = false;
 

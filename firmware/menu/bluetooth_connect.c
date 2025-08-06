@@ -5,7 +5,7 @@
 #include "midi_ble_client.h"
 #include "ui/menu.h"
 #include "ui/menu_items.h"
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 typedef struct bluetooth_device_menu_item_t {
   ui_menu_item_default_t base;

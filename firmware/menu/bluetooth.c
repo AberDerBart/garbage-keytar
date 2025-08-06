@@ -5,7 +5,7 @@
 #include "midi_ble_client.h"
 #include "ui/menu.h"
 #include "ui/menu_items.h"
-#include "ui_stack.h"
+#include "ui/stack.h"
 
 void disconnect() {
   midi_ble_client_disconnect();

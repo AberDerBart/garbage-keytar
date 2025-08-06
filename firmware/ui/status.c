@@ -63,8 +63,6 @@ ui_pos_t render_status(ui_element_t* status, ssd1306_t* display, ui_pos_t pos,
   // ssd1306_draw_string(display, 0, 20, 1, buffer);
   ssd1306_draw_string(display, 0, 20, 1, "test");
 
-  ssd1306_show(display);
-
   ui_pos_t new_pos = {
     x : display->width,
     y : display->height,

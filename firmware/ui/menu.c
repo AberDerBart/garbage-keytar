@@ -70,8 +70,6 @@ ui_pos_t render_menu(ui_element_t* item, ssd1306_t* display, ui_pos_t pos,
     y += 8;
   }
 
-  ssd1306_show(display);
-
   ui_pos_t new_pos = {
     x : display->width,
     y : y,

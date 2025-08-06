@@ -75,6 +75,7 @@ void ui_render() {
   };
 
   element->render(element, ui_stack.display, pos, true);
+  ssd1306_show(ui_stack.display);
 }
 
 void ui_navigate(ui_nav_t nav) {

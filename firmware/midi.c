@@ -16,6 +16,11 @@
 #define CONTROL_SUSTAIN 64
 #define CONTROL_SOSTENUTO 66
 
+#define CC_SOUND_CONTROLLER_3_RELEASE 72
+#define CC_SOUND_CONTROLLER_4_ATTACK 73
+#define CC_SOUND_CONTROLLER_6_DECAY 75
+#define CC_SOUND_CONTROLLER_7_SUSTAIN 76
+
 #define CONTROL_VALUE_ON 64
 #define CONTROL_VALUE_OFF 0
 
@@ -47,5 +52,25 @@ void midi_clear_notes() {
 
 void midi_pitchbend(uint8_t low, uint8_t high) {
   uint8_t msg[3] = {CMD_PITCHBEND, low, high};
+  send(3, msg);
+}
+
+void midi_cc_attack(uint8_t attack) {
+  uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_4_ATTACK, attack};
+  send(3, msg);
+}
+
+void midi_cc_decay(uint8_t decay) {
+  uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_6_DECAY, decay};
+  send(3, msg);
+}
+
+void midi_cc_sustain(uint8_t sustain) {
+  uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_7_SUSTAIN, sustain};
+  send(3, msg);
+}
+
+void midi_cc_release(uint8_t release) {
+  uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_3_RELEASE, release};
   send(3, msg);
 }

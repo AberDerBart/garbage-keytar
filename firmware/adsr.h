@@ -20,3 +20,5 @@ void change_attack_setting(int8_t steps);
 void change_decay_setting(int8_t steps);
 void change_sustain_setting(int8_t steps);
 void change_release_setting(int8_t steps);
+
+void adsr_send_midi();

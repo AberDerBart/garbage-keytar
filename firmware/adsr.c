@@ -2,6 +2,8 @@
 
 #include <stdio.h>
 
+#include "midi.h"
+
 adsr_settings_t adsr_settings;
 
 char menu_setting_buffer[5] = {0, 0, 0, 0, 0};
@@ -56,4 +58,11 @@ void change_sustain_setting(int8_t steps) {
 
 void change_release_setting(int8_t steps) {
   change_setting(&adsr_settings.release, steps, UINT8_MAX);
+}
+
+void adsr_send_midi() {
+  midi_cc_attack(adsr_settings.attack);
+  midi_cc_decay(adsr_settings.decay);
+  midi_cc_sustain(adsr_settings.sustain);
+  midi_cc_release(adsr_settings.release);
 }

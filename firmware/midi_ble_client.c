@@ -1,5 +1,6 @@
 #include "midi_ble_client.h"
 
+#include "adsr.h"
 #include "ble_midi_client.h"
 #include "menu/bluetooth.h"
 #include "pico/cyw43_arch.h"
@@ -7,10 +8,17 @@
 
 bool ble_client_is_initialized = false;
 
+void status_callback() {
+  if (ble_midi_client_is_ready()) {
+    adsr_send_midi();
+  }
+  ui_render();
+}
+
 void midi_ble_client_init_with_addr(int addr_type, uint8_t *addr) {
   printf("init midi ble client: ");
 
-  ble_midi_client_set_status_change_cb(ui_render);
+  ble_midi_client_set_status_change_cb(status_callback);
 
   if (cyw43_arch_init()) {
     printf("failed to initialise cyw43_arch\n");

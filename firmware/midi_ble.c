@@ -1,5 +1,6 @@
 #include "midi_ble.h"
 
+#include "adsr.h"
 #include "btstack.h"
 #include "display.h"
 #include "menu/bluetooth.h"
@@ -100,6 +101,7 @@ void server_packet_handler(uint8_t packet_type, uint16_t channel,
           con_handle =
               gattservice_subevent_spp_service_connected_get_con_handle(packet);
           printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_CONNECTED event\r\n");
+          adsr_send_midi();
           ui_render();
           break;
         case GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED:

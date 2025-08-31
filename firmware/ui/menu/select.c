@@ -56,9 +56,13 @@ ui_pos_t ui_menu_item_select_render(ui_element_t* item, ssd1306_t* display,
                       self->options[self->value]);
 
   if (focus) {
-    ssd1306_draw_char(display, display->width - 6, pos.y, 1, '>');
-    ssd1306_draw_char(display, display->width - 18 - 6 * charCount, pos.y, 1,
-                      '<');
+    if (self->value > 0) {
+      ssd1306_draw_char(display, display->width - 18 - 6 * charCount, pos.y, 1,
+                        '<');
+    }
+    if (self->value < self->max) {
+      ssd1306_draw_char(display, display->width - 6, pos.y, 1, '>');
+    }
   }
 
   ui_pos_t new_pos = {

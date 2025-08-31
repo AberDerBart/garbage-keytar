@@ -49,6 +49,6 @@ void push_menu_profiles() {
     item->base.render = profile_item_render;
     item->base.navigate = profile_item_navigate;
     item->profile_index = i;
-    menu_add(menu, item);
+    menu_add(menu, (ui_element_t*)item);
   }
 }

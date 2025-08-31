@@ -55,7 +55,8 @@ uint8_t lookup_piano(uint8_t keycode) {
 keymap_t keymap_piano = {
   lookup : &lookup_piano,
   icon_size : piano_32_16_bmp_size,
-  icon_data : piano_32_16_bmp_data
+  icon_data : piano_32_16_bmp_data,
+  label : "Piano"
 };
 
 uint8_t lookup_accordion_c(uint8_t keycode) {
@@ -64,7 +65,8 @@ uint8_t lookup_accordion_c(uint8_t keycode) {
 keymap_t keymap_accordion_c = {
   lookup : &lookup_accordion_c,
   icon_size : accordion_c_32_16_bmp_size,
-  icon_data : accordion_c_32_16_bmp_data
+  icon_data : accordion_c_32_16_bmp_data,
+  label : "Acc. C"
 };
 
 uint8_t lookup_accordion_b(uint8_t keycode) {
@@ -73,7 +75,8 @@ uint8_t lookup_accordion_b(uint8_t keycode) {
 keymap_t keymap_accordion_b = {
   lookup : &lookup_accordion_b,
   icon_size : accordion_b_32_16_bmp_size,
-  icon_data : accordion_b_32_16_bmp_data
+  icon_data : accordion_b_32_16_bmp_data,
+  label : "Acc. B"
 };
 
 uint8_t lookup_accordion_6plus6(uint8_t keycode) {
@@ -82,7 +85,8 @@ uint8_t lookup_accordion_6plus6(uint8_t keycode) {
 keymap_t keymap_accordion_6plus6 = {
   lookup : &lookup_accordion_6plus6,
   icon_size : six_plus_six_32_16_bmp_size,
-  icon_data : six_plus_six_32_16_bmp_data
+  icon_data : six_plus_six_32_16_bmp_data,
+  label : "6 + 6"
 };
 
 uint8_t lookup_wicki_hayden(uint8_t keycode) {
@@ -91,7 +95,8 @@ uint8_t lookup_wicki_hayden(uint8_t keycode) {
 keymap_t keymap_wicki_hayden = {
   lookup : &lookup_wicki_hayden,
   icon_size : wicki_hayden_32_16_bmp_size,
-  icon_data : wicki_hayden_32_16_bmp_data
+  icon_data : wicki_hayden_32_16_bmp_data,
+  label : "W/H"
 };
 
 uint8_t lookup_guitar(uint8_t keycode) {
@@ -101,6 +106,7 @@ keymap_t keymap_guitar = {
   lookup : &lookup_guitar,
   icon_size : guitar_32_16_bmp_size,
   icon_data : guitar_32_16_bmp_data,
+  label : "Guitar"
 };
 
 keymap_t* keymap = &keymap_piano;
@@ -120,8 +126,10 @@ keymap_t* keymaps[N_KEYMAPS] = {
     &keymap_wicki_hayden, &keymap_guitar,
 };
 
-uint8_t get_keymap_index() {
-  for (uint8_t i = 0; i < N_KEYMAPS; i++) {
+size_t get_n_keymaps() { return N_KEYMAPS; }
+
+size_t get_keymap_index() {
+  for (size_t i = 0; i < N_KEYMAPS; i++) {
     if (keymap == keymaps[i]) {
       return i;
     }
@@ -129,7 +137,7 @@ uint8_t get_keymap_index() {
   return 0;
 }
 
-void set_keymap_by_index(uint8_t index) {
+void set_keymap_by_index(size_t index) {
   if (index >= N_KEYMAPS) {
     return;
   }

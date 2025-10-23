@@ -88,12 +88,12 @@ void handle_key(uint8_t key, bool pressed) {
     }
   }
 
-  uint8_t raw_note = keymap_get()->lookup(key);
-  if (raw_note != 0) {
+  uint8_t *raw_notes = keymap_get()->lookup(key);
+  for (int i = 0; raw_notes[i] != 0; i++) {
     if (pressed) {
-      midi_note_on(raw_note + offset);
+      midi_note_on(raw_notes[i] + offset);
     } else {
-      midi_note_off(raw_note + offset);
+      midi_note_off(raw_notes[i] + offset);
     }
   }
 }

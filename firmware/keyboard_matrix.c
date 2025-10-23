@@ -7,6 +7,7 @@
 #include "img/gen/accordion_b_32_16.h"
 #include "img/gen/accordion_c_32_16.h"
 #include "img/gen/guitar_32_16.h"
+#include "img/gen/omnichord_32_16.h"
 #include "img/gen/piano_32_16.h"
 #include "img/gen/six_plus_six_32_16.h"
 #include "img/gen/wicki_hayden_32_16.h"
@@ -49,8 +50,10 @@ uint8_t piano_lut[4][14] = {
     {0, 36, 38, 40, 41, 43, 45, 47, 48, 50, 52, 0, 0, 0},
 };
 
-uint8_t lookup_piano(uint8_t keycode) {
-  return note_by_lut(keycode, piano_lut);
+uint8_t* lookup_piano(uint8_t keycode) {
+  static uint8_t notes[2] = {0, 0};
+  notes[0] = note_by_lut(keycode, piano_lut);
+  return notes;
 }
 keymap_t keymap_piano = {
   lookup : &lookup_piano,
@@ -59,8 +62,10 @@ keymap_t keymap_piano = {
   label : "Piano"
 };
 
-uint8_t lookup_accordion_c(uint8_t keycode) {
-  return note_by_pattern(keycode, 36, 3, -2);
+uint8_t* lookup_accordion_c(uint8_t keycode) {
+  static uint8_t notes[2] = {0, 0};
+  notes[0] = note_by_pattern(keycode, 36, 3, -2);
+  return notes;
 }
 keymap_t keymap_accordion_c = {
   lookup : &lookup_accordion_c,
@@ -69,8 +74,10 @@ keymap_t keymap_accordion_c = {
   label : "Acc. C"
 };
 
-uint8_t lookup_accordion_b(uint8_t keycode) {
-  return note_by_pattern(keycode, 38, 3, -1);
+uint8_t* lookup_accordion_b(uint8_t keycode) {
+  static uint8_t notes[2] = {0, 0};
+  notes[0] = note_by_pattern(keycode, 38, 3, -1);
+  return notes;
 }
 keymap_t keymap_accordion_b = {
   lookup : &lookup_accordion_b,
@@ -79,8 +86,10 @@ keymap_t keymap_accordion_b = {
   label : "Acc. B"
 };
 
-uint8_t lookup_accordion_6plus6(uint8_t keycode) {
-  return note_by_pattern(keycode, 32, 2, -1);
+uint8_t* lookup_accordion_6plus6(uint8_t keycode) {
+  static uint8_t notes[2] = {0, 0};
+  notes[0] = note_by_pattern(keycode, 32, 2, -1);
+  return notes;
 }
 keymap_t keymap_accordion_6plus6 = {
   lookup : &lookup_accordion_6plus6,
@@ -89,8 +98,10 @@ keymap_t keymap_accordion_6plus6 = {
   label : "6 + 6"
 };
 
-uint8_t lookup_wicki_hayden(uint8_t keycode) {
-  return note_by_pattern(keycode, 32, 2, 7);
+uint8_t* lookup_wicki_hayden(uint8_t keycode) {
+  static uint8_t notes[2] = {0, 0};
+  notes[0] = note_by_pattern(keycode, 32, 2, 7);
+  return notes;
 }
 keymap_t keymap_wicki_hayden = {
   lookup : &lookup_wicki_hayden,
@@ -99,8 +110,10 @@ keymap_t keymap_wicki_hayden = {
   label : "W/H"
 };
 
-uint8_t lookup_guitar(uint8_t keycode) {
-  return note_by_pattern(keycode, 40, 1, 5);
+uint8_t* lookup_guitar(uint8_t keycode) {
+  static uint8_t notes[2] = {0, 0};
+  notes[0] = note_by_pattern(keycode, 40, 1, 5);
+  return notes;
 }
 keymap_t keymap_guitar = {
   lookup : &lookup_guitar,
@@ -111,6 +124,49 @@ keymap_t keymap_guitar = {
 
 keymap_t* keymap = &keymap_piano;
 
+uint8_t* lookup_omnichord(uint8_t keycode) {
+  static uint8_t notes[5] = {0, 0, 0, 0, 0};
+
+  int8_t row = keycode2row[keycode];
+  int8_t col = keycode2column[keycode];
+
+  if (row < 0 || col < 0) {
+    notes[0] = 0;
+    return notes;
+  }
+
+  notes[0] = 40 + ((col * 7) % 12);
+  switch (row) {
+    case 1:
+      notes[1] = notes[0] + 4;
+      notes[2] = notes[0] + 7;
+      notes[3] = notes[0] + 10;
+      notes[4] = 0;
+      break;
+    case 2:
+      notes[1] = notes[0] + 3;
+      notes[2] = notes[0] + 7;
+      notes[3] = 0;
+      break;
+    case 3:
+      notes[1] = notes[0] + 4;
+      notes[2] = notes[0] + 7;
+      notes[3] = 0;
+      break;
+    case 4:
+    default:
+      notes[1] = 0;
+  }
+  return notes;
+}
+
+keymap_t keymap_omnichord = {
+  lookup : &lookup_omnichord,
+  icon_size : omnichord_32_16_bmp_size,
+  icon_data : omnichord_32_16_bmp_data,
+  label : "Omnichord"
+};
+
 void set_keymap(keymap_t* new_keymap) {
   keymap = new_keymap;
   ui_render();
@@ -118,13 +174,10 @@ void set_keymap(keymap_t* new_keymap) {
 
 keymap_t* keymap_get() { return keymap; }
 
-#define N_KEYMAPS 6
-
-keymap_t* keymaps[N_KEYMAPS] = {
-    &keymap_piano,        &keymap_accordion_c,
-    &keymap_accordion_b,  &keymap_accordion_6plus6,
-    &keymap_wicki_hayden, &keymap_guitar,
-};
+keymap_t* keymaps[N_KEYMAPS] = {&keymap_piano,        &keymap_accordion_c,
+                                &keymap_accordion_b,  &keymap_accordion_6plus6,
+                                &keymap_wicki_hayden, &keymap_guitar,
+                                &keymap_omnichord};
 
 size_t get_n_keymaps() { return N_KEYMAPS; }
 

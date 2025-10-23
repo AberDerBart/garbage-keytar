@@ -2,10 +2,10 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#define N_KEYMAPS 6
+#define N_KEYMAPS 7
 
 typedef struct {
-  uint8_t (*lookup)(uint8_t);
+  uint8_t* (*lookup)(uint8_t);
   unsigned long icon_size;
   unsigned char* icon_data;
   char* label;
@@ -17,6 +17,7 @@ extern keymap_t keymap_accordion_c;
 extern keymap_t keymap_accordion_6plus6;
 extern keymap_t keymap_wicki_hayden;
 extern keymap_t keymap_guitar;
+extern keymap_t keymap_omnichord;
 
 extern keymap_t* keymaps[];
 

@@ -25,7 +25,7 @@ typedef struct {
 const config_t *saved_config =
     (const config_t *)(XIP_BASE + CONFIG_FLASH_OFFSET);
 
-static_assert(sizeof(config_t) < FLASH_PAGE_SIZE);
+static_assert(sizeof(config_t) < FLASH_PAGE_SIZE, "config exceeds flash page size");
 
 void load_internal() {
   if (saved_config->magic_number != CONFIG_MAGIC_NUMBER) {

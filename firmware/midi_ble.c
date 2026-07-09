@@ -2,12 +2,9 @@
 
 #include "adsr.h"
 #include "btstack.h"
-#include "display.h"
-#include "menu/bluetooth.h"
 #include "midi-ble.h"
 #include "midi_ble_client.h"
 #include "midi_service_stream_handler.h"
-#include "pico/btstack_cyw43.h"
 #include "pico/cyw43_arch.h"
 #include "ui/stack.h"
 
@@ -201,7 +198,7 @@ void midi_ble_server_write(uint8_t n_bytes, uint8_t *midi_stream_bytes) {
   midi_service_stream_write(con_handle, n_bytes, midi_stream_bytes);
 }
 
-void midi_ble_set_initial_state(ble_state_t *state) {
+void midi_ble_set_initial_state(const ble_state_t *state) {
   memcpy(&initial_state, state, sizeof(ble_state_t));
 }
 

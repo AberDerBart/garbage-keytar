@@ -1,19 +1,7 @@
 #include "pitchbend.h"
 
-#include "bsp/board.h"
-#include "hardware/adc.h"
+#include "analog_strip.h"
 #include "midi.h"
-
-#define PITCHBEND_ADC_INPUT 2
-#define PITCHBEND_PIN 28
-
-#define CENTER_VALUE_MIN 1520
-#define CENTER_VALUE_MAX 2160
-
-#define MIN_VALUE 200
-#define MAX_VALUE 3600
-
-#define OFF_THRESHOLD_VALUE 4000
 
 // use a uint16_t to store a uint14_t
 typedef uint16_t uint14_t;
@@ -21,7 +9,7 @@ typedef uint16_t uint14_t;
 #define UINT14_MIN 0
 #define UINT14_MAX 0x3fff
 
-#define PITCHBEND_CENTER 0x2000
+#define UINT16_CENTER 0x8000
 
 struct pitchbend_value {
   uint8_t high;
@@ -32,64 +20,21 @@ static struct pitchbend_value last_pitchbend;
 
 struct pitchbend_value to_pitchbend(uint16_t value) {
   struct pitchbend_value result = {
-    low : value & 0x7f,
-    high : (value >> 7) & 0x7f
+    .low =  (value >> 2) & 0x7f,
+    .high =  (value >> 9) & 0x7f
   };
 
   return result;
 }
 
-void pitchbend_init() {
-  adc_init();
-  adc_gpio_init(PITCHBEND_PIN);
-
-  last_pitchbend = to_pitchbend(PITCHBEND_CENTER);
-}
+void pitchbend_init() { last_pitchbend = to_pitchbend(UINT16_CENTER); }
 
 struct pitchbend_value pitchbend_read() {
-  adc_select_input(PITCHBEND_ADC_INPUT);
-
-  uint32_t adc_value = adc_read();
-
-  // if pitchbend is not pressed, it is pulled high, so send centered pitchbend
-  // NOTE: if picthbend is pulled all the way up, it is still beneath the
-  // threshold as there is an additional resistor in place, see schematic
-  if (adc_value > OFF_THRESHOLD_VALUE) {
-    return to_pitchbend(PITCHBEND_CENTER);
+  uint16_t read_value;
+  if (analog_strip_read_uint16(&read_value)) {
+    return to_pitchbend(read_value);
   }
-
-  if (adc_value <= MIN_VALUE) {
-    // max bend down
-    return to_pitchbend(UINT14_MIN);
-  }
-
-  if (adc_value >= MAX_VALUE) {
-    // max bend up
-    return to_pitchbend(UINT14_MAX);
-  }
-
-  if (adc_value < CENTER_VALUE_MIN) {
-    // bending down, adc_value is between MIN_VALUE and CENTER_VALUE_MIN
-    uint32_t diff_min = adc_value - MIN_VALUE;
-    uint32_t pitchbend_range = PITCHBEND_CENTER - UINT14_MIN;
-    uint32_t adc_range = CENTER_VALUE_MIN - MIN_VALUE;
-    uint32_t v = diff_min * pitchbend_range / adc_range;
-
-    return to_pitchbend(v);
-  }
-
-  if (adc_value > CENTER_VALUE_MAX) {
-    // bending up, adc_value is between CENTER_VALUE_MAX and MAX_VALUE
-    uint32_t diff_center = adc_value - CENTER_VALUE_MAX;
-    uint32_t pitchbend_range = UINT14_MAX - PITCHBEND_CENTER;
-    uint32_t adc_range = MAX_VALUE - CENTER_VALUE_MAX;
-    uint32_t v = diff_center * pitchbend_range / adc_range + PITCHBEND_CENTER;
-
-    return to_pitchbend(v);
-  }
-
-  // not bending, adc_value is between CENTER_VALUE_MIN and CENTER_VALUE_MAX
-  return to_pitchbend(PITCHBEND_CENTER);
+  return to_pitchbend(UINT16_CENTER);
 }
 
 void pitchbend_task() {

@@ -24,23 +24,16 @@
  */
 
 #include <stdio.h>
-#include <string.h>
 
-#include "adsr.h"
+#include "analog_strip.h"
 #include "battery.h"
-#include "class/hid/hid.h"
 #include "config.h"
-#include "control.h"
 #include "display.h"
 #include "keyboard.h"
-#include "midi.h"
 #include "midi_ble.h"
 #include "midi_uart.h"
-#include "pico/stdlib.h"
+#include "pico/stdio.h"
 #include "pitchbend.h"
-#include "settings.h"
-#include "tusb.h"
-#include "tusb_config.h"
 
 extern void hid_task(void);
 
@@ -56,6 +49,7 @@ int main(void) {
   midi_uart_init();
   battery_init();
 
+  analog_strip_init();
   pitchbend_init();
   // control_init();
   display_init();
@@ -71,7 +65,7 @@ int main(void) {
 
     // control_task();
 
-    // pitchbend_task();
+    pitchbend_task();
   }
 
   return 0;

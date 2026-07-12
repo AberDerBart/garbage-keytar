@@ -45,6 +45,7 @@ set(target_name keytar)
 add_executable(${target_name})
 target_sources(${target_name} PRIVATE
   main.c
+  analog_strip.c
   display.c
   pico-ssd1306/ssd1306.c
   settings.c

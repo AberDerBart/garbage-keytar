@@ -22,11 +22,6 @@ ui_pos_t render_status(ui_element_t* status, ssd1306_t* display, ui_pos_t pos,
     ssd1306_bmp_show_image_with_offset(display, keyboard_24_16_bmp_data,
                                        keyboard_24_16_bmp_size, pos.x, pos.y);
   }
-  if (midi_ble_is_connected()) {
-    ssd1306_bmp_show_image_with_offset(display, bluetooth_8_16_bmp_data,
-                                       bluetooth_8_16_bmp_size, pos.x + 48,
-                                       pos.y);
-  }
   if (battery_is_charging()) {
     ssd1306_bmp_show_image_with_offset(display, charge_8_16_bmp_data,
                                        charge_8_16_bmp_size, pos.x + 96, pos.y);
@@ -58,10 +53,20 @@ ui_pos_t render_status(ui_element_t* status, ssd1306_t* display, ui_pos_t pos,
   ssd1306_bmp_show_image_with_offset(display, keymap->icon_data,
                                      keymap->icon_size, pos.x + 64, pos.y);
 
+  if (midi_ble_is_connected()) {
+    ssd1306_bmp_show_image_with_offset(display, bluetooth_8_16_bmp_data,
+                                       bluetooth_8_16_bmp_size, pos.x,
+                                       pos.y + 16);
+  } else if (midi_ble_server_is_initialized()) {
+    ssd1306_bmp_show_image_with_offset(display, bluetooth_8_16_bmp_data,
+                                       bluetooth_8_16_bmp_size, pos.x,
+                                       pos.y + 16);
+    ssd1306_draw_string(display, pos.x + 8, pos.y + 20, 1, "...");
+  }
+
   // char buffer[16];
   // snprintf(buffer, 15, "%.2fV", battery_get_voltage());
   // ssd1306_draw_string(display, 0, 20, 1, buffer);
-  ssd1306_draw_string(display, 0, 20, 1, "test");
 
   ui_pos_t new_pos = {
     x : display->width,

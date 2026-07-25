@@ -42,8 +42,9 @@ void pitchbend_task() {
 
   if (last_pitchbend.low != pitchbend.low ||
       last_pitchbend.high != pitchbend.high) {
-    midi_pitchbend(pitchbend.low, pitchbend.high);
+    if(midi_pitchbend(pitchbend.low, pitchbend.high)) {
+      last_pitchbend = pitchbend;
+    }
   }
 
-  last_pitchbend = pitchbend;
 }

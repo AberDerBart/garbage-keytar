@@ -5,7 +5,6 @@
 
 #include "hardware/gpio.h"
 #include "hardware/uart.h"
-#include "midi.h"
 
 #define UART_ID uart1
 #define BAUD_RATE 31250
@@ -27,11 +26,12 @@ void midi_uart_init() {
   }
 }
 
-void midi_uart_write(uint8_t len, uint8_t *msg) {
+bool midi_uart_write(uint8_t len, uint8_t *msg) {
   if (!midi_uart_initialized) {
-    return;
+    return false;
   }
   for (uint8_t i = 0; i < len; i++) {
     uart_putc(UART_ID, msg[i]);
   }
+  return true;
 }

@@ -63,13 +63,12 @@ void midi_ble_client_deinit() {
 
 bool midi_ble_client_is_initialized() { return ble_client_is_initialized; }
 
-void midi_ble_client_write(uint8_t len, uint8_t *msg) {
+bool midi_ble_client_write(uint8_t len, uint8_t *msg) {
   if (!ble_midi_client_is_connected()) {
-    return;
+    return true;
   }
-  printf("sending %d %d %d\n", msg[0], msg[1], msg[2]);
-
-  ble_midi_client_stream_write(len, msg);
+  uint8_t bytes_written = ble_midi_client_stream_write(len, msg);
+  return bytes_written == len;
 }
 
 uint8_t midi_ble_client_device_count() {

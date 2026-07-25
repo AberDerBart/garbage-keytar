@@ -3,6 +3,7 @@
 #include "midi_ble.h"
 #include "midi_ble_client.h"
 #include "midi_uart.h"
+#include <stdio.h>
 
 #define CMD_NOTE_ON 0x90
 #define CMD_NOTE_OFF 0x80
@@ -24,53 +25,68 @@
 #define CONTROL_VALUE_ON 64
 #define CONTROL_VALUE_OFF 0
 
-void send(uint8_t len, uint8_t *msg) {
-  midi_uart_write(len, msg);
-  midi_ble_server_write(len, msg);
-  midi_ble_client_write(len, msg);
+bool send(uint8_t len, uint8_t *msg) {
+  bool ok = true;
+  if (!midi_uart_write(len, msg)){
+    ok = false;
+    printf("Failed to send midi via UART\n");
+  }
+  if (midi_ble_is_connected()){
+    if (!midi_ble_server_write(len, msg)) {
+      ok = false;
+      printf("Failed to send midi via BLE server\n");
+    }
+  }
+  if (midi_ble_client_is_connected()) {
+    if (!midi_ble_client_write(len, msg)) {
+      ok = false;
+      printf("Failed to send midi via BLE client\n");
+    }
+  }
+  return ok;
 }
 
-void midi_note_on(uint8_t note) {
+bool midi_note_on(uint8_t note) {
   uint8_t msg[3] = {CMD_NOTE_ON, note, 127};
-  send(3, msg);
+  return send(3, msg);
 }
 
-void midi_note_off(uint8_t note) {
+bool midi_note_off(uint8_t note) {
   uint8_t msg[3] = {CMD_NOTE_OFF, note, 127};
-  send(3, msg);
+  return send(3, msg);
 }
 
-void midi_program_change(uint8_t program) {
+bool midi_program_change(uint8_t program) {
   uint8_t msg[2] = {CMD_PC, program};
-  send(2, msg);
+  return send(2, msg);
 }
 
-void midi_clear_notes() {
+bool midi_clear_notes() {
   uint8_t msg[3] = {CMD_CC, CONTROL_ALL_NOTES_OFF_B1, CONTROL_ALL_NOTES_OFF_B2};
-  send(3, msg);
+  return send(3, msg);
 }
 
-void midi_pitchbend(uint8_t low, uint8_t high) {
+bool midi_pitchbend(uint8_t low, uint8_t high) {
   uint8_t msg[3] = {CMD_PITCHBEND, low, high};
-  send(3, msg);
+  return send(3, msg);
 }
 
-void midi_cc_attack(uint8_t attack) {
+bool midi_cc_attack(uint8_t attack) {
   uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_4_ATTACK, attack};
-  send(3, msg);
+  return send(3, msg);
 }
 
-void midi_cc_decay(uint8_t decay) {
+bool midi_cc_decay(uint8_t decay) {
   uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_6_DECAY, decay};
-  send(3, msg);
+  return send(3, msg);
 }
 
-void midi_cc_sustain(uint8_t sustain) {
+bool midi_cc_sustain(uint8_t sustain) {
   uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_7_SUSTAIN, sustain};
-  send(3, msg);
+  return send(3, msg);
 }
 
-void midi_cc_release(uint8_t release) {
+bool midi_cc_release(uint8_t release) {
   uint8_t msg[3] = {CMD_CC, CC_SOUND_CONTROLLER_3_RELEASE, release};
-  send(3, msg);
+  return send(3, msg);
 }

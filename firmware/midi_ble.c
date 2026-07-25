@@ -190,12 +190,14 @@ void midi_ble_deinit() {
 
 bool midi_ble_server_is_initialized() { return ble_server_is_initialized; }
 
-void midi_ble_server_write(uint8_t n_bytes, uint8_t *midi_stream_bytes) {
+bool midi_ble_server_write(uint8_t n_bytes, uint8_t *midi_stream_bytes) {
   if (con_handle == HCI_CON_HANDLE_INVALID) {
-    return;
+    return false;
   }
 
-  midi_service_stream_write(con_handle, n_bytes, midi_stream_bytes);
+  
+  uint8_t bytes_sent = midi_service_stream_write(con_handle, n_bytes, midi_stream_bytes);
+  return bytes_sent == n_bytes;
 }
 
 void midi_ble_set_initial_state(const ble_state_t *state) {

@@ -18,7 +18,6 @@ void analog_strip_init() {
 bool analog_strip_read_uint16(uint16_t* value) {
   adc_select_input(STRIP_ADC_INPUT);
   uint32_t adc_value = adc_read();
-  printf("read %d\n",adc_value);
 
   if (adc_value > OFF_THRESHOLD_VALUE) {
     return false;

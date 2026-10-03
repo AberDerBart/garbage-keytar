@@ -1,5 +1,6 @@
 #pragma once
 #include "./menu.h"
+#include "../midi_value.h"
 
 typedef struct ui_menu_item_default_t {
   ui_element_t base;
@@ -14,3 +15,5 @@ ui_element_t* make_default_menu_item(char* label, void (*action)());
 
 ui_element_t* ui_menu_item_uint8_new(char* label, uint8_t* value, uint8_t min,
                                      uint8_t max, void (*on_change)());
+
+ui_element_t* ui_menu_item_midi_value_new(midi_value* mv);

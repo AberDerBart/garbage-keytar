@@ -1,16 +1,16 @@
 #include "midi_ble_client.h"
 
-#include "adsr.h"
 #include "ble_midi_client.h"
 #include "menu/bluetooth.h"
 #include "pico/cyw43_arch.h"
 #include "ui/stack.h"
+#include "midi_value.h"
 
 bool ble_client_is_initialized = false;
 
 void status_callback() {
   if (ble_midi_client_is_ready()) {
-    adsr_send_midi();
+    midi_value_send_all();
   }
   ui_render();
 }

@@ -3,7 +3,6 @@
 #include "./bluetooth.h"
 #include "./envelope.h"
 #include "./keymap.h"
-#include "./profiles.h"
 #include "keyboard_matrix.h"
 #include "ui/menu.h"
 #include "ui/menu/select.h"
@@ -24,5 +23,4 @@ void push_menu_main() {
                                          keymap_options, set_keymap_by_index));
 
   menu_add(menu, make_default_menu_item("Envelope", push_menu_envelope));
-  menu_add(menu, make_default_menu_item("Profiles", push_menu_profiles));
 }

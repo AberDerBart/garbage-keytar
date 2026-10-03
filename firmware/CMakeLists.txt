@@ -60,12 +60,10 @@ target_sources(${target_name} PRIVATE
   menu/envelope.c
   menu/main.c
   menu/bluetooth_connect.c
-  menu/profiles.c
   pitchbend.c
   adsr.c
   config.c
   battery.c
-  profile.c
   ui/menu.c
   ui/menu_items.c
   ui/stack.c

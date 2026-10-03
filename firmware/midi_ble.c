@@ -1,12 +1,12 @@
 #include "midi_ble.h"
 
-#include "adsr.h"
 #include "btstack.h"
 #include "midi-ble.h"
 #include "midi_ble_client.h"
 #include "midi_service_stream_handler.h"
 #include "pico/cyw43_arch.h"
 #include "ui/stack.h"
+#include "midi_value.h"
 
 #define APP_AD_FLAGS 0x06
 const uint8_t adv_data[] = {
@@ -98,7 +98,7 @@ void server_packet_handler(uint8_t packet_type, uint16_t channel,
           con_handle =
               gattservice_subevent_spp_service_connected_get_con_handle(packet);
           printf("GATTSERVICE_SUBEVENT_SPP_SERVICE_CONNECTED event\r\n");
-          adsr_send_midi();
+          midi_value_send_all();
           ui_render();
           break;
         case GATTSERVICE_SUBEVENT_SPP_SERVICE_DISCONNECTED:

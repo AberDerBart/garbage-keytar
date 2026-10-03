@@ -7,7 +7,6 @@
 #include "midi_note_table.h"
 #include "pico/flash.h"
 #include "pico/multicore.h"
-#include "profile.h"
 #include "settings.h"
 #include "tusb.h"
 #include "ui/stack.h"
@@ -59,7 +58,6 @@ void handle_key(uint8_t key, bool pressed) {
     if (key >= 58 && key <= 69) {
       // F1 - F12
       uint8_t profile_index = key - 58;
-      profile_apply(&profiles[profile_index]);
     }
     if (key == 75) {
       int16_t max_note = 67 + offset + 12;

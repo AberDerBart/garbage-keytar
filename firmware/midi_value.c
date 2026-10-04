@@ -31,6 +31,18 @@ void midi_value_set(midi_value *mv, uint16_t value, bool set_setting) {
   midi_value_sync(mv);
 }
 
+bool send_pitchbend(midi_value *v) {
+  uint8_t low = v->value & 0x7f;
+  uint8_t high = (v->value >> 7) & 0x7f;
+  return midi_pitchbend(low, high);
+}
+MIDI_VALUE(mv_pitchbend, "Pitchbend", 8192, 0, 0x3fff, send_pitchbend);
+
+bool send_mod(midi_value *v) {
+  return midi_cc_mod(v->value);
+}
+MIDI_VALUE(mv_mod, "Modulation", 0, 0, 127, send_mod);
+
 bool send_attack(midi_value *v) {
   return midi_cc_attack(v->value);
 }
@@ -51,7 +63,7 @@ bool send_release(midi_value *v) {
 }
 MIDI_VALUE(mv_release, "Release", 0, 0, 127, send_release)
 
-midi_value* midi_values[] = {&mv_attack, &mv_decay, &mv_sustain, &mv_release, NULL};
+midi_value* midi_values[] = {&mv_pitchbend, &mv_mod, &mv_attack, &mv_decay, &mv_sustain, &mv_release, NULL};
 
 void midi_value_send_all() {
   for (midi_value** mv = &midi_values[0]; *mv != NULL; mv++) {

@@ -17,6 +17,7 @@
 #define CONTROL_SUSTAIN 64
 #define CONTROL_SOSTENUTO 66
 
+#define CC_MODULATION 1
 #define CC_SOUND_CONTROLLER_3_RELEASE 72
 #define CC_SOUND_CONTROLLER_4_ATTACK 73
 #define CC_SOUND_CONTROLLER_6_DECAY 75
@@ -68,6 +69,11 @@ bool midi_clear_notes() {
 
 bool midi_pitchbend(uint8_t low, uint8_t high) {
   uint8_t msg[3] = {CMD_PITCHBEND, low, high};
+  return send(3, msg);
+}
+
+bool midi_cc_mod(uint8_t mod) {
+  uint8_t msg[3] = {CMD_CC, CC_MODULATION, mod};
   return send(3, msg);
 }
 

@@ -20,6 +20,10 @@ typedef struct midi_value{
 void midi_value_set(midi_value* v, uint16_t value, bool set_setting);
 void midi_value_send_all();
 
+extern midi_value mv_pitchbend;
+
+extern midi_value mv_mod;
+
 extern midi_value mv_attack;
 extern midi_value mv_decay;
 extern midi_value mv_sustain;

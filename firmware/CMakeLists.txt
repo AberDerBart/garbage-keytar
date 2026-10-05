@@ -61,7 +61,6 @@ target_sources(${target_name} PRIVATE
   menu/envelope.c
   menu/main.c
   menu/bluetooth_connect.c
-  pitchbend.c
   config.c
   battery.c
   ui/menu.c

@@ -56,3 +56,17 @@ bool analog_strip_read_float(float* value) {
 
   return true;
 }
+
+bool analog_strip_read(midi_value* mv, bool reset_on_release) {
+  float v = -1.;
+  if (!analog_strip_read_float(&v)) {
+    if (reset_on_release) {
+      midi_value_set(mv, mv->default_value, false);
+    }
+    return false;
+  } 
+
+  uint16_t value = mv->min_value + ((mv->max_value - mv->min_value) * v);
+  midi_value_set(mv, value, false);
+  return true;
+}

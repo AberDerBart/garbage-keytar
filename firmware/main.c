@@ -33,7 +33,7 @@
 #include "midi_ble.h"
 #include "midi_uart.h"
 #include "pico/stdio.h"
-#include "pitchbend.h"
+#include "midi_value.h"
 
 extern void hid_task(void);
 
@@ -50,8 +50,6 @@ int main(void) {
   battery_init();
 
   analog_strip_init();
-  pitchbend_init();
-  // control_init();
   display_init();
 
   config_init();
@@ -63,9 +61,7 @@ int main(void) {
   while (1) {
     keyboard_task();
 
-    // control_task();
-
-    pitchbend_task();
+    analog_strip_read(&mv_pitchbend, true);
   }
 
   return 0;

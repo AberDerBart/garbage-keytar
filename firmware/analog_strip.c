@@ -59,7 +59,9 @@ bool analog_strip_read_uint16(uint16_t* value) {
 }
 
 bool analog_strip_read_float(float* value) {
+  adc_select_input(STRIP_ADC_INPUT);
   uint32_t adc_value = adc_read();
+  printf("Strip ADC: %d\n", adc_value);
 
   if (adc_value > OFF_THRESHOLD_VALUE) {
     return false;

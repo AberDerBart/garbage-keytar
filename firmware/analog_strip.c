@@ -28,6 +28,14 @@ void analog_strip_assign(midi_value* mv, bool reset) {
   reset_on_release = reset;
 }
 
+midi_value* analog_strip_get_assigned() {
+  return analog_strip_midi_value;
+}
+
+bool analog_strip_get_reset_on_release() {
+  return reset_on_release;
+}
+
 bool analog_strip_read_uint16(uint16_t* value) {
   adc_select_input(STRIP_ADC_INPUT);
   uint32_t adc_value = adc_read();

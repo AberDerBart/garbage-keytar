@@ -28,3 +28,5 @@ extern midi_value mv_attack;
 extern midi_value mv_decay;
 extern midi_value mv_sustain;
 extern midi_value mv_release;
+
+extern midi_value* midi_values[];

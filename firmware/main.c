@@ -56,12 +56,13 @@ int main(void) {
 
   midi_ble_init();
 
+  analog_strip_assign(&mv_pitchbend, true);
+
   printf("all set up\n");
 
   while (1) {
     keyboard_task();
-
-    analog_strip_read(&mv_pitchbend, true);
+    analog_strip_task();
   }
 
   return 0;

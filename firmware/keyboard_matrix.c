@@ -174,10 +174,10 @@ void set_keymap(keymap_t* new_keymap) {
 
 keymap_t* keymap_get() { return keymap; }
 
-keymap_t* keymaps[N_KEYMAPS] = {&keymap_piano,        &keymap_accordion_c,
+keymap_t* keymaps[N_KEYMAPS + 1] = {&keymap_piano,        &keymap_accordion_c,
                                 &keymap_accordion_b,  &keymap_accordion_6plus6,
                                 &keymap_wicki_hayden, &keymap_guitar,
-                                &keymap_omnichord};
+                                &keymap_omnichord, NULL};
 
 size_t get_n_keymaps() { return N_KEYMAPS; }
 

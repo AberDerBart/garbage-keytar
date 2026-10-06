@@ -5,7 +5,11 @@
 
 void analog_strip_init();
 
+void analog_strip_assign(midi_value* mv, bool reset_on_release);
+
 bool analog_strip_read_uint16(uint16_t* value);
 bool analog_strip_read_float(float* value);
 
 bool analog_strip_read(midi_value* mv, bool reset_on_release);
+
+void analog_strip_task();

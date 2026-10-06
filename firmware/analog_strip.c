@@ -10,9 +10,22 @@
 
 #define OFF_THRESHOLD_VALUE 4000
 
+midi_value* analog_strip_midi_value = NULL;
+bool reset_on_release = false;
+
 void analog_strip_init() {
   adc_init();
   adc_gpio_init(STRIP_PIN);
+}
+
+void analog_strip_assign(midi_value* mv, bool reset) {
+  if (analog_strip_midi_value) {
+    if (reset_on_release) {
+      midi_value_set(analog_strip_midi_value, analog_strip_midi_value->default_value, false);
+    }
+  }
+  analog_strip_midi_value = mv;
+  reset_on_release = reset;
 }
 
 bool analog_strip_read_uint16(uint16_t* value) {
@@ -69,4 +82,10 @@ bool analog_strip_read(midi_value* mv, bool reset_on_release) {
   uint16_t value = mv->min_value + ((mv->max_value - mv->min_value) * v);
   midi_value_set(mv, value, false);
   return true;
+}
+
+void analog_strip_task() {
+  if (analog_strip_midi_value){
+    analog_strip_read(analog_strip_midi_value, reset_on_release);
+  }
 }

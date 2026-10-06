@@ -2,8 +2,6 @@
 
 #include <stddef.h>
 
-#include "config.h"
-#include "display.h"
 #include "img/gen/accordion_b_32_16.h"
 #include "img/gen/accordion_c_32_16.h"
 #include "img/gen/guitar_32_16.h"
@@ -56,10 +54,10 @@ uint8_t* lookup_piano(uint8_t keycode) {
   return notes;
 }
 keymap_t keymap_piano = {
-  lookup : &lookup_piano,
-  icon_size : piano_32_16_bmp_size,
-  icon_data : piano_32_16_bmp_data,
-  label : "Piano"
+  .lookup = &lookup_piano,
+  .icon_size = piano_32_16_bmp_size,
+  .icon_data = piano_32_16_bmp_data,
+  .label = "Piano"
 };
 
 uint8_t* lookup_accordion_c(uint8_t keycode) {
@@ -68,10 +66,10 @@ uint8_t* lookup_accordion_c(uint8_t keycode) {
   return notes;
 }
 keymap_t keymap_accordion_c = {
-  lookup : &lookup_accordion_c,
-  icon_size : accordion_c_32_16_bmp_size,
-  icon_data : accordion_c_32_16_bmp_data,
-  label : "Acc. C"
+  .lookup = &lookup_accordion_c,
+  .icon_size = accordion_c_32_16_bmp_size,
+  .icon_data = accordion_c_32_16_bmp_data,
+  .label = "Acc. C"
 };
 
 uint8_t* lookup_accordion_b(uint8_t keycode) {
@@ -80,10 +78,10 @@ uint8_t* lookup_accordion_b(uint8_t keycode) {
   return notes;
 }
 keymap_t keymap_accordion_b = {
-  lookup : &lookup_accordion_b,
-  icon_size : accordion_b_32_16_bmp_size,
-  icon_data : accordion_b_32_16_bmp_data,
-  label : "Acc. B"
+  .lookup = &lookup_accordion_b,
+  .icon_size =  accordion_b_32_16_bmp_size,
+  .icon_data =  accordion_b_32_16_bmp_data,
+  .label =  "Acc. B"
 };
 
 uint8_t* lookup_accordion_6plus6(uint8_t keycode) {
@@ -92,10 +90,10 @@ uint8_t* lookup_accordion_6plus6(uint8_t keycode) {
   return notes;
 }
 keymap_t keymap_accordion_6plus6 = {
-  lookup : &lookup_accordion_6plus6,
-  icon_size : six_plus_six_32_16_bmp_size,
-  icon_data : six_plus_six_32_16_bmp_data,
-  label : "6 + 6"
+  .lookup = &lookup_accordion_6plus6,
+  .icon_size =  six_plus_six_32_16_bmp_size,
+  .icon_data =  six_plus_six_32_16_bmp_data,
+  .label =  "6 + 6"
 };
 
 uint8_t* lookup_wicki_hayden(uint8_t keycode) {
@@ -104,10 +102,10 @@ uint8_t* lookup_wicki_hayden(uint8_t keycode) {
   return notes;
 }
 keymap_t keymap_wicki_hayden = {
-  lookup : &lookup_wicki_hayden,
-  icon_size : wicki_hayden_32_16_bmp_size,
-  icon_data : wicki_hayden_32_16_bmp_data,
-  label : "W/H"
+  .lookup = &lookup_wicki_hayden,
+  .icon_size =  wicki_hayden_32_16_bmp_size,
+  .icon_data =  wicki_hayden_32_16_bmp_data,
+  .label =  "W/H"
 };
 
 uint8_t* lookup_guitar(uint8_t keycode) {
@@ -116,10 +114,10 @@ uint8_t* lookup_guitar(uint8_t keycode) {
   return notes;
 }
 keymap_t keymap_guitar = {
-  lookup : &lookup_guitar,
-  icon_size : guitar_32_16_bmp_size,
-  icon_data : guitar_32_16_bmp_data,
-  label : "Guitar"
+  .lookup = &lookup_guitar,
+  .icon_size =  guitar_32_16_bmp_size,
+  .icon_data =  guitar_32_16_bmp_data,
+  .label =  "Guitar"
 };
 
 keymap_t* keymap = &keymap_piano;
@@ -161,10 +159,10 @@ uint8_t* lookup_omnichord(uint8_t keycode) {
 }
 
 keymap_t keymap_omnichord = {
-  lookup : &lookup_omnichord,
-  icon_size : omnichord_32_16_bmp_size,
-  icon_data : omnichord_32_16_bmp_data,
-  label : "Omnichord"
+  .lookup = &lookup_omnichord,
+  .icon_size =  omnichord_32_16_bmp_size,
+  .icon_data =  omnichord_32_16_bmp_data,
+  .label =  "Omnichord"
 };
 
 void set_keymap(keymap_t* new_keymap) {

@@ -68,6 +68,7 @@ target_sources(${target_name} PRIVATE
   ui/stack.c
   ui/status.c
   ui/menu/select.c
+  ui/menu_items/checkbox.c
   util.c
 )
 

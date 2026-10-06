@@ -5,7 +5,7 @@
 #include "./keymap.h"
 #include "keyboard_matrix.h"
 #include "ui/menu.h"
-#include "ui/menu/select.h"
+#include "ui/menu_items/select.h"
 #include "ui/menu_items.h"
 #include "ui/stack.h"
 

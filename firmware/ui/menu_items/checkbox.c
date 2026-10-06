@@ -30,7 +30,7 @@ static ui_pos_t render(ui_element_t* item, ssd1306_t* display, ui_pos_t pos, boo
   checkbox_t * self = (checkbox_t*) item;
   ssd1306_draw_string(display, pos.x, pos.y, 1, self->label);
 
-  if (*self->value) {
+  if (self->value) {
     ssd1306_bmp_show_image_with_offset(display, check_on_8_8_bmp_data, check_on_8_8_bmp_size, display->width-8, pos.y);
   } else {
     ssd1306_bmp_show_image_with_offset(display, check_off_8_8_bmp_data, check_off_8_8_bmp_size, display->width-8, pos.y);
